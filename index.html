@@ -6,7 +6,6 @@
 <title>STW Marketing Dashboard — 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
 /* ============================================================
    GLOBAL STYLES
@@ -505,13 +504,6 @@ if (sessionStorage.getItem('stw_auth') === '1') {
   document.getElementById('dashboard').style.display = 'block';
 }
 
-// Datalabels plugin loaded from CDN auto-registers globally.
-// We unregister it globally and apply per-chart via plugins array.
-// Charts that use it explicitly pass ChartDataLabels in their plugins option.
-window.addEventListener('load', ()=>{
-  if(window.ChartDataLabels) Chart.unregister(ChartDataLabels);
-});
-
 function initDashboard() {
   buildS1Charts();
   buildS2Charts();
@@ -901,35 +893,44 @@ function buildS2Charts() {
       backgroundColor:S2_IMPR_COLORS[yi], borderRadius:3,
       categoryPercentage:0.75, barPercentage:0.82, yAxisID:'y2'
     }));
-    if(window.ChartDataLabels) Chart.register(ChartDataLabels);
     const yoyChart = new Chart(document.getElementById(canvasId),{
       type:'bar',
       data:{ labels:['Posts','Interactions','Impressions'], datasets:[...dsLeft,...dsRight] },
       options:{ responsive:true, maintainAspectRatio:false,
         layout:{padding:{top:22}},
-        plugins:{legend:{display:false},tooltip:{enabled:false},
-          datalabels:{
-            display:ctx=>ctx.parsed.y!==null,
-            anchor:'end', align:'end', offset:2,
-            font:{family:'Open Sans',size:8,weight:'600'},
-            color:ctx=>ctx.dataset.yAxisID==='y2'?'#cc5500':'#333',
-            formatter:(val,ctx)=>{
-              if(val===null) return null;
-              return val>=1000?(val/1000).toFixed(0)+'k':String(val);
-            }
-          }
-        },
+        plugins:{legend:{display:false},tooltip:{enabled:false}},
         scales:{
           x:{...AXT,ticks:{...AXT.ticks,font:{family:'Montserrat',size:12,weight:'600'},color:'#333'}},
           y:{position:'left',title:{display:true,text:'Posts / Interactions',font:{size:10},color:'#555'},ticks:AXT.ticks,grid:{color:'#f0f0f0'}},
           y2:{position:'right',title:{display:true,text:'Impressions',font:{size:10},color:'#ff7300'},ticks:{...AXT.ticks,color:'#ff7300',callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{drawOnChartArea:false}}
         }
-      }
+      },
+      plugins:[{
+        id:'yoyLabels',
+        afterDatasetsDraw(chart){
+          const ctx=chart.ctx;
+          chart.data.datasets.forEach((ds,di)=>{
+            const meta=chart.getDatasetMeta(di);
+            meta.data.forEach((bar,idx)=>{
+              const val=ds.data[idx];
+              if(val===null||val===undefined) return;
+              const isRight=ds.yAxisID==='y2';
+              const label=val>=1000?(val/1000).toFixed(0)+'k':String(val);
+              ctx.save();
+              ctx.font='600 8px Open Sans';
+              ctx.fillStyle=isRight?'#cc5500':'#444';
+              ctx.textAlign='center';
+              ctx.textBaseline='bottom';
+              ctx.fillText(label,bar.x,bar.y-2);
+              ctx.restore();
+            });
+          });
+        }
+      }]
     });
   }
   makeYOY('s2fb', S2_FB_IMP_YR, S2_FB_POSTS_YR, S2_FB_INT_YR, ['#c5cce8','#8f9fd4','#5a6fc0','#182f8c']);
   makeYOY('s2ig', S2_IG_IMP_YR, S2_IG_POSTS_YR, S2_IG_INT_YR, ['#b3ddb0','#7fbf7a','#4aa344','#259717']);
-  if(window.ChartDataLabels) Chart.unregister(ChartDataLabels);
 }
 
 // --- SECTION 3 WEBSITE ---
@@ -960,23 +961,27 @@ function buildS3Charts() {
       return {type:'bar',label:yr,data:d,backgroundColor:d.map((v,i)=>v!==null&&sslAll[i]?colorMap[yi]:colorMap[yi]+'99'),borderRadius:2,categoryPercentage:0.85,barPercentage:0.92};
     });
   }
-  if(window.ChartDataLabels) Chart.register(ChartDataLabels);
   new Chart(document.getElementById('s3ov'),{
     data:{labels:allL,datasets:buildYearBars(S3_PAGEVIEWS,['#182f8c','#7f8fcc','#b8c2e8','#ff7300'])},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       layout:{padding:{top:18}},
-      plugins:{legend:{display:false},
-        datalabels:{
-          display:ctx=>ctx.parsed.y!==null&&ctx.parsed.y>0,
-          anchor:'end',align:'end',offset:1,
-          font:{family:'Open Sans',size:7,weight:'600'},
-          color:ctx=>{const colors=['#182f8c','#7f8fcc','#b8c2e8','#ff7300'];return colors[ctx.datasetIndex]||'#333';},
-          formatter:v=>v>=1000?(v/1000).toFixed(0)+'k':String(v)
-        }
-      },
-      scales:{x:AXT,y:{ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}}
+      plugins:{legend:{display:false}},
+      scales:{x:AXT,y:{ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}},
+    plugins:[{id:'s3ovLabels',afterDatasetsDraw(chart){
+      const ctx=chart.ctx;
+      const colors=['#182f8c','#7f8fcc','#b8c2e8','#ff7300'];
+      chart.data.datasets.forEach((ds,di)=>{
+        chart.getDatasetMeta(di).data.forEach((bar,idx)=>{
+          const val=ds.data[idx];
+          if(!val||val<=0) return;
+          const label=val>=1000?(val/1000).toFixed(0)+'k':String(val);
+          ctx.save();ctx.font='600 7px Open Sans';ctx.fillStyle=colors[di]||'#333';
+          ctx.textAlign='center';ctx.textBaseline='bottom';
+          ctx.fillText(label,bar.x,bar.y-2);ctx.restore();
+        });
+      });
+    }}]
   });
-  if(window.ChartDataLabels) Chart.unregister(ChartDataLabels);
   const allS=[6974,12413,5643,5951,9456,9651,8320,6235,3887,4063,8323,7760,7948,7569,6190,3502,6841,3585,3135,1945,2639,4769,6427,7169,5812,5854,5487,5063,5983,4963,2764,2668,3732,5513,7319,7529,7253,4762,5382];
   const other=allL.map((_,i)=>Math.max(0,allS[i]-(S3_DIRECT[i]||0)-(S3_ORGANIC[i]||0)-(S3_CPC[i]||0)-(S3_ORGSOCIAL[i]||0)-(S3_EMAIL_SRC[i]||0)));
   new Chart(document.getElementById('s3src'),{type:'bar',data:{labels:allL,datasets:[
@@ -1209,20 +1214,29 @@ function buildS9() {
     {label:'IG int',data:[null,d.ig.intPerPost],backgroundColor:'#259717',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y2'},
     {label:'TT int',data:[null,d.tt.intPerPost],backgroundColor:'#ff7300',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y2'}
   ]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:22}},
-    plugins:{legend:{display:false},tooltip:{enabled:false},
-      datalabels:{
-        display:ctx=>ctx.parsed.y!==null,
-        anchor:'end',align:'end',offset:2,
-        font:{family:'Open Sans',size:10,weight:'600'},
-        color:ctx=>{
-          const base=['#182f8c','#259717','#ff7300'];
-          return base[ctx.dataIndex]||'#333';
-        },
-        formatter:v=>v!==null?String(v):''
-      }
-    },
-    scales:{x:{...AXT,ticks:{...AXT.ticks,font:{family:'Montserrat',size:11,weight:'600'},color:'#333'}},y:{position:'left',title:{display:true,text:'Impressions per post',font:{size:10},color:'#555'},ticks:AXT.ticks,grid:{color:'#f0f0f0'},min:0},y2:{position:'right',title:{display:true,text:'Interactions per post',font:{size:10},color:'#7a3000'},ticks:{...AXT.ticks,color:'#7a3000'},grid:{drawOnChartArea:false},min:0,max:75}}}});
-  if(window.ChartDataLabels) Chart.unregister(ChartDataLabels);
+    plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
+    scales:{x:{...AXT,ticks:{...AXT.ticks,font:{family:'Montserrat',size:11,weight:'600'},color:'#333'}},y:{position:'left',title:{display:true,text:'Impressions per post',font:{size:10},color:'#555'},ticks:AXT.ticks,grid:{color:'#f0f0f0'},min:0},y2:{position:'right',title:{display:true,text:'Interactions per post',font:{size:10},color:'#7a3000'},ticks:{...AXT.ticks,color:'#7a3000'},grid:{drawOnChartArea:false},min:0,max:75}}},
+  plugins:[{
+    id:'s9Labels',
+    afterDatasetsDraw(chart){
+      const ctx=chart.ctx;
+      const colors=['#182f8c','#259717','#ff7300'];
+      chart.data.datasets.forEach((ds,di)=>{
+        const meta=chart.getDatasetMeta(di);
+        meta.data.forEach((bar,idx)=>{
+          const val=ds.data[idx];
+          if(val===null||val===undefined) return;
+          ctx.save();
+          ctx.font='600 10px Open Sans';
+          ctx.fillStyle=colors[idx]||'#333';
+          ctx.textAlign='center';
+          ctx.textBaseline='bottom';
+          ctx.fillText(String(val),bar.x,bar.y-3);
+          ctx.restore();
+        });
+      });
+    }
+  }]});
 }
 
 // --- SECTION 10 CAMPAIGNS ---
