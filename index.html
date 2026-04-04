@@ -224,7 +224,6 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
   <div class="legend-item"><div class="legend-dot" style="background:#7f8fcc;"></div>2024</div>
   <div class="legend-item"><div class="legend-dot" style="background:#b8c2e8;"></div>2025</div>
   <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>2026</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#f7ca09;border:1px solid #cca800;"></div>SSL month</div>
 </div>
 <div id="s3-chart-overview" class="chart-wrap" style="height:300px;"><canvas id="s3ov"></canvas></div>
 <div id="s3-insight-overview" class="stw-insight">Feb 2023 (34k pageviews) remains the all-time peak driven by high CPC spend. Traffic declined through 2024&#8211;25 as paid spend shifted. Mar 2026 recovered to 8.6k. SSL months show modest lift but website is less SSL-dependent than social.</div>
@@ -255,7 +254,6 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 <div id="s3-legend-13mo-ov" class="legend" style="display:none;">
   <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Pageviews</div>
   <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Sessions</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#f7ca09;border:1px solid #cca800;"></div>SSL month</div>
 </div>
 <div id="s3-chart-13mo-ov" class="chart-wrap" style="height:300px;display:none;"><canvas id="s3c-13mo-ov"></canvas></div>
 <div id="s3-insight-13mo-ov" class="stw-insight" style="display:none;">Apr 2025 &#8211; Mar 2026: Pageviews range 4.8k&#8211;12k. May 2025 was the peak (12k); Aug the low (4.8k). Mar 2026 recovered to 8.6k pageviews and 5.4k sessions, up 37% and 13% respectively vs. Feb.</div>
@@ -268,7 +266,6 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
   <div class="legend-item"><div class="legend-dot" style="background:#cca800;"></div>Organic social</div>
   <div class="legend-item"><div class="legend-dot" style="background:#7f8fcc;"></div>Email</div>
   <div class="legend-item"><div class="legend-dot" style="background:#b3ddb0;"></div>Other</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#f7ca09;border:1px solid #cca800;"></div>SSL month</div>
 </div>
 <div id="s3-chart-13mo-src" class="chart-wrap" style="height:300px;display:none;"><canvas id="s3c-13mo-src"></canvas></div>
 <div id="s3-insight-13mo-src" class="stw-insight" style="display:none;">Direct traffic is the dominant source throughout the 13-month window. Organic social spikes in SSL months (Feb, Mar). Email peaked Jan 2026 at 429. CPC remains minimal &#8212; organic and direct now carry the site.</div>
@@ -279,7 +276,6 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
   <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Fundraising pages</div>
   <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>SSL pages</div>
   <div class="legend-item"><div class="legend-dot" style="background:#cca800;"></div>Blog</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#f7ca09;border:1px solid #cca800;"></div>SSL month</div>
 </div>
 <div id="s3-chart-13mo-pg" class="chart-wrap" style="height:300px;display:none;"><canvas id="s3c-13mo-pg"></canvas></div>
 <div id="s3-insight-13mo-pg" class="stw-insight" style="display:none;">Fundraising pages dominate Apr&#8211;Jun and Oct&#8211;Mar &#8212; driven by SSL student trip fundraising. Blog traffic building steadily from Oct 2025, reaching 488 in Mar 2026. Homepage traffic is relatively stable 790&#8211;1,738 throughout.</div>
@@ -699,7 +695,7 @@ const S3_EMAIL_SRC = [199,224,256,212,241,162,38,20,76,124,380,138,177,241,225,1
 const S3_HOMEPAGE  = [1091,1679,1617,1365,1442,1519,1121,1142,978,1209,1406,1241,1559,1343,1361,1340,1140,763,864,970,1148,1415,1809,1420,1873,1260,1341,1115,1392,946,1175,1240,1677,1738,1347,1303,1188,790,826];
 const S3_FUNDRAISE = [262,580,394,475,369,630,345,14,10,25,164,71,198,280,245,226,1134,446,423,41,11,123,168,203,240,489,4525,3824,4783,4418,774,628,597,953,2610,5443,4170,2769,4315];
 const S3_SSL_PG    = [687,1182,679,978,1352,481,582,645,1413,2138,928,1096,1488,1651,1364,1184,1250,687,1018,680,1049,1017,1476,1347,1840,1261,null,null,null,null,150,914,2566,1099,958,1048,665,861,null];
-const S3_BLOG_PG   = [15,15,7,18,59,46,40,49,30,32,29,26,32,22,30,23,34,36,38,35,41,50,38,null,null,null,null,null,null,null,10,435,220,276,525,523,506,265,488];
+const S3_BLOG_PG   = [15,15,7,18,59,46,40,49,30,32,29,26,32,22,30,23,34,36,38,35,41,50,38,null,null,null,null,null,null,null,10,435,220,276,525,582,506,265,488];
 // M/M cards: current = Mar 26, prev = Feb 26
 const S3_MM = { cur:{pv:8570,sessions:5382,users:3426,engaged:46}, prev:{pv:6239,sessions:4762,users:2431,engaged:81} };
 
@@ -1133,7 +1129,6 @@ function buildS3Charts() {
 // --- SECTION 3 — 13-MONTH VIEWS (Mar 2025 – Mar 2026) ---
 function buildS3_13mo() {
   const L = ['Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
-  const ssl = [1,0,0,0,1,0,0,0,0,0,0,1,1]; // Mar+Jul=SSL, Feb+Mar 26=SSL
   const PV  = [11949,10552,12013,9699,5318,4758,6648,8496,10348,11199,10618,6239,8570];
   const SE  = [5487,5063,5983,4963,2764,2668,3732,5513,7319,7529,7253,4762,5382];
   const D   = [2598,2506,3073,2582,930,796,1402,1698,2156,4331,4583,1792,3141];
@@ -1145,14 +1140,14 @@ function buildS3_13mo() {
   const HP  = [1341,1115,1392,946,1175,1240,1677,1738,1347,1303,1188,790,826];
   const FD  = [4525,3824,4783,4418,774,628,597,953,2610,5443,4170,2769,4315];
   const SL  = [null,null,null,null,150,914,2566,1099,958,1048,665,861,null];
-  const BL  = [null,null,null,null,10,435,220,276,525,523,506,265,488];
+  const BL  = [null,null,null,10,435,220,276,525,523,582,506,265,488];
   const h = v=>v>=1000?(v/1000).toFixed(0)+'k':v;
 
   // Traffic overview: grouped PV + Sessions
   new Chart(document.getElementById('s3c-13mo-ov'),{type:'bar',
     data:{labels:L,datasets:[
-      {label:'Pageviews',data:PV,backgroundColor:PV.map((_,i)=>ssl[i]?'#182f8c':'#182f8c88'),borderRadius:3,categoryPercentage:0.7,barPercentage:0.6},
-      {label:'Sessions', data:SE,backgroundColor:SE.map((_,i)=>ssl[i]?'#259717':'#25971788'),borderRadius:3,categoryPercentage:0.7,barPercentage:0.6}
+      {label:'Pageviews',data:PV,backgroundColor:'#182f8c',borderRadius:3,categoryPercentage:0.7,barPercentage:0.6},
+      {label:'Sessions', data:SE,backgroundColor:'#259717',borderRadius:3,categoryPercentage:0.7,barPercentage:0.6}
     ]},
     options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},
       interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},
@@ -1173,12 +1168,12 @@ function buildS3_13mo() {
   // Sources stacked
   new Chart(document.getElementById('s3c-13mo-src'),{type:'bar',
     data:{labels:L,datasets:[
-      {label:'Direct',        data:D,  backgroundColor:D.map((_,i) =>ssl[i]?'#182f8c':'#182f8c99'),borderRadius:0},
-      {label:'Organic search',data:O,  backgroundColor:O.map((_,i) =>ssl[i]?'#259717':'#25971799'),borderRadius:0},
-      {label:'CPC',           data:C,  backgroundColor:C.map((_,i) =>ssl[i]?'#ff7300':'#ff730099'),borderRadius:0},
-      {label:'Organic social',data:OS, backgroundColor:OS.map((_,i)=>ssl[i]?'#cca800':'#f7ca0999'),borderRadius:0},
-      {label:'Email',         data:EM, backgroundColor:EM.map((_,i)=>ssl[i]?'#7f8fcc':'#7f8fcc99'),borderRadius:0},
-      {label:'Other',         data:OT, backgroundColor:OT.map((_,i)=>ssl[i]?'#b3ddb0':'#b3ddb099'),borderRadius:2}
+      {label:'Direct',        data:D,  backgroundColor:'#182f8c',borderRadius:0},
+      {label:'Organic search',data:O,  backgroundColor:'#259717',borderRadius:0},
+      {label:'CPC',           data:C,  backgroundColor:'#ff7300',borderRadius:0},
+      {label:'Organic social',data:OS, backgroundColor:'#cca800',borderRadius:0},
+      {label:'Email',         data:EM, backgroundColor:'#7f8fcc',borderRadius:0},
+      {label:'Other',         data:OT, backgroundColor:'#b3ddb0',borderRadius:2}
     ]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false}},
@@ -1188,10 +1183,10 @@ function buildS3_13mo() {
   // Key pages stacked
   new Chart(document.getElementById('s3c-13mo-pg'),{type:'bar',
     data:{labels:L,datasets:[
-      {label:'Homepage',    data:HP, backgroundColor:HP.map((_,i)=>ssl[i]?'#182f8c':'#182f8c99'),borderRadius:0},
-      {label:'Fundraising', data:FD, backgroundColor:FD.map((_,i)=>ssl[i]?'#ff7300':'#ff730099'),borderRadius:0},
-      {label:'SSL pages',   data:SL, backgroundColor:SL.map((_,i)=>ssl[i]?'#259717':'#25971799'),borderRadius:0},
-      {label:'Blog',        data:BL, backgroundColor:BL.map((_,i)=>ssl[i]?'#cca800':'#f7ca0999'),borderRadius:2}
+      {label:'Homepage',    data:HP, backgroundColor:'#182f8c',borderRadius:0},
+      {label:'Fundraising', data:FD, backgroundColor:'#ff7300',borderRadius:0},
+      {label:'SSL pages',   data:SL, backgroundColor:'#259717',borderRadius:0},
+      {label:'Blog',        data:BL, backgroundColor:'#cca800',borderRadius:2}
     ]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false}},
