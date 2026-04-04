@@ -622,7 +622,6 @@ function initDashboard() {
   buildS4Overview();
   buildS4();
   buildS5Charts();
-  buildS5Newsletter();
   buildS6Charts();
   buildS7Charts();
   buildS8Charts();
@@ -1914,7 +1913,16 @@ function showSubTab(section, tab, el) {
   el.classList.add('active');
   // Update S1 cards when switching FB/IG
   if(section==='s1') buildS1Cards(tab);
-
+  // Build newsletter chart lazily on first click (canvas needs visible parent)
+  if(section==='s5' && tab==='newsletter' && !window._s5nlBuilt) {
+    window._s5nlBuilt = true;
+    buildS5Newsletter();
+  }
+  // s4 inventory tab uses a plain div wrapper
+  if(section==='s4' && tab==='inventory') {
+    const inv=document.getElementById('s4-chart-inventory');
+    if(inv) inv.style.display='block';
+  }
 }
 
 // ================================================================
