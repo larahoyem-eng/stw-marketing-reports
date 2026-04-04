@@ -208,9 +208,11 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 </div>
 <div id="s3-cards" class="mm-grid mm-grid-4"></div>
 <div class="stw-tabs">
-  <button class="stw-tab active" onclick="showSubTab('s3','overview',this)">Overview</button>
-  <button class="stw-tab" onclick="showSubTab('s3','sources',this)">Traffic sources</button>
-  <button class="stw-tab" onclick="showSubTab('s3','pages',this)">Key pages</button>
+  <button class="stw-tab active" onclick="showSubTab('s3','overview',this)">Overview (3yr)</button>
+  <button class="stw-tab" onclick="showSubTab('s3','sources',this)">Sources (3yr)</button>
+  <button class="stw-tab" onclick="showSubTab('s3','pages',this)">Pages (3yr)</button>
+  <button class="stw-tab" onclick="showSubTab('s3','13mo',this)">13-month</button>
+  <button class="stw-tab" onclick="showSubTab('s3','march-yoy',this)">March YOY</button>
 </div>
 <div id="s3-legend-overview" class="legend">
   <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>2023</div>
@@ -238,6 +240,32 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 <div id="s3-insight-overview" class="stw-insight">Feb 2023 (34k pageviews) remains the all-time peak driven by high CPC spend. Traffic declined through 2024–25 as paid spend shifted. Mar 2026 recovered to 8.6k. SSL months show modest lift but website is less SSL-dependent than social.</div>
 <div id="s3-insight-sources" class="stw-insight" style="display:none;">Google CPC dominated 2023 (up to 5,139 sessions/month) but has declined sharply. Direct and organic search are now primary. Organic social spikes in SSL months. Fundraising pages spiked Apr–Jun 2025 — tied to SSL student fundraising.</div>
 <div id="s3-insight-pages" class="stw-insight" style="display:none;">Fundraising pages spike in SSL recruitment season (students fundraising for trips). Blog traffic growing from near-zero to 488 sessions in Mar 2026 — AEO/SEO value accumulating over time.</div>
+
+<!-- 13-month tab elements -->
+<div id="s3-legend-13mo" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Pageviews (left)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Sessions (left)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Direct &middot; <div class="legend-dot" style="background:#259717;"></div>Organic &middot; <div class="legend-dot" style="background:#f7ca09;border:1px solid #cca800;"></div>Org Social (sources)</div>
+</div>
+<div id="s3-cards-13mo" style="display:none;"></div>
+<div id="s3-chart-13mo" class="chart-wrap" style="height:240px;display:none;"><canvas id="s3-13mo-ov"></canvas></div>
+<div id="s3-chart-13mo-src" class="chart-wrap" style="height:240px;display:none;margin-top:14px;"><canvas id="s3-13mo-src"></canvas></div>
+<div id="s3-chart-13mo-pg" class="chart-wrap" style="height:240px;display:none;margin-top:14px;"><canvas id="s3-13mo-pg"></canvas></div>
+<div id="s3-insight-13mo" class="stw-insight" style="display:none;">Apr 2025 – Mar 2026: Pageviews range 4.8k–12k. Direct traffic dominates. Fundraising pages peak Apr–Jun and Dec–Jan driven by SSL student trip fundraising. Blog traffic building steadily from Oct 2025 onward.</div>
+
+<!-- March YOY tab elements -->
+<div id="s3-legend-march-yoy" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>2023</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7f8fcc;"></div>2024</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#b8c2e8;"></div>2025</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>2026</div>
+</div>
+<div id="s3-cards-march-yoy" style="display:none;"></div>
+<div id="s3-chart-march-yoy" class="chart-wrap" style="height:260px;display:none;"><canvas id="s3-march-ov"></canvas></div>
+<div id="s3-chart-march-yoy-src" class="chart-wrap" style="height:260px;display:none;margin-top:14px;"><canvas id="s3-march-src"></canvas></div>
+<div id="s3-chart-march-yoy-pg" class="chart-wrap" style="height:260px;display:none;margin-top:14px;"><canvas id="s3-march-pg"></canvas></div>
+<div id="s3-insight-march-yoy" class="stw-insight" style="display:none;">March traffic peaked in 2024 (15.2k PV, 6.2k sessions) then dipped in 2025. 2026 sessions (5.4k) are near 2025 levels. Fundraising pages now dominate March traffic — a clear SSL-season signal. Blog newly visible in 2026 (488 sessions).</div>
+
 <div class="stw-note">Source: STW Marketing KPI Tracker · <span class="ssl-badge">SSL</span> = Feb, Mar, Apr, Jul · Jan 2023 – Mar 2026</div>
 </div>
 
@@ -320,6 +348,7 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
   <button class="stw-tab" onclick="showSubTab('s6','paid-eff',this)">Paid Efficiency</button>
   <button class="stw-tab" onclick="showSubTab('s6','paid-mix',this)">Paid Conversion mix</button>
   <button class="stw-tab" onclick="showSubTab('s6','spend',this)">Spend</button>
+  <button class="stw-tab" onclick="showSubTab('s6','camp-compare',this)">Campaign Comparison</button>
 </div>
 <div id="s6-legend-ag-eff" class="legend">
   <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Cost/conversion — Ad Grant</div>
@@ -367,6 +396,18 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 <div id="s6-insight-paid-eff" class="stw-insight" style="display:none;">Paid campaign cost/conversion has risen slightly ($0.94–$1.80) but remains dramatically lower than the Ad Grant. Guatemala, Panama, and Honduras trip recruitment drive the bulk of paid conversions.</div>
 <div id="s6-insight-paid-mix" class="stw-insight" style="display:none;">Paid campaign conversions are almost entirely SSL trip recruitment — Guatemala leads, followed by Panama and Honduras. Request Info is a consistent conversion type, reflecting a direct inquiry intent from this warmer audience.</div>
 <div id="s6-insight-spend" class="stw-insight" style="display:none;">Ad Grant hit $10k ceiling Oct–Dec 2025. Jan dipped to $5.8k (disruption). Paid campaign spend is modest ($177–$623/month) but growing. CTR held stable at 3.5–4.2%.</div>
+
+<!-- Campaign Comparison tab — March 2026 -->
+<div id="s6-legend-camp-compare" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Performance Max</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Search</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Display</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#7a3000;"></div>Avg. Cost / Interaction (right axis)</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#b05000;border-style:dashed;"></div>Cost / Conversion (right axis)</div>
+</div>
+<div id="s6-chart-camp-compare" class="chart-wrap" style="height:300px;display:none;"><canvas id="s6campcompare"></canvas></div>
+<div id="s6-insight-camp-compare" class="stw-insight orange" style="display:none;">Search leads on interaction rate (8.6%) and conversion rate (43.5%) — the most qualified traffic. Performance Max drives volume at 4.5% interaction rate and 47.3% conv. rate. Display's 3.1% interaction rate and 4.3% conv. rate reflects awareness-stage behavior, but at $0.51 avg. cost it was the cheapest per interaction tested.</div>
+
 <div class="stw-note">Source: STW Marketing KPI Tracker + PromotMotor · Ad Grant max $10,000/month · Mar 2025 – Mar 2026</div>
 </div>
 
@@ -504,6 +545,8 @@ function initDashboard() {
   buildS1Charts();
   buildS2Charts();
   buildS3Charts();
+  buildS3_13mo();
+  buildS3_marchYOY();
   buildS4();
   buildS5Charts();
   buildS6Charts();
@@ -717,6 +760,47 @@ const EMAIL_DATA = [
 const S6_LABELS = ['Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
 const S6_CURRENT_IDX = 12;
 const S6_AG_COST  = [1360,2390,2700,1740,7602,4621,4764,9830,9899,10249,5818,9292,10267];
+
+// March 2026 campaign comparison — 3 paid campaigns
+// Source: March_2026_paid_google_campaign_report.csv
+const S6_CAMP_COMPARE = [
+  {
+    label:       'Performance Max',
+    color:       '#182f8c',
+    intRate:     4.50,   // interaction rate %
+    convRate:    47.28,  // conversion rate %
+    avgCost:     0.65,   // avg. cost per interaction ($)
+    costPerConv: 1.38,   // cost / conversion ($)
+    impr:        14425,
+    interactions:649,
+    conversions: 306.86,
+    totalCost:   423.43,
+  },
+  {
+    label:       'Search',
+    color:       '#259717',
+    intRate:     8.56,
+    convRate:    43.48,
+    avgCost:     0.66,
+    costPerConv: 1.51,
+    impr:        1075,
+    interactions:92,
+    conversions: 40.00,
+    totalCost:   60.49,
+  },
+  {
+    label:       'Display',
+    color:       '#ff7300',
+    intRate:     3.12,
+    convRate:    4.33,
+    avgCost:     0.51,
+    costPerConv: 11.66,
+    impr:        8882,
+    interactions:277,
+    conversions: 12.00,
+    totalCost:   139.91,
+  },
+];
 const S6_AG_IMPR  = [7826,8644,6594,3935,9488,9955,14331,62600,147528,197386,55515,107219,111130];
 const S6_AG_CLICKS= [162,204,182,181,374,422,512,2290,5820,6832,2077,4451,4221];
 const S6_AG_CTR   = [2.07,2.36,2.76,4.60,3.92,4.24,3.57,3.66,3.95,3.46,3.74,4.15,3.80];
@@ -998,6 +1082,170 @@ function buildS3Charts() {
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}}});
 }
 
+// --- SECTION 3 — 13-MONTH VIEW ---
+function buildS3_13mo() {
+  const L13 = ['Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
+  const sslMo = [0,0,0,1,0,0,0,0,0,0,1,1]; // Jul, Feb, Mar are SSL in this window
+  const PV13  = [10552,12013,9699,5318,4758,6648,8496,10348,11199,10618,6239,8570];
+  const SE13  = [5063,5983,4963,2764,2668,3732,5513,7319,7529,7253,4762,5382];
+  const cur = PV13[11], prev = PV13[10];
+  const curS = SE13[11], prevS = SE13[10];
+  // summary cards
+  document.getElementById('s3-cards-13mo').innerHTML =
+    buildMMCard('Mar pageviews', cur, prev, true, v=>v.toLocaleString()) +
+    buildMMCard('Mar sessions', curS, prevS, true, v=>v.toLocaleString()) +
+    buildMMCard('Peak month', 12013, null, null, ()=>'May 25') +
+    buildMMCard('Low month', 4758, null, null, ()=>'Aug 25');
+  document.getElementById('s3-cards-13mo').className = 'mm-grid mm-grid-4';
+
+  // Overview: dual bar pageviews + sessions
+  new Chart(document.getElementById('s3-13mo-ov'), {
+    type:'bar',
+    data:{labels:L13, datasets:[
+      {label:'Pageviews', data:PV13, backgroundColor:PV13.map((_,i)=>sslMo[i]?'#182f8c':'#182f8c88'), borderRadius:3, categoryPercentage:0.7, barPercentage:0.6, yAxisID:'y'},
+      {label:'Sessions',  data:SE13, backgroundColor:SE13.map((_,i)=>sslMo[i]?'#259717':'#25971788'), borderRadius:3, categoryPercentage:0.7, barPercentage:0.6, yAxisID:'y'}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
+      scales:{x:AXT, y:{ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}}
+  });
+
+  // Sources stacked bar
+  const D13  = [2506,3073,2582,930,796,1402,1698,2156,4331,4583,1792,3141];
+  const O13  = [1112,1296,847,846,802,1060,601,1102,477,673,507,514];
+  const C13  = [41,45,35,181,217,299,219,251,225,170,64,119];
+  const OS13 = [919,854,674,197,419,396,173,201,840,531,560,562];
+  const EM13 = [159,225,107,151,101,116,117,173,225,429,108,51];
+  const OT13 = SE13.map((_,i)=>Math.max(0,SE13[i]-D13[i]-O13[i]-C13[i]-OS13[i]-EM13[i]));
+  new Chart(document.getElementById('s3-13mo-src'), {
+    type:'bar',
+    data:{labels:L13, datasets:[
+      {label:'Direct',        data:D13,  backgroundColor:D13.map((_,i)=>sslMo[i]?'#182f8c':'#182f8c99'), borderRadius:0},
+      {label:'Organic search',data:O13,  backgroundColor:O13.map((_,i)=>sslMo[i]?'#259717':'#25971799'), borderRadius:0},
+      {label:'CPC',           data:C13,  backgroundColor:C13.map((_,i)=>sslMo[i]?'#ff7300':'#ff730099'), borderRadius:0},
+      {label:'Organic social',data:OS13, backgroundColor:OS13.map((_,i)=>sslMo[i]?'#cca800':'#f7ca0999'), borderRadius:0},
+      {label:'Email',         data:EM13, backgroundColor:EM13.map((_,i)=>sslMo[i]?'#7f8fcc':'#7f8fcc99'), borderRadius:0},
+      {label:'Other',         data:OT13, backgroundColor:OT13.map((_,i)=>sslMo[i]?'#b3ddb0':'#b3ddb099'), borderRadius:2}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false}},
+      scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}}
+  });
+
+  // Key pages stacked bar
+  const HP13   = [1115,1392,946,1175,1240,1677,1738,1347,1303,1188,790,826];
+  const FUND13 = [3824,4783,4418,774,628,597,953,2610,5443,4170,2769,4315];
+  const SSL13  = [null,null,null,150,914,2566,1099,958,1048,665,861,null];
+  const BLOG13 = [null,null,null,10,435,220,276,525,523,506,265,488];
+  new Chart(document.getElementById('s3-13mo-pg'), {
+    type:'bar',
+    data:{labels:L13, datasets:[
+      {label:'Homepage',    data:HP13,   backgroundColor:HP13.map((_,i)=>sslMo[i]?'#182f8c':'#182f8c99'),   borderRadius:0},
+      {label:'Fundraising', data:FUND13, backgroundColor:FUND13.map((_,i)=>sslMo[i]?'#ff7300':'#ff730099'), borderRadius:0},
+      {label:'SSL pages',   data:SSL13,  backgroundColor:SSL13.map((_,i)=>sslMo[i]?'#259717':'#25971799'),  borderRadius:0},
+      {label:'Blog',        data:BLOG13, backgroundColor:BLOG13.map((_,i)=>sslMo[i]?'#cca800':'#f7ca0999'), borderRadius:2}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false}},
+      scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}}
+  });
+}
+
+// --- SECTION 3 — MARCH YOY VIEW ---
+function buildS3_marchYOY() {
+  const YRS    = ['Mar 2023','Mar 2024','Mar 2025','Mar 2026'];
+  const COLORS = ['#182f8c','#7f8fcc','#b8c2e8','#ff7300'];
+  const PV_M   = [13968, 15177, 11949, 8570];
+  const SE_M   = [5643,  6190,  5487,  5382];
+  const DIR_M  = [3084,  3063,  2598,  3141];
+  const ORG_M  = [1396,  1461,  1209,  514];
+  const CPC_M  = [52,    656,   80,    119];
+  const OS_M   = [600,   665,   896,   562];
+  const EM_M   = [256,   225,   285,   51];
+  const OT_M   = SE_M.map((_,i)=>Math.max(0,SE_M[i]-DIR_M[i]-ORG_M[i]-CPC_M[i]-OS_M[i]-EM_M[i]));
+  const HP_M   = [1617,  1361,  1341,  826];
+  const FUND_M = [394,   245,   4525,  4315];
+  const SSL_M  = [679,   1364,  null,  null];
+  const BLOG_M = [7,     30,    null,  488];
+
+  // Summary cards
+  document.getElementById('s3-cards-march-yoy').innerHTML =
+    ['2023','2024','2025','2026'].map((yr,i)=>{
+      const col = COLORS[i];
+      return `<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px;border-top:3px solid ${col};">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:${col};margin-bottom:6px;">March ${yr}</div>
+        <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:22px;color:${col};">${PV_M[i].toLocaleString()}</div>
+        <div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:4px;">pageviews</div>
+        <div style="font-size:11px;color:var(--color-text-secondary);">${SE_M[i].toLocaleString()} sessions</div>
+      </div>`;
+    }).join('');
+  document.getElementById('s3-cards-march-yoy').className = 'mm-grid mm-grid-4';
+
+  // Overview grouped bar
+  new Chart(document.getElementById('s3-march-ov'), {
+    type:'bar',
+    data:{labels:['Pageviews','Sessions'], datasets:
+      YRS.map((yr,i)=>({
+        label:yr,
+        data:[PV_M[i], SE_M[i]],
+        backgroundColor:COLORS[i],
+        borderRadius:4,
+        categoryPercentage:0.7,
+        barPercentage:0.85
+      }))
+    },
+    options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:22}},
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false}},
+      scales:{x:{...AXT,ticks:{...AXT.ticks,font:{family:'Montserrat',size:11,weight:'600'},color:'#333'}},
+              y:{ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}},
+    plugins:[{id:'marchOvLabels',afterDatasetsDraw(chart){
+      const ctx=chart.ctx;
+      chart.data.datasets.forEach((ds,di)=>{
+        chart.getDatasetMeta(di).data.forEach((bar,idx)=>{
+          const v=ds.data[idx]; if(!v) return;
+          ctx.save(); ctx.font='600 9px Open Sans'; ctx.fillStyle=COLORS[di];
+          ctx.textAlign='center'; ctx.textBaseline='bottom';
+          ctx.fillText(v>=1000?(v/1000).toFixed(1)+'k':v, bar.x, bar.y-3); ctx.restore();
+        });
+      });
+    }}]
+  });
+
+  // Sources grouped bar
+  const srcData = [DIR_M,ORG_M,CPC_M,OS_M,EM_M,OT_M];
+  const srcLabels = ['Direct','Organic search','CPC','Organic social','Email','Other'];
+  const srcColors = ['#182f8c','#259717','#ff7300','#cca800','#7f8fcc','#b3ddb0'];
+  new Chart(document.getElementById('s3-march-src'), {
+    type:'bar',
+    data:{labels:YRS, datasets: srcLabels.map((lbl,si)=>({
+      label:lbl, data:srcData[si],
+      backgroundColor:srcColors[si],
+      borderRadius:si===5?2:0, stack:'src'
+    }))},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false}},
+      scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}}
+  });
+
+  // Key pages grouped bar
+  const pgData  = [HP_M, FUND_M, SSL_M, BLOG_M];
+  const pgLabels= ['Homepage','Fundraising','SSL pages','Blog'];
+  const pgColors= ['#182f8c','#ff7300','#259717','#cca800'];
+  new Chart(document.getElementById('s3-march-pg'), {
+    type:'bar',
+    data:{labels:YRS, datasets: pgLabels.map((lbl,pi)=>({
+      label:lbl, data:pgData[pi],
+      backgroundColor:pgColors[pi],
+      borderRadius:pi===3?2:0, stack:'pg'
+    }))},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false}},
+      scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}}
+  });
+}
+
 // --- SECTION 4 BLOG ---
 function parseDate(s){const[m,d,y]=s.split('/');return new Date(`20${y.length===2?y:y.slice(2)}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`);}
 function fmtDate(s){return parseDate(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
@@ -1151,6 +1399,142 @@ function buildS6Charts() {
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
     plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{if(ctx.dataset.label==='CTR')return` CTR: ${ctx.parsed.y}%`;return` ${ctx.dataset.label}: $${ctx.parsed.y?.toLocaleString()??'—'}`;}}}},
     scales:{x:AXT,y:{position:'left',stacked:true,ticks:{...AXT.ticks,callback:v=>'$'+(v>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:'#f0f0f0'}},y2:{position:'right',min:0,max:7,ticks:{...AXT.ticks,callback:v=>v+'%'},grid:{drawOnChartArea:false}}}}});
+
+  // ── Campaign Comparison — March 2026 ─────────────────────────────────
+  // 3 grouped bar sets: Interaction Rate | Conv. Rate | (rates on y left)
+  // Avg. Cost + Cost/Conv on y2 right as line markers with dot labels
+  const cc = S6_CAMP_COMPARE;
+  const campLabels = ['Interaction Rate', 'Conv. Rate'];
+  new Chart(document.getElementById('s6campcompare'), {
+    type: 'bar',
+    data: {
+      labels: campLabels,
+      datasets: [
+        // Interaction Rate bars (left metric)
+        { label:'Perf Max — Int Rate', data:[cc[0].intRate, null], backgroundColor:'#182f8c', borderRadius:4, categoryPercentage:0.65, barPercentage:0.85, yAxisID:'y' },
+        { label:'Search — Int Rate',   data:[cc[1].intRate, null], backgroundColor:'#259717', borderRadius:4, categoryPercentage:0.65, barPercentage:0.85, yAxisID:'y' },
+        { label:'Display — Int Rate',  data:[cc[2].intRate, null], backgroundColor:'#ff7300', borderRadius:4, categoryPercentage:0.65, barPercentage:0.85, yAxisID:'y' },
+        // Conversion Rate bars (right metric)
+        { label:'Perf Max — Conv Rate', data:[null, cc[0].convRate], backgroundColor:'#182f8c', borderRadius:4, categoryPercentage:0.65, barPercentage:0.85, yAxisID:'y' },
+        { label:'Search — Conv Rate',   data:[null, cc[1].convRate], backgroundColor:'#259717', borderRadius:4, categoryPercentage:0.65, barPercentage:0.85, yAxisID:'y' },
+        { label:'Display — Conv Rate',  data:[null, cc[2].convRate], backgroundColor:'#ff7300', borderRadius:4, categoryPercentage:0.65, barPercentage:0.85, yAxisID:'y' },
+        // Avg cost per interaction — hidden bars, shown via custom labels only
+        { label:'Perf Max — Avg Cost', data:[cc[0].avgCost, null], backgroundColor:'transparent', borderColor:'transparent', borderRadius:0, categoryPercentage:0, barPercentage:0, yAxisID:'y2' },
+        { label:'Search — Avg Cost',   data:[cc[1].avgCost, null], backgroundColor:'transparent', borderColor:'transparent', borderRadius:0, categoryPercentage:0, barPercentage:0, yAxisID:'y2' },
+        { label:'Display — Avg Cost',  data:[cc[2].avgCost, null], backgroundColor:'transparent', borderColor:'transparent', borderRadius:0, categoryPercentage:0, barPercentage:0, yAxisID:'y2' },
+        // Cost per conversion — hidden bars
+        { label:'Perf Max — Cost/Conv', data:[null, cc[0].costPerConv], backgroundColor:'transparent', borderColor:'transparent', borderRadius:0, categoryPercentage:0, barPercentage:0, yAxisID:'y2' },
+        { label:'Search — Cost/Conv',   data:[null, cc[1].costPerConv], backgroundColor:'transparent', borderColor:'transparent', borderRadius:0, categoryPercentage:0, barPercentage:0, yAxisID:'y2' },
+        { label:'Display — Cost/Conv',  data:[null, cc[2].costPerConv], backgroundColor:'transparent', borderColor:'transparent', borderRadius:0, categoryPercentage:0, barPercentage:0, yAxisID:'y2' },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding: { top: 28, right: 10 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: {
+            label: ctx => {
+              const l = ctx.dataset.label;
+              const v = ctx.parsed.y;
+              if (v === null || v === undefined) return null;
+              if (l.includes('Avg Cost'))    return ` ${l.replace(' — Avg Cost','')}: $${v.toFixed(2)} avg cost/interaction`;
+              if (l.includes('Cost/Conv'))   return ` ${l.replace(' — Cost/Conv','')}: $${v.toFixed(2)} cost/conv`;
+              if (l.includes('Int Rate'))    return ` ${l.replace(' — Int Rate','')}: ${v.toFixed(2)}% interaction rate`;
+              if (l.includes('Conv Rate'))   return ` ${l.replace(' — Conv Rate','')}: ${v.toFixed(2)}% conv rate`;
+              return ` ${l}: ${v}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ...AXT, ticks: { ...AXT.ticks, font: { family:'Montserrat', size:11, weight:'600' }, color:'#333' } },
+        y: {
+          position: 'left',
+          title: { display:true, text:'Rate (%)', font:{size:10}, color:'#555' },
+          ticks: { ...AXT.ticks, callback: v => v+'%' },
+          grid: { color:'#f0f0f0' }, min: 0
+        },
+        y2: {
+          position: 'right',
+          title: { display:true, text:'Cost ($)', font:{size:10}, color:'#7a3000' },
+          ticks: { ...AXT.ticks, color:'#7a3000', callback: v => '$'+v.toFixed(2) },
+          grid: { drawOnChartArea:false }, min: 0
+        }
+      }
+    },
+    plugins: [{
+      id: 's6campLabels',
+      afterDatasetsDraw(chart) {
+        const ctx = chart.ctx;
+        const cc = S6_CAMP_COMPARE;
+        // For each group (label position 0 and 1), draw cost values above the bars
+        // using the y2 scale to position them
+        const y2 = chart.scales.y2;
+        const colors = ['#182f8c','#259717','#ff7300'];
+
+        // We draw $ labels for avg cost (group 0) and cost/conv (group 1)
+        // Get bar positions from the first 3 datasets (the visible bars)
+        [0,1,2].forEach(di => {
+          const meta0 = chart.getDatasetMeta(di);      // int rate bars
+          const meta3 = chart.getDatasetMeta(di + 3);  // conv rate bars
+
+          // Avg cost label above int rate bar
+          const bar0 = meta0.data[0];
+          if (bar0) {
+            const yPx = y2.getPixelForValue(cc[di].avgCost);
+            ctx.save();
+            ctx.font = '700 10px Open Sans';
+            ctx.fillStyle = colors[di];
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('$' + cc[di].avgCost.toFixed(2), bar0.x, yPx - 3);
+            // Draw a small dot on the y2 scale position
+            ctx.beginPath();
+            ctx.arc(bar0.x, yPx, 4, 0, Math.PI * 2);
+            ctx.fillStyle = colors[di];
+            ctx.fill();
+            ctx.restore();
+          }
+
+          // Cost/conv label above conv rate bar
+          const bar3 = meta3.data[1];
+          if (bar3) {
+            const yPx = y2.getPixelForValue(cc[di].costPerConv);
+            ctx.save();
+            ctx.font = '700 10px Open Sans';
+            ctx.fillStyle = colors[di];
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('$' + cc[di].costPerConv.toFixed(2), bar3.x, yPx - 3);
+            ctx.beginPath();
+            ctx.arc(bar3.x, yPx, 4, 0, Math.PI * 2);
+            ctx.fillStyle = colors[di];
+            ctx.fill();
+            ctx.restore();
+          }
+        });
+
+        // Also draw % values on top of each rate bar
+        [0,1,2,3,4,5].forEach(di => {
+          const meta = chart.getDatasetMeta(di);
+          meta.data.forEach((bar, idx) => {
+            const val = chart.data.datasets[di].data[idx];
+            if (val === null || val === undefined) return;
+            ctx.save();
+            ctx.font = '600 9px Open Sans';
+            ctx.fillStyle = colors[di % 3];
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(val.toFixed(1) + '%', bar.x, bar.y - 3);
+            ctx.restore();
+          });
+        });
+      }
+    }]
+  });
 }
 
 // --- SECTION 7 LINKEDIN ---
@@ -1289,6 +1673,13 @@ function showSubTab(section, tab, el) {
   el.classList.add('active');
   // Update S1 cards when switching FB/IG
   if(section==='s1') buildS1Cards(tab);
+  // S3 new tabs need extra sub-elements shown (src/pg charts and cards)
+  if(section==='s3' && (tab==='13mo'||tab==='march-yoy')) {
+    ['chart-'+tab+'-src','chart-'+tab+'-pg','cards-'+tab].forEach(sfx=>{
+      const e=document.getElementById('s3-'+sfx);
+      if(e) e.style.display='block';
+    });
+  }
 }
 
 // ================================================================
