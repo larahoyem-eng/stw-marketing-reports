@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STW Marketing Dashboard — 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+/* ============================================================
+   GLOBAL STYLES
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
+
+/* Password screen */
+#pw-screen { position: fixed; inset: 0; background: #182f8c; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+#pw-box { background: #fff; border-radius: 14px; padding: 36px 40px; width: 340px; text-align: center; }
+#pw-logo { font-family: 'Montserrat', sans-serif; font-size: 18px; line-height: 1.2; margin-bottom: 6px; }
+#pw-logo .s { color: #259717; font-weight: 700; }
+#pw-logo .w { color: #182f8c; font-weight: 700; }
+#pw-subtitle { font-size: 12px; color: #888; margin-bottom: 24px; }
+#pw-input { width: 100%; padding: 10px 14px; font-family: 'Open Sans', sans-serif; font-size: 14px; border: 1.5px solid #e0e0e0; border-radius: 8px; outline: none; margin-bottom: 10px; text-align: center; letter-spacing: .1em; }
+#pw-input:focus { border-color: #182f8c; }
+#pw-btn { width: 100%; padding: 11px; background: #182f8c; color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 10px; }
+#pw-btn:hover { background: #0f1f6a; }
+#pw-error { font-size: 12px; color: #cc2200; min-height: 16px; }
+#dashboard { display: none; }
+
+/* Navigation */
+#nav { position: sticky; top: 0; z-index: 100; background: #182f8c; padding: 0 20px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+#nav-logo { font-family: 'Montserrat', sans-serif; font-size: 12px; line-height: 1.2; background: #fff; border-radius: 6px; padding: 4px 8px; margin: 8px 12px 8px 0; flex-shrink: 0; }
+#nav-logo .s { color: #259717; font-weight: 700; }
+#nav-logo .w { color: #182f8c; font-weight: 700; }
+.nav-btn { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 11px; color: rgba(255,255,255,0.75); background: transparent; border: none; padding: 14px 12px; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
+.nav-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.nav-btn.active { color: #fff; border-bottom-color: #f7ca09; }
+
+/* Sections */
+.section { display: none; padding: 24px 20px; max-width: 1100px; margin: 0 auto; }
+.section.active { display: block; }
+
+/* Section header */
+.stw-header { background: #182f8c; border-radius: 10px; padding: 14px 20px; display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.stw-logo-wrap { background: #fff; border-radius: 8px; padding: 5px 10px; flex-shrink: 0; }
+.stw-logo-text { font-family: 'Montserrat', sans-serif; font-size: 13px; line-height: 1.2; }
+.stw-logo-school { color: #259717; font-weight: 700; }
+.stw-logo-world { color: #182f8c; font-weight: 700; }
+.stw-title { color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 15px; margin: 0 0 2px; }
+.stw-subtitle { color: rgba(255,255,255,0.85); font-size: 12px; }
+
+/* Shared components */
+.section-label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; color: #182f8c; text-transform: uppercase; letter-spacing: .05em; margin: 18px 0 10px; padding-bottom: 4px; border-bottom: 2px solid #e8ecf8; }
+.stw-tabs { display: flex; gap: 4px; margin-bottom: 14px; flex-wrap: wrap; }
+.stw-tab { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 6px; cursor: pointer; border: 1.5px solid #e0e0e0; background: #fff; color: #666; }
+.stw-tab.active { background: #182f8c; color: #fff; border-color: #182f8c; }
+.chart-wrap { position: relative; width: 100%; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; align-items: center; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #555; }
+.legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.legend-line { width: 18px; height: 0; border-top: 2px dashed #333; flex-shrink: 0; }
+.stw-insight { background: #e8ecf8; border-left: 3px solid #182f8c; padding: 8px 12px; border-radius: 0 6px 6px 0; margin: 12px 0 4px; font-size: 12px; color: #182f8c; line-height: 1.5; }
+.stw-insight.green { background: #eaf6e8; border-color: #259717; color: #1a5a10; }
+.stw-insight.orange { background: #fff3e8; border-color: #ff7300; color: #7a3000; }
+.stw-insight.yellow { background: #fefbe8; border-color: #f7ca09; color: #7a5a00; }
+.stw-note { font-size: 10px; color: #888; margin-top: 8px; }
+.ssl-badge { display: inline-block; background: #e8ecf8; color: #182f8c; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+.divider { border: none; border-top: 1.5px solid #e8ecf8; margin: 20px 0; }
+
+/* M/M Summary cards */
+.mm-grid { display: grid; gap: 10px; margin-bottom: 20px; }
+.mm-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.mm-grid-5 { grid-template-columns: repeat(5, 1fr); }
+@media(max-width:600px) { .mm-grid-4, .mm-grid-5 { grid-template-columns: repeat(2,1fr); } }
+.mm-card { background: #fff; border: 0.5px solid #e0e0e0; border-radius: 10px; padding: 12px 14px; }
+.mm-label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: #666; margin-bottom: 6px; }
+.mm-value { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 22px; color: #182f8c; margin-bottom: 4px; line-height: 1; }
+.mm-value.orange { color: #ff7300; }
+.mm-value.green { color: #259717; }
+.mm-change { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; font-family: 'Montserrat', sans-serif; }
+.mm-change.up { color: #259717; }
+.mm-change.down { color: #cc2200; }
+.mm-change.neutral { color: #888; }
+.mm-period { font-size: 10px; color: #999; margin-top: 2px; }
+
+/* Update instructions box */
+.update-box { background: #fefbe8; border: 1.5px solid #f7ca09; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 12px; color: #7a5a00; line-height: 1.6; }
+.update-box strong { font-family: 'Montserrat', sans-serif; font-weight: 700; display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD SCREEN -->
+<div id="pw-screen">
+  <div id="pw-box">
+    <div id="pw-logo"><div class="s">SCHOOL</div><div class="w">THE WORLD</div></div>
+    <div id="pw-subtitle">Marketing Dashboard · 2026</div>
+    <input id="pw-input" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPW()" autofocus>
+    <button id="pw-btn" onclick="checkPW()">Access Dashboard</button>
+    <div id="pw-error"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD (hidden until authenticated) -->
+<div id="dashboard">
+
+<!-- NAVIGATION -->
+<div id="nav">
+  <div id="nav-logo"><div class="s">SCHOOL</div><div class="w">THE WORLD</div></div>
+  <button class="nav-btn active" onclick="showSection('s1',this)">FB/IG Organic</button>
+  <button class="nav-btn" onclick="showSection('s2',this)">Monthly YOY</button>
+  <button class="nav-btn" onclick="showSection('s3',this)">Website</button>
+  <button class="nav-btn" onclick="showSection('s4',this)">Blog</button>
+  <button class="nav-btn" onclick="showSection('s5',this)">Email</button>
+  <button class="nav-btn" onclick="showSection('s6',this)">Paid Google</button>
+  <button class="nav-btn" onclick="showSection('s7',this)">LinkedIn</button>
+  <button class="nav-btn" onclick="showSection('s8',this)">Paid Social</button>
+  <button class="nav-btn" onclick="showSection('s9',this)">TikTok</button>
+  <button class="nav-btn" onclick="showSection('s10',this)">Campaigns</button>
+</div>
+
+<!-- ============================================================
+     SECTION 1 — FB/IG ORGANIC 13-MONTH TREND
+     ============================================================
+     TO UPDATE EACH MONTH:
+     1. Add new month label to LABELS array
+     2. Add new values to each data array (fbImp13, fbPosts13, etc.)
+     3. Update CURRENT_MONTH_IDX to the last index
+     4. Update ssl13 array (true if SSL trip month: Feb/Mar/Apr/Jul)
+     ============================================================ -->
+<div id="s1" class="section active">
+<div class="stw-header">
+  <div class="stw-logo-wrap"><div class="stw-logo-text"><div class="stw-logo-school">SCHOOL</div><div class="stw-logo-world">THE WORLD</div></div></div>
+  <div><div class="stw-title">FB & IG Organic — 13-Month Trend</div><div class="stw-subtitle">Impressions vs. posts · Mar 2025 – Mar 2026</div></div>
+</div>
+<div id="s1-cards-fb" class="mm-grid mm-grid-4"></div>
+<div class="stw-tabs">
+  <button class="stw-tab active" onclick="showSubTab('s1','fb',this)">Facebook</button>
+  <button class="stw-tab" onclick="showSubTab('s1','ig',this)">Instagram</button>
+</div>
+<div id="s1-legend-fb" class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>FB impressions (line)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#b8c2e8;"></div>FB posts (bars)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;border-radius:50%;"></div><span class="ssl-badge">SSL</span> month</div>
+</div>
+<div id="s1-legend-ig" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>IG impressions (line)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#b3ddb0;"></div>IG posts (bars)</div>
+</div>
+<div id="s1-chart-fb" class="chart-wrap" style="height:280px;"><canvas id="s1fb"></canvas></div>
+<div id="s1-chart-ig" class="chart-wrap" style="height:280px;display:none;"><canvas id="s1ig"></canvas></div>
+<div id="s1-insight-fb" class="stw-insight">Feb 2026 (79,546) and Mar 2026 (105,000) are the two strongest FB months — both SSL trip months. SSL months deliver 2–4× the reach of non-trip months at similar post volumes.</div>
+<div id="s1-insight-ig" class="stw-insight green" style="display:none;">IG peaked at 129,078 in Jul 2025 and 94,849 in Feb 2026 — both SSL months. Mar 2026 held strong at 74,991 post-trip.</div>
+<div class="stw-note">Source: STW Marketing KPI Tracker · <span class="ssl-badge">SSL</span> = Feb, Mar, Apr, Jul · Mar 2025–Mar 2026</div>
+</div>
+
+<!-- ============================================================
+     SECTION 2 — MONTHLY YOY COMPARISON
+     ============================================================
+     TO UPDATE EACH MONTH:
+     1. Change CURRENT_MONTH_NAME and CURRENT_MONTH_LABEL
+     2. Update the 4 data values for FB and IG (posts/interactions/impressions)
+        by finding the correct month row in the 39-month arrays below
+     ============================================================ -->
+<div id="s2" class="section">
+<div class="stw-header">
+  <div class="stw-logo-wrap"><div class="stw-logo-text"><div class="stw-logo-school">SCHOOL</div><div class="stw-logo-world">THE WORLD</div></div></div>
+  <div><div class="stw-title">Monthly Year-over-Year</div><div class="stw-subtitle" id="s2-subtitle">March 2023 vs 2024 vs 2025 vs 2026</div></div>
+</div>
+<div class="stw-tabs">
+  <button class="stw-tab active" onclick="showSubTab('s2','fb',this)">Facebook</button>
+  <button class="stw-tab" onclick="showSubTab('s2','ig',this)">Instagram</button>
+</div>
+<div id="s2-legend-fb" class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#c5cce8;"></div>2023</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#8f9fd4;"></div>2024</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#5a6fc0;"></div>2025</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>2026</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff730033;border:1px solid #ff7300;"></div>2023 impr</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff730077;"></div>2024 impr</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300bb;"></div>2025 impr</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>2026 impr</div>
+</div>
+<div id="s2-legend-ig" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#b3ddb0;"></div>2023</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7fbf7a;"></div>2024</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#4aa344;"></div>2025</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>2026</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff730033;border:1px solid #ff7300;"></div>2023 impr</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff730077;"></div>2024 impr</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300bb;"></div>2025 impr</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>2026 impr</div>
+</div>
+<div id="s2-chart-fb" class="chart-wrap" style="height:300px;"><canvas id="s2fb"></canvas></div>
+<div id="s2-chart-ig" class="chart-wrap" style="height:300px;display:none;"><canvas id="s2ig"></canvas></div>
+<div id="s2-insight-fb" class="stw-insight">Post count held nearly flat (15–29), yet FB impressions surged to 105,000 in 2026 vs 13,486 in 2025 — same effort, 7× the reach. 2026 interactions (1,677) are the highest March on record.</div>
+<div id="s2-insight-ig" class="stw-insight green" style="display:none;">IG March impressions: 17,280 (2023) → 18,670 (2024) → 13,966 (2025) → 74,991 (2026). Post count consistent at 26–37. Content quality and SSL context — not volume — driving growth.</div>
+<div class="stw-note">Source: STW Marketing KPI Tracker · Posts/Interactions on left axis · Impressions on right axis</div>
+</div>
+
+<!-- ============================================================
+     SECTION 3 — WEBSITE (AS-IS)
+     ============================================================ -->
+<div id="s3" class="section">
+<div class="stw-header">
+  <div class="stw-logo-wrap"><div class="stw-logo-text"><div class="stw-logo-school">SCHOOL</div><div class="stw-logo-world">THE WORLD</div></div></div>
+  <div><div class="stw-title">Website Traffic</div><div class="stw-subtitle">Sessions, pageviews, and traffic sources · Jan 2023 – Mar 2026</div></div>
+</div>
+<div id="s3-cards" class="mm-grid mm-grid-4"></div>
+<div class="stw-tabs">
+  <button class="stw-tab active" onclick="showSubTab('s3','overview',this)">Overview</button>
+  <button class="stw-tab" onclick="showSubTab('s3','sources',this)">Traffic sources</button>
+  <button class="stw-tab" onclick="showSubTab('s3','pages',this)">Key pages</button>
+</div>
+<div id="s3-legend-overview" class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>2023</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7f8fcc;"></div>2024</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#b8c2e8;"></div>2025</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>2026</div>
+</div>
+<div id="s3-legend-sources" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Direct</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Organic search</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Google CPC</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#cca800;"></div>Organic social</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7f8fcc;"></div>Email</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#b3ddb0;"></div>Other</div>
+</div>
+<div id="s3-legend-pages" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Homepage</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Fundraising pages</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>SSL pages</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#cca800;"></div>Blog</div>
+</div>
+<div id="s3-chart-overview" class="chart-wrap" style="height:300px;"><canvas id="s3ov"></canvas></div>
+<div id="s3-chart-sources" class="chart-wrap" style="height:320px;display:none;"><canvas id="s3src"></canvas></div>
+<div id="s3-chart-pages" class="chart-wrap" style="height:300px;display:none;"><canvas id="s3pg"></canvas></div>
+<div id="s3-insight-overview" class="stw-insight">Feb 2023 (34k pageviews) remains the all-time peak driven by high CPC spend. Traffic declined through 2024–25 as paid spend shifted. Mar 2026 recovered to 8.6k. SSL months show modest lift but website is less SSL-dependent than social.</div>
+<div id="s3-insight-sources" class="stw-insight" style="display:none;">Google CPC dominated 2023 (up to 5,139 sessions/month) but has declined sharply. Direct and organic search are now primary. Organic social spikes in SSL months. Fundraising pages spiked Apr–Jun 2025 — tied to SSL student fundraising.</div>
+<div id="s3-insight-pages" class="stw-insight" style="display:none;">Fundraising pages spike in SSL recruitment season (students fundraising for trips). Blog traffic growing from near-zero to 488 sessions in Mar 2026 — AEO/SEO value accumulating over time.</div>
+<div class="stw-note">Source: STW Marketing KPI Tracker · <span class="ssl-badge">SSL</span> = Feb, Mar, Apr, Jul · Jan 2023 – Mar 2026</div>
+</div>
+
+<!-- ============================================================
+     SECTION 4 — BLOG INVENTORY (AS-IS)
+     ============================================================ -->
+<div id="s4" class="section">
+<div class="stw-header">
+  <div class="stw-logo-wrap"><div class="stw-logo-text"><div class="stw-logo-school">SCHOOL</div><div class="stw-logo-world">THE WORLD</div></div></div>
+  <div><div class="stw-title">Blog Post Inventory</div><div class="stw-subtitle">Cumulative pageviews to date · Jan 2025 – Mar 2026</div></div>
+</div>
+<div class="update-box"><strong>📋 To update next month:</strong> Add new posts to the BLOG_POSTS array at the top of this section's script. Each entry: ["Title", "M/D/YY", pageviews, "Category"]</div>
+<div class="mm-grid mm-grid-4" id="s4-summary"></div>
+<div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+  <select id="s4-filter-month" onchange="renderBlog()" style="font-family:'Open Sans',sans-serif;font-size:12px;padding:5px 10px;border-radius:6px;border:1.5px solid #e0e0e0;"><option value="all">All months</option></select>
+  <select id="s4-filter-cat" onchange="renderBlog()" style="font-family:'Open Sans',sans-serif;font-size:12px;padding:5px 10px;border-radius:6px;border:1.5px solid #e0e0e0;"><option value="all">All categories</option></select>
+  <select id="s4-sort" onchange="renderBlog()" style="font-family:'Open Sans',sans-serif;font-size:12px;padding:5px 10px;border-radius:6px;border:1.5px solid #e0e0e0;">
+    <option value="pv_desc">Most views</option>
+    <option value="date_desc">Newest first</option>
+    <option value="date_asc">Oldest first</option>
+  </select>
+</div>
+<div style="overflow-x:auto;">
+<table id="s4-table" style="width:100%;border-collapse:collapse;font-size:12px;">
+  <thead><tr>
+    <th style="background:#e8ecf8;color:#182f8c;font-family:'Montserrat',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.04em;padding:7px 10px;text-align:left;border-bottom:2px solid #182f8c;width:40%;">Post title</th>
+    <th style="background:#e8ecf8;color:#182f8c;font-family:'Montserrat',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.04em;padding:7px 10px;text-align:left;">Published</th>
+    <th style="background:#e8ecf8;color:#182f8c;font-family:'Montserrat',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.04em;padding:7px 10px;text-align:left;">Category</th>
+    <th style="background:#e8ecf8;color:#182f8c;font-family:'Montserrat',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.04em;padding:7px 10px;text-align:right;">Views</th>
+    <th style="background:#e8ecf8;color:#182f8c;font-family:'Montserrat',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.04em;padding:7px 10px;min-width:80px;">Reach</th>
+  </tr></thead>
+  <tbody id="s4-tbody"></tbody>
+</table>
+</div>
+<div class="stw-note" id="s4-note"></div>
+</div>
+
+<!-- ============================================================
+     SECTION 5 — EMAIL
+     ============================================================ -->
+<div id="s5" class="section">
+<div class="stw-header">
+  <div class="stw-logo-wrap"><div class="stw-logo-text"><div class="stw-logo-school">SCHOOL</div><div class="stw-logo-world">THE WORLD</div></div></div>
+  <div><div class="stw-title">Email Performance by Campaign Type</div><div class="stw-subtitle">Avg open rate, CTR, and volume · Aug 2025 – Mar 2026</div></div>
+</div>
+<div class="stw-tabs">
+  <button class="stw-tab active" onclick="showSubTab('s5','openrate',this)">Open rate</button>
+  <button class="stw-tab" onclick="showSubTab('s5','ctr',this)">CTR</button>
+  <button class="stw-tab" onclick="showSubTab('s5','volume',this)">Send volume</button>
+  <button class="stw-tab" onclick="showSubTab('s5','monthly',this)">Monthly activity</button>
+</div>
+<div id="s5-legend-openrate" class="legend"></div>
+<div id="s5-legend-ctr" class="legend" style="display:none;"></div>
+<div id="s5-legend-volume" class="legend" style="display:none;"></div>
+<div id="s5-chart-openrate" class="chart-wrap"><canvas id="s5or"></canvas></div>
+<div id="s5-chart-ctr" class="chart-wrap" style="display:none;"><canvas id="s5ctr"></canvas></div>
+<div id="s5-chart-volume" class="chart-wrap" style="height:300px;display:none;"><canvas id="s5vol"></canvas></div>
+<div id="s5-chart-monthly" style="display:none;"><div class="mm-grid" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;" id="s5-monthly-grid"></div></div>
+<div id="s5-insight-openrate" class="stw-insight">Trip-adjacent emails (SSL Supporters, Trip Recruitment) have highest open rates (20–58%). Newsletter open rate varies by list size: targeted sends hit 37–44%, large sends (12k) land at 7–14%.</div>
+<div id="s5-insight-ctr" class="stw-insight" style="display:none;">SSL Supporters averaged 14% CTR — families clicking through for trip updates. Trip Recruitment hit 29% on warm prospect emails. YE Campaign and Scholarship emails drove low CTR despite decent open rates.</div>
+<div id="s5-insight-volume" class="stw-insight" style="display:none;">December was heaviest (YE campaign, 14 sends). February had most campaign diversity — SSL supporter updates, scholarship, lapsed, and newsletter running simultaneously.</div>
+<div id="s5-insight-monthly" class="stw-insight" style="display:none;">Monthly activity cards show sends, avg open rate, total delivered, and campaign types per month.</div>
+<div class="stw-note">Avg open rate = mean across all emails of that type · Source: STW Marketing KPI Tracker · Aug 2025 – Mar 2026</div>
+</div>
+
+<!-- ============================================================
+     SECTION 6 — PAID GOOGLE
+     ============================================================ -->
+<div id="s6" class="section">
+<div class="stw-header">
+  <div class="stw-logo-wrap"><div class="stw-logo-text"><div class="stw-logo-school">SCHOOL</div><div class="stw-logo-world">THE WORLD</div></div></div>
+  <div><div class="stw-title">Paid Search Performance</div><div class="stw-subtitle">Google Ad Grant + paid campaign · Mar 2025 – Mar 2026</div></div>
+</div>
+<div id="s6-cards" class="mm-grid mm-grid-5"></div>
+<div class="stw-tabs">
+  <button class="stw-tab active" onclick="showSubTab('s6','efficiency',this)">Efficiency</button>
+  <button class="stw-tab" onclick="showSubTab('s6','conversions',this)">Conversions</button>
+  <button class="stw-tab" onclick="showSubTab('s6','mix',this)">Conversion mix</button>
+  <button class="stw-tab" onclick="showSubTab('s6','spend',this)">Spend</button>
+</div>
+<div id="s6-legend-efficiency" class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Cost/conversion (Ad Grant)</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#ff7300;"></div>Conversions (right)</div>
+</div>
+<div id="s6-legend-conversions" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Ad Grant</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Paid campaign</div>
+</div>
+<div id="s6-legend-mix" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Guatemala</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Honduras</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Panama</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#cca800;"></div>Newsletter</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7f8fcc;"></div>Outbound</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#b3ddb0;"></div>Blog/other</div>
+</div>
+<div id="s6-legend-spend" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Ad Grant spend</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Paid campaign</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#259717;"></div>CTR % (right)</div>
+</div>
+<div id="s6-chart-efficiency" class="chart-wrap" style="height:280px;"><canvas id="s6eff"></canvas></div>
+<div id="s6-chart-conversions" class="chart-wrap" style="height:280px;display:none;"><canvas id="s6conv"></canvas></div>
+<div id="s6-chart-mix" class="chart-wrap" style="height:300px;display:none;"><canvas id="s6mix"></canvas></div>
+<div id="s6-chart-spend" class="chart-wrap" style="height:280px;display:none;"><canvas id="s6spend"></canvas></div>
+<div id="s6-insight-efficiency" class="stw-insight">Cost per Ad Grant conversion rose from ~$4 (Mar 2025) to $71 (Feb 2026) — a 17× increase as the grant reached full $10k utilization but conversions declined. Mar 2026 improved to $57.</div>
+<div id="s6-insight-conversions" class="stw-insight" style="display:none;">Ad Grant conversions peaked at 678 in Jul 2025 then declined. The paid campaign launched Oct 2025 and adds 275–510 conversions/month at under $2 each.</div>
+<div id="s6-insight-mix" class="stw-insight" style="display:none;">Guatemala dominates conversion volume, followed by Honduras and Panama — mirroring SSL trip recruitment focus. Newsletter sign-ups are consistent across both campaigns.</div>
+<div id="s6-insight-spend" class="stw-insight" style="display:none;">Ad Grant hit $10k ceiling Oct–Dec 2025. Jan dipped to $5.8k (disruption). CTR stable at 3.5–4.2% — healthy for nonprofit search.</div>
+<div class="stw-note">Source: STW Marketing KPI Tracker + PromotMotor · Ad Grant max $10,000/month · Mar 2025 – Mar 2026</div>
+</div>
+
+<!-- ============================================================
+     SECTION 7 — LINKEDIN
+     ============================================================ -->
+<div id="s7" class="section">
+<div class="stw-header">
+  <div class="stw-logo-wrap"><div class="stw-logo-text"><div class="stw-logo-school">SCHOOL</div><div class="stw-logo-world">THE WORLD</div></div></div>
+  <div><div class="stw-title">LinkedIn — Organic</div><div class="stw-subtitle">STW page + Kate Curran · Jun 2025 – Mar 2026</div></div>
+</div>
+<div id="s7-cards" class="mm-grid mm-grid-4"></div>
+<div class="stw-tabs">
+  <button class="stw-tab active" onclick="showSubTab('s7','impressions',this)">Impressions</button>
+  <button class="stw-tab" onclick="showSubTab('s7','interactions',this)">Interactions</button>
+  <button class="stw-tab" onclick="showSubTab('s7','efficiency',this)">Per-post efficiency</button>
+  <button class="stw-tab" onclick="showSubTab('s7','followers',this)">Follower growth</button>
+</div>
+<div id="s7-legend-impressions" class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>STW page impressions</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Kate impressions</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#182f8c;"></div>STW posts (right)</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#ff7300;"></div>Kate posts (right)</div>
+</div>
+<div id="s7-legend-interactions" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>STW interactions</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Kate interactions</div>
+</div>
+<div id="s7-legend-efficiency" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>STW impr/post</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Kate impr/post</div>
+</div>
+<div id="s7-legend-followers" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>STW new followers</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Kate new followers</div>
+</div>
+<div id="s7-chart-impressions" class="chart-wrap" style="height:260px;"><canvas id="s7imp"></canvas></div>
+<div id="s7-chart-interactions" class="chart-wrap" style="height:260px;display:none;"><canvas id="s7int"></canvas></div>
+<div id="s7-chart-efficiency" class="chart-wrap" style="height:260px;display:none;"><canvas id="s7eff"></canvas></div>
+<div id="s7-chart-followers" class="chart-wrap" style="height:260px;display:none;"><canvas id="s7fol"></canvas></div>
+<div id="s7-insight-impressions" class="stw-insight">STW page reached 2,912 impressions in Mar 2026 on 16 posts (11 reposts). Kate's impressions dropped to 42 on 0 original posts in March — LinkedIn requires active original posting to maintain reach.</div>
+<div id="s7-insight-interactions" class="stw-insight" style="display:none;">STW hit 107 interactions in Mar 2026 — strongest month. Kate's 143 in March on 0 posts reflects delayed engagement on prior content.</div>
+<div id="s7-insight-efficiency" class="stw-insight" style="display:none;">STW peaked at 890 impr/post (Jul 2025, 4 posts). Mar 2026's 224 impr/post on 16 posts reflects repost dilution. Kate consistently outperforms STW brand page per post — LinkedIn favors personal accounts.</div>
+<div id="s7-insight-followers" class="stw-insight" style="display:none;">STW added 41 new followers in Mar 2026 — highest in dataset — bringing total to 1,504. Kate reached 1,849 total. Her personal network is a meaningful amplification channel.</div>
+<div class="stw-note">Source: STW Marketing KPI Tracker · Data verified against source screenshot · Mar 2026 STW posts include 11 reposts</div>
+</div>
+
+<!-- ============================================================
+     SECTION 8 — PAID SOCIAL
+     ============================================================ -->
+<div id="s8" class="section">
+<div class="stw-header">
+  <div class="stw-logo-wrap"><div class="stw-logo-text"><div class="stw-logo-school">SCHOOL</div><div class="stw-logo-world">THE WORLD</div></div></div>
+  <div><div class="stw-title">Paid Social</div><div class="stw-subtitle">Oct 2025 – Mar 2026</div></div>
+</div>
+<div id="s8-cards" class="mm-grid mm-grid-4"></div>
+<div class="section-label">Trend — Oct 2025 to Mar 2026</div>
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Spend ($)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Clicks</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Impressions ÷100 (right)</div>
+</div>
+<div class="chart-wrap" style="height:240px;"><canvas id="s8trend"></canvas></div>
+<div class="stw-insight">Sep 2025 was highest paid social month ($604, 1,410 clicks, 104k impressions) — tied to Gala promotion. Jan–Feb 2026 renewed SSL recruitment at efficient CPC ($0.43–0.53). Mar held steady.</div>
+<div class="stw-note">Source: STW Marketing KPI Tracker · Oct 2025 – Mar 2026</div>
+</div>
+
+<!-- ============================================================
+     SECTION 9 — TIKTOK
+     ============================================================ -->
+<div id="s9" class="section">
+<div class="stw-header">
+  <div class="stw-logo-wrap"><div class="stw-logo-text"><div class="stw-logo-school">SCHOOL</div><div class="stw-logo-world">THE WORLD</div></div></div>
+  <div><div class="stw-title">TikTok Launch: First Month Benchmarks</div><div class="stw-subtitle">March 2026 · TikTok vs. Facebook vs. Instagram</div></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;" id="s9-context"></div>
+<div class="section-label">Engagement efficiency — per post · March 2026</div>
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Facebook</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Instagram</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>TikTok</div>
+  <div class="legend-item" style="font-size:10px;color:#555;margin-left:8px;">Impressions/post → left axis</div>
+  <div class="legend-item" style="font-size:10px;color:#7a3000;">Interactions/post → right axis</div>
+</div>
+<div class="chart-wrap" style="height:300px;"><canvas id="s9chart"></canvas></div>
+<div class="stw-insight orange">TikTok's first month: 6.5% interaction rate vs FB's 1.6% and IG's 2.2% — strong engagement efficiency despite 90× fewer followers. Watch as the channel grows.</div>
+<div class="stw-note">TikTok views normalized as impressions · Source: STW Marketing KPI Tracker · March 2026</div>
+</div>
+
+<!-- ============================================================
+     SECTION 10 — PAID SOCIAL CAMPAIGNS
+     ============================================================ -->
+<div id="s10" class="section">
+<div class="stw-header">
+  <div class="stw-logo-wrap"><div class="stw-logo-text"><div class="stw-logo-school">SCHOOL</div><div class="stw-logo-world">THE WORLD</div></div></div>
+  <div><div class="stw-title">Paid Social — March 2026 Campaigns</div><div class="stw-subtitle">Virtual Info Session vs. SSL Trip Interest Form</div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;" id="s10-camps"></div>
+<div class="section-label">Head-to-head · normalised metrics</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;" id="s10-h2h"></div>
+<div class="stw-insight">Info Session converted at 4× the rate (1.76% vs 0.43%) and $0.40/LPV vs $3.14. Interest Form is early and still active — full comparison when campaign ends Apr 10.</div>
+<div class="stw-note">Source: Meta Ads Manager · Mar 2026 · Interest Form runs through Apr 10 · LPV rate = landing page views ÷ total views</div>
+</div>
+
+<!-- ============================================================
+     ALL DATA + SCRIPTS
+     ============================================================ -->
+<script>
+// ================================================================
+// PASSWORD PROTECTION
+// Session-based: stays unlocked until tab is closed
+// To change password: update PW_HASH below using SHA-256 of new password
+// Current password: STW2026!
+// ================================================================
+const PW_CORRECT = 'STW2026!';
+
+function checkPW() {
+  const input = document.getElementById('pw-input').value;
+  const err = document.getElementById('pw-error');
+  if (input === PW_CORRECT) {
+    sessionStorage.setItem('stw_auth', '1');
+    document.getElementById('pw-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    initDashboard();
+  } else {
+    err.textContent = 'Incorrect password. Please try again.';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+// Check if already authenticated this session
+if (sessionStorage.getItem('stw_auth') === '1') {
+  document.getElementById('pw-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+}
+
+function initDashboard() {
+  buildS1Charts();
+  buildS2Charts();
+  buildS3Charts();
+  buildS4();
+  buildS5Charts();
+  buildS6Charts();
+  buildS7Charts();
+  buildS8Charts();
+  buildS9();
+  buildS10();
+}
+// ================================================================
+//  ██████╗  █████╗ ████████╗ █████╗
+//  ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗
+//  ██║  ██║███████║   ██║   ███████║
+//  ██║  ██║██╔══██║   ██║   ██╔══██║
+//  ██████╔╝██║  ██║   ██║   ██║  ██║
+//  ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
+//
+//  ALL CHART DATA LIVES HERE.
+//  TO UPDATE EACH MONTH: find the section for your chart,
+//  add one new value to each array, update CURRENT_IDX.
+// ================================================================
+
+// ----------------------------------------------------------------
+// SECTION 1 & 2 — ORGANIC SOCIAL
+// Months: Mar 25 → Mar 26 (13 months)
+// SSL months: Feb=1, Mar=2, Apr=3, Jul=6 (0-indexed within each year)
+// ----------------------------------------------------------------
+const S1_LABELS = ['Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
+const S1_SSL    = [true, true, false, false, true, false, false, false, false, false, false, true, true]; // Feb/Mar/Apr/Jul
+const S1_CURRENT_IDX = 12; // UPDATE: index of most recent month (0-based)
+
+const S1_FB_IMP    = [13486,23879,8113,9941,65852,7451,45800,25778,42411,30947,24901,79546,105000];
+const S1_FB_POSTS  = [15,25,8,18,45,13,20,21,25,22,18,24,29];
+const S1_FB_INT    = [479,675,168,304,1587,2620,719,379,558,398,247,2625,1677];
+const S1_FB_IPP    = [899,955,1014,552,1463,573,2290,1228,852,1388,1383,3314,3621];
+
+const S1_IG_IMP    = [13966,33502,6789,19816,129078,14894,44919,34800,40396,43110,34647,94849,74991];
+const S1_IG_POSTS  = [37,15,10,24,25,12,41,23,25,28,20,25,29];
+const S1_IG_INT    = [426,1307,282,386,1745,390,1869,499,561,817,520,2376,1620];
+const S1_IG_IPP    = [377,2233,679,826,5163,1241,1096,1513,822,1823,1732,3794,2586];
+
+// YOY data — full monthly arrays 2023-2026
+// Each row = Jan through Dec (or available months for 2026)
+const S2_ALL_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+// FB by year
+const S2_FB_IMP_YR  = {
+  2023:[14589,32843,57813,50222,16677,31958,48977,32080,21173,21836,21203,39620],
+  2024:[16060,23963,28527,42156,33074,18166,36036,38144,23883,36194,16074,16522],
+  2025:[7817,18184,13486,23879,8113,9941,65852,7451,45800,25778,42411,30947],
+  2026:[24901,79546,105000,null,null,null,null,null,null,null,null,null]
+};
+const S2_FB_POSTS_YR = {
+  2023:[18,32,29,32,22,26,23,19,20,29,19,30],
+  2024:[14,21,27,41,23,19,29,28,25,23,16,13],
+  2025:[11,19,15,25,8,18,45,13,20,21,25,22],
+  2026:[18,24,29,null,null,null,null,null,null,null,null,null]
+};
+const S2_FB_INT_YR = {
+  2023:[337,659,858,972,461,750,874,841,508,557,385,830],
+  2024:[392,621,521,962,644,577,791,997,673,788,420,382],
+  2025:[236,501,479,675,168,304,1587,2620,719,379,558,398],
+  2026:[247,2625,1677,null,null,null,null,null,null,null,null,null]
+};
+const S2_IG_IMP_YR = {
+  2023:[7604,12581,17280,15442,9593,11308,17964,12839,11351,11138,5865,14876],
+  2024:[5799,17383,18670,17087,12340,8394,22628,12573,21152,18436,17749,13510],
+  2025:[10334,34940,13966,33502,6789,19816,129078,14894,44919,34800,40396,43110],
+  2026:[34647,94849,74991,null,null,null,null,null,null,null,null,null]
+};
+const S2_IG_POSTS_YR = {
+  2023:[18,22,28,29,22,21,20,18,20,22,15,29],
+  2024:[11,23,26,22,22,19,18,20,41,48,35,39],
+  2025:[14,60,37,15,10,24,25,12,41,23,25,28],
+  2026:[20,25,29,null,null,null,null,null,null,null,null,null]
+};
+const S2_IG_INT_YR = {
+  2023:[515,1318,1744,1605,914,967,1608,1123,588,548,480,869],
+  2024:[288,1347,1509,1276,794,698,1438,1031,1118,733,727,483],
+  2025:[379,917,426,1307,282,386,1745,390,1869,499,561,817],
+  2026:[520,2376,1620,null,null,null,null,null,null,null,null,null]
+};
+// UPDATE THIS each month — month index (0=Jan) for YOY comparison
+const S2_CURRENT_MONTH_IDX = 2; // March = 2
+const S2_CURRENT_MONTH_NAME = 'March';
+
+// ----------------------------------------------------------------
+// SECTION 3 — WEBSITE
+// ----------------------------------------------------------------
+const S3_YEAR_COUNTS = [['2023',12],['2024',12],['2025',12],['2026',3]];
+const S3_PAGEVIEWS = {
+  '2023':[17799,34332,13968,14400,19726,20352,16436,12629,8420,9783,20357,18165],
+  '2024':[17458,18152,15177,9708,16058,8074,7614,5780,7515,12972,16152,15773],
+  '2025':[12665,12774,11949,10552,12013,9699,5318,4758,6648,8496,10348,11199],
+  '2026':[10618,6239,8570]
+};
+const S3_DIRECT    = [3555,4719,3084,1700,2242,2136,1613,716,692,1307,3770,3816,3397,3331,3063,1412,3264,1634,1341,637,813,1680,3000,3023,2757,2823,2598,2506,3073,2582,930,796,1402,1698,2156,4331,4583,1792,3141];
+const S3_ORGANIC   = [882,1608,1396,1126,1208,1103,842,621,539,976,1402,1583,1936,1863,1461,1253,1111,804,851,806,1093,1442,1606,1251,1336,1218,1209,1112,1296,847,846,802,1060,601,1102,477,673,507,514];
+const S3_CPC       = [1070,3994,52,2283,4657,5139,4693,4299,1992,220,1039,646,475,661,656,306,524,329,384,236,226,486,199,135,217,144,80,41,45,35,181,217,299,219,251,225,170,64,119];
+const S3_ORGSOCIAL = [868,1228,600,269,354,846,641,139,97,156,1458,1303,1662,1295,665,236,1169,499,356,116,198,486,818,1137,803,1039,896,919,854,674,197,419,396,173,201,840,531,560,562];
+const S3_EMAIL_SRC = [199,224,256,212,241,162,38,20,76,124,380,138,177,241,225,109,501,150,87,23,185,438,473,828,386,401,285,159,225,107,151,101,116,117,173,225,429,108,51];
+const S3_HOMEPAGE  = [1091,1679,1617,1365,1442,1519,1121,1142,978,1209,1406,1241,1559,1343,1361,1340,1140,763,864,970,1148,1415,1809,1420,1873,1260,1341,1115,1392,946,1175,1240,1677,1738,1347,1303,1188,790,826];
+const S3_FUNDRAISE = [262,580,394,475,369,630,345,14,10,25,164,71,198,280,245,226,1134,446,423,41,11,123,168,203,240,489,4525,3824,4783,4418,774,628,597,953,2610,5443,4170,2769,4315];
+const S3_SSL_PG    = [687,1182,679,978,1352,481,582,645,1413,2138,928,1096,1488,1651,1364,1184,1250,687,1018,680,1049,1017,1476,1347,1840,1261,null,null,null,null,150,914,2566,1099,958,1048,665,861,null];
+const S3_BLOG_PG   = [15,15,7,18,59,46,40,49,30,32,29,26,32,22,30,23,34,36,38,35,41,50,38,null,null,null,null,null,null,null,10,435,220,276,525,523,506,265,488];
+// M/M cards: current = Mar 26, prev = Feb 26
+const S3_MM = { cur:{pv:8570,sessions:5382,users:3426,engaged:46}, prev:{pv:6239,sessions:4762,users:2431,engaged:81} };
+
+// ----------------------------------------------------------------
+// SECTION 4 — BLOG POSTS
+// ----------------------------------------------------------------
+const BLOG_POSTS = [
+  ["How Service Learning Trips Transform Your Education","1/2/25",79,"SSL"],
+  ['"To Be a Woman, to Be Indigenous, and to Never Give Up"',"4/7/25",6,"Story"],
+  ["World Changer Diaries: Helena Wade","5/12/25",50,"Spotlight"],
+  ["Beyond the Classroom: How Volunteer Nurses Like Trish Lincoln Strengthen Our Work","5/30/25",9,"Story"],
+  ["Félix Quixtán: Breaking the Cycle","6/10/25",19,"Story"],
+  ["From Grief to Leadership: One Father's Journey in Rural Guatemala","6/13/25",4,"Story"],
+  ["Summer (Fun)draising Made Easy","6/27/25",6,"SSL"],
+  ["Full Circle: School the World Founder Delivers Commencement Address","6/25/25",0,"Story"],
+  ["The Early Childhood Education Crisis in Central America","7/17/25",7,"Thought Leadership"],
+  ["How Early Childhood Education Gave One Woman Her Voice","7/14/25",22,"Story"],
+  ["A Week That Changed Us: Reflections from Our Guatemala Service Trip","7/18/25",82,"SSL"],
+  ["Charli, Louise & Ziad: The Ripple Effect of One Service Trip","7/29/25",34,"SSL"],
+  ["Planting Possibility in La Dalia: Why the Transition to Secondary School Matters","8/6/25",12,"Thought Leadership"],
+  ["Returning with Purpose: Reflections from Second-Time SSL Participants","8/7/25",7,"SSL"],
+  ["Jefry's Journey: From the End of the Road to a New Beginning","8/22/25",18,"Story"],
+  ["Celebrating Our Largest and Most Impactful Service Learning Season Yet","8/24/25",0,"SSL"],
+  ["Alumni Spotlight: Gabriela Baghdady","9/3/25",3,"Spotlight"],
+  ["National Literacy Day: How Classroom Libraries Are Transforming Education","9/5/25",4,"Thought Leadership"],
+  ["The Smart Way to Write About a Service Trip in Your College Application","9/15/25",19,"SSL"],
+  ["School the World Launches in the Philippines","9/19/25",0,"News"],
+  ["From Cookies to Classrooms: A High School Club That's Changing Lives","9/30/25",14,"Spotlight"],
+  ["How TaRL Tutoring is Transforming Literacy and Numeracy","10/5/25",23,"Thought Leadership"],
+  ["Want to Change the World? Here's How to Fund Your Trip","10/15/25",32,"SSL"],
+  ["Scaling Impact Through Strategic Partnerships","10/16/25",5,"Thought Leadership"],
+  ["100 Playgrounds: A Milestone Worth Celebrating","10/20/25",4,"News"],
+  ["Breaking the Cycle: When Tutors Become the Support They Never Had","10/26/25",2,"Story"],
+  ["Starting a School Chapter? Take Notes from This Club","10/31/25",5,"SSL"],
+  ["Why Our Work Matters: Reflections from Our Team","11/3/25",17,"Story"],
+  ["Student Ambassador Spotlight: Launching a STW Club in College","11/6/25",5,"Spotlight"],
+  ["For the Third Year in a Row, STW Selected for HundrED","11/11/25",4,"News"],
+  ["The First Chaperone: How Pat Doerr Helped Shape Our SSL Program","11/13/25",6,"Spotlight"],
+  ["Behind the Scenes: Meet Our Fall 2025 Interns","11/17/25",25,"News"],
+  ["Second Chances: Stories from Our Alternative Education Program","11/17/25",5,"Story"],
+  ["Honduran Government Recognizes STW's Holistic Approach","11/28/25",2,"News"],
+  ["When Parents Lead: How a Community United for Education","11/28/25",1,"Story"],
+  ["Beyond Service Hours: The Science Behind Why Service Trips Transform Teens","12/3/25",18,"SSL"],
+  ["From Student to Leader: Jacqueline Fanning's STW Journey","12/3/25",8,"Spotlight"],
+  ["Beyond the Scholarship: How Evelin and Ángel Kept Climbing","12/6/25",7,"Story"],
+  ['"More Highs Than Lows": Remembering Our First School Trip to Guatemala',"12/10/25",2,"SSL"],
+  ["Aarón's Story: A Bed, A Dream, and the Power of Education","12/15/25",4,"Story"],
+  ["2025: A Look By the Numbers","12/18/25",18,"News"],
+  ["Empowering Parents, Transforming Education","12/22/25",2,"Story"],
+  ["The Many Hats Guatemalan Girls Wear on Their Way to Their Dreams","1/2/26",3,"Story"],
+  ["World Changer Diaries: Bruno's Journey Home to Honduras","1/10/26",33,"SSL"],
+  ["How Corporate Volunteer Trips Create Employee Loyalty That Lasts Years","1/10/26",9,"Thought Leadership"],
+  ["Beyond the Classroom: How One Mother's Dream Transforms a Community","1/22/26",3,"Story"],
+  ["When School Becomes the First Home, Not the Second","1/25/26",0,"Story"],
+  ["World Changer Diaries: Gabby's Transformation","1/27/26",11,"SSL"],
+  ["Meet Aaron Molino: Engineering Dreams from the Comarca","2/9/26",12,"Spotlight"],
+  ["Alumni Spotlight: Ryan Kyle – When a Summer Trip Becomes a Calling","2/13/26",8,"Spotlight"],
+  ["Welcoming School the World's Spring 2026 Intern Cohort","2/18/26",0,"News"],
+  ["Celebrating 200 Schools and the Communities Who Made Them Possible","2/22/26",27,"News"],
+  ["What It Takes to Build 200 Schools: Lessons from the Ground","2/28/26",0,"News"],
+  ["Stories of Strength: Women Leading Change Across STW Communities","3/30/26",1,"Story"],
+  ["World Changer Diary: A Week that Changed How I Think About Opportunity","3/26/26",8,"SSL"],
+  ["An Unexpected Educator — and a Lifelong Advocate for Guatemalan Students","3/23/26",11,"Story"],
+  ["World Changer Diary: A Blessing in Guatemala","3/19/26",8,"SSL"],
+  ["What a Week in Guatemala Really Looks Like","3/10/26",20,"SSL"],
+  ['"I Want to Fly and Be Someone in Life"',"3/6/26",9,"Story"],
+  ["One Student's Guide to Partnering with Local Businesses for Global Impact","3/6/26",6,"SSL"],
+  ["Dedicating Our Inaugural School in the Philippines","3/4/26",6,"News"]
+];
+
+// ----------------------------------------------------------------
+// SECTION 5 — EMAIL
+// ----------------------------------------------------------------
+const EMAIL_DATA = [
+  ["Newsletter","8/26/25",4046,1765,43.62,5,0.12],["Trip Recruitment","8/26/25",425,245,57.65,116,47.35],
+  ["Campaign","9/4/25",1998,434,21.72,1,0.23],["Trip Follow-up","9/4/25",63,14,22.22,0,0],
+  ["Gala","9/17/25",12102,1099,9.08,43,3.91],["Newsletter","9/25/25",4504,853,18.94,17,1.99],
+  ["Gala","10/9/25",4509,946,20.98,35,3.70],["Trip Recruitment","10/29/25",12157,891,7.33,26,2.92],
+  ["Newsletter","10/24/25",4506,1384,30.71,21,1.52],["Gala","10/21/25",2295,493,21.48,9,1.83],
+  ["Trip Recruitment","10/20/25",723,99,13.69,11,11.11],["Gala","11/6/25",2563,451,17.60,14,3.10],
+  ["Gala","11/10/25",6953,544,7.82,16,2.94],["SSL","11/18/25",94,44,46.81,0,0],
+  ["SSL","11/18/25",427,162,37.94,3,1.85],["Newsletter","11/21/25",4520,971,21.48,9,0.93],
+  ["YE Campaign","11/25/25",41,2,4.88,0,0],["YE Campaign","11/26/25",4458,811,18.19,13,1.60],
+  ["YE Campaign","12/1/25",4052,700,17.28,7,1.00],["YE Campaign","12/5/25",3449,580,16.82,11,1.90],
+  ["YE Campaign","12/4/25",37,19,51.35,1,5.26],["YE Campaign","12/4/25",359,80,22.28,1,1.25],
+  ["YE Campaign","12/9/25",11093,736,6.63,16,2.17],["Gala","12/10/25",141,44,31.21,14,31.82],
+  ["YE Campaign","12/12/25",3276,661,20.18,6,0.91],["YE Campaign","12/12/25",36,7,19.44,0,0],
+  ["YE Campaign","12/15/25",11028,714,6.47,14,1.96],["Newsletter","12/18/25",12343,817,6.62,10,1.22],
+  ["YE Campaign","12/22/25",2913,606,20.80,3,0.50],["YE Campaign","12/22/25",342,69,20.18,1,1.45],
+  ["YE Campaign","12/22/25",94,17,18.09,0,0],["YE Campaign","12/25/25",3666,783,21.36,5,0.64],
+  ["YE Campaign","12/26/25",2987,668,22.36,4,0.60],["YE Campaign","12/29/25",2809,614,21.86,8,1.30],
+  ["YE Campaign","12/31/25",11611,753,6.49,5,0.66],["YE Campaign","12/31/25",10,2,20.00,1,50.00],
+  ["YE Campaign","1/1/26",3037,696,22.92,0,0],["Newsletter","1/22/26",3176,916,28.84,8,0.87],
+  ["SSL","1/13/26",928,424,45.69,123,29.01],["SSL","1/13/26",906,292,32.23,45,15.41],
+  ["Lapsed Campaign","2/5/26",445,22,4.94,0,0],["Lapsed Campaign","2/10/26",443,34,7.67,0,0],
+  ["SSL Supporters","2/16/26",324,87,26.85,21,24.14],["Scholarship Campaign","2/17/26",2899,820,28.29,2,0.24],
+  ["SSL Supporters","2/19/26",319,69,21.63,8,11.59],["Scholarship Campaign","2/20/26",2748,794,28.89,2,0.25],
+  ["Newsletter","2/24/26",12582,1715,13.63,23,1.34],["SSL Supporters","2/26/26",232,67,28.88,10,14.93],
+  ["Scholarship Campaign","2/26/26",3389,730,21.54,5,0.68],["SSL Supporters","3/3/26",138,26,18.84,1,3.85],
+  ["SSL Supporters","3/9/26",140,21,15.00,1,4.76],["SSL Follow-Up","3/9/26",59,28,47.46,1,3.57],
+  ["Newsletter","3/18/26",3832,1417,36.98,7,0.49],["SSL Supporters","3/19/26",92,18,19.57,0,0],
+  ["DAF Campaign","3/19/26",37,7,18.92,2,28.57],["SSL Supporters","3/23/26",92,11,11.96,0,0]
+];
+
+// ----------------------------------------------------------------
+// SECTION 6 — PAID GOOGLE
+// ----------------------------------------------------------------
+const S6_LABELS = ['Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
+const S6_CURRENT_IDX = 12;
+const S6_AG_COST  = [1360,2390,2700,1740,7602,4621,4764,9830,9899,10249,5818,9292,10267];
+const S6_AG_IMPR  = [7826,8644,6594,3935,9488,9955,14331,62600,147528,197386,55515,107219,111130];
+const S6_AG_CLICKS= [162,204,182,181,374,422,512,2290,5820,6832,2077,4451,4221];
+const S6_AG_CTR   = [2.07,2.36,2.76,4.60,3.92,4.24,3.57,3.66,3.95,3.46,3.74,4.15,3.80];
+const S6_AG_CONV  = [338,464,368,678,678,564,409,320,230,175,159,131,179];
+const S6_AG_CPC   = [4.02,5.16,4.04,2.60,11.21,8.19,11.65,30.72,43.04,58.57,36.59,70.93,57.36];
+const S6_PAID_COST= [null,null,null,null,null,null,null,177,486,486,479,491,623];
+const S6_PAID_CONV= [null,null,null,null,null,null,null,164,477,412,510,275,346];
+const S6_MIX_GUA  = [14,18,10,8,8,11,31,12,0,0,21,68,31];
+const S6_MIX_HON  = [18,8,9,5,10,0,0,0,0,0,16,3,11];
+const S6_MIX_PAN  = [0,6,0,18,10,9,0,0,0,0,0,9,0];
+const S6_MIX_NEWS = [16,14,5,2,4,8,30,0,12,24,28,3,0];
+const S6_MIX_OUT  = [6,9,8,19,18,30,12,32,0,0,0,0,12];
+const S6_MIX_BLOG = [0,0,0,0,0,0,0,18,16,10,4,14,6];
+
+// ----------------------------------------------------------------
+// SECTION 7 — LINKEDIN
+// ----------------------------------------------------------------
+const S7_LABELS = ['Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
+const S7_CURRENT_IDX = 9;
+const S7_STW_IMPR  = [602,3560,1531,2777,4815,2955,1158,1507,1989,2912];
+const S7_STW_INT   = [16,165,35,111,129,127,23,25,69,107];
+const S7_STW_POSTS = [2,4,3,5,8,7,5,2,4,16];
+const S7_STW_EFF   = [301,890,510,555,602,422,232,753,497,224];
+const S7_STW_NFOL  = [null,59,19,36,35,21,13,15,22,41];
+const S7_KATE_IMPR = [1312,3946,2357,1845,1568,700,1973,535,1626,42];
+const S7_KATE_INT  = [89,126,42,64,67,20,67,12,117,143];
+const S7_KATE_POSTS= [1,1,2,2,3,2,4,0,2,0];
+const S7_KATE_EFF  = [1312,3946,1179,923,523,350,493,null,813,null];
+const S7_KATE_NFOL = [null,7,8,11,9,19,3,9,12,12];
+
+// ----------------------------------------------------------------
+// SECTION 8 — PAID SOCIAL
+// ----------------------------------------------------------------
+const S8_LABELS = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
+const S8_CURRENT_IDX = 5;
+const S8_COST   = [604,150,75,109,422.81,393.30];
+const S8_IMPR   = [104318,28555,8185,8314,64013,48478];
+const S8_CLICKS = [1410,272,118,155,976,744];
+const S8_CTR    = [1.35,0.95,1.44,1.86,1.52,1.53];
+const S8_CPC    = [0.43,0.55,0.63,0.70,0.43,0.53];
+
+// ----------------------------------------------------------------
+// SECTION 9 — TIKTOK (update monthly once more data available)
+// ----------------------------------------------------------------
+const S9_DATA = {
+  fb:  { followers:11156, posts:29, imprPerPost:3621, intPerPost:58  },
+  ig:  { followers:3761,  posts:29, imprPerPost:2586, intPerPost:56  },
+  tt:  { followers:123,   posts:1,  imprPerPost:308,  intPerPost:20  }
+};
+
+// ----------------------------------------------------------------
+// SECTION 10 — CAMPAIGNS (update as new campaigns run)
+// ----------------------------------------------------------------
+const S10_CAMPAIGNS = [
+  { name:'Virtual Info Session', status:'Completed', dateRange:'Mar 11–29', creatives:4, budgetPerAd:75, totalBudget:300, spent:280.70, spentPct:94,
+    totalViews:39637, lpv:696, lpvRate:1.76, uniqueViewers:34120, costPerLPV:0.40, color:'#182f8c', lightColor:'#e8ecf8' },
+  { name:'SSL Trip Interest Form', status:'Active', dateRange:'Mar 25–Apr 10', creatives:4, budgetPerAd:48, totalBudget:192, spent:100.54, spentPct:52,
+    totalViews:7434, lpv:32, lpvRate:0.43, uniqueViewers:7204, costPerLPV:3.14, color:'#259717', lightColor:'#eaf6e8' }
+];
+
+// ================================================================
+//  CHART RENDERING
+// ================================================================
+const AXT = { ticks:{font:{family:'Open Sans',size:10},color:'#555',autoSkip:true,maxTicksLimit:13,maxRotation:45}, grid:{color:'#f0f0f0'} };
+
+// Helper: M/M change
+function mmChange(cur, prev, higherIsGood) {
+  if (!prev) return { arrow:'—', cls:'neutral', pct:'—' };
+  const pct = ((cur-prev)/prev)*100;
+  const up = pct >= 0.5;
+  const down = pct <= -0.5;
+  let arrow = up ? '▲' : down ? '▼' : '→';
+  let cls = 'neutral';
+  if (up && higherIsGood === true) cls = 'up';
+  else if (up && higherIsGood === false) cls = 'down';
+  else if (down && higherIsGood === true) cls = 'down';
+  else if (down && higherIsGood === false) cls = 'up';
+  return { arrow, cls, pct: Math.abs(pct).toFixed(1)+'%' };
+}
+
+function buildMMCard(label, value, prevValue, higherIsGood, fmtFn, colorClass='') {
+  const ch = mmChange(value, prevValue, higherIsGood);
+  return `<div class="mm-card">
+    <div class="mm-label">${label}</div>
+    <div class="mm-value ${colorClass}">${fmtFn(value)}</div>
+    <div class="mm-change ${ch.cls}">${ch.arrow} ${ch.pct} vs prior month</div>
+    <div class="mm-period">Prior: ${fmtFn(prevValue)}</div>
+  </div>`;
+}
+
+// --- SECTION 1 CARDS ---
+function buildS1Cards(platform) {
+  const ci = S1_CURRENT_IDX, pi = ci-1;
+  const imp = platform==='fb' ? S1_FB_IMP : S1_IG_IMP;
+  const posts = platform==='fb' ? S1_FB_POSTS : S1_IG_POSTS;
+  const ints = platform==='fb' ? S1_FB_INT : S1_IG_INT;
+  const ipp = platform==='fb' ? S1_FB_IPP : S1_IG_IPP;
+  const color = platform==='fb' ? '' : 'green';
+  document.getElementById('s1-cards-fb').innerHTML =
+    buildMMCard('Impressions', imp[ci], imp[pi], true, v=>v.toLocaleString(), color) +
+    buildMMCard('Interactions', ints[ci], ints[pi], true, v=>v.toLocaleString(), color) +
+    buildMMCard('Posts', posts[ci], posts[pi], null, v=>String(v), color) +
+    buildMMCard('Impr / post', ipp[ci], ipp[pi], true, v=>v.toLocaleString(), color);
+}
+
+// --- SECTION 1 CHARTS ---
+function buildS1Charts() {
+  buildS1Cards('fb');
+  function makeTrend(canvasId, imp, posts, impColor, postColor) {
+    return new Chart(document.getElementById(canvasId), {
+      data:{ labels:S1_LABELS, datasets:[
+        { type:'bar', label:'Posts', data:posts,
+          backgroundColor: posts.map((_,i)=>S1_SSL[i]?postColor:postColor+'99'),
+          borderRadius:3, yAxisID:'y2', categoryPercentage:0.5, order:2 },
+        { type:'line', label:'Impressions', data:imp,
+          borderColor:impColor, backgroundColor:'transparent',
+          pointBackgroundColor:imp.map((_,i)=>S1_SSL[i]?impColor:'#fff'),
+          pointBorderColor:impColor,
+          pointRadius:imp.map((_,i)=>S1_SSL[i]?6:4), pointBorderWidth:2,
+          yAxisID:'y', tension:0.3, order:1 }
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false,
+        interaction:{mode:'index',intersect:false},
+        plugins:{legend:{display:false},tooltip:{callbacks:{
+          title:ctx=>ctx[0].label+(S1_SSL[S1_LABELS.indexOf(ctx[0].label)]?' ★ SSL':''),
+          label:ctx=>ctx.dataset.yAxisID==='y2'?` Posts: ${ctx.parsed.y}`:` Impressions: ${ctx.parsed.y.toLocaleString()}`
+        }}},
+        scales:{
+          x:AXT,
+          y:{position:'left',ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'},title:{display:true,text:'Impressions',font:{size:9},color:'#666'}},
+          y2:{position:'right',min:0,max:55,ticks:{...AXT.ticks,stepSize:10},grid:{drawOnChartArea:false},title:{display:true,text:'Posts',font:{size:9},color:'#888'}}
+        }
+      }
+    });
+  }
+  makeTrend('s1fb', S1_FB_IMP, S1_FB_POSTS, '#182f8c', '#b8c2e8');
+  makeTrend('s1ig', S1_IG_IMP, S1_IG_POSTS, '#259717', '#b3ddb0');
+}
+
+// --- SECTION 2 YOY ---
+const S2_IMPR_COLORS = ['#ff730033','#ff730077','#ff7300bb','#ff7300'];
+function buildS2Charts() {
+  const mi = S2_CURRENT_MONTH_IDX;
+  document.getElementById('s2-subtitle').textContent = `${S2_CURRENT_MONTH_NAME} 2023 vs 2024 vs 2025 vs 2026`;
+  const labelPlugin = {
+    id:'barLabels2',
+    afterDatasetsDraw(chart) {
+      const ctx = chart.ctx;
+      chart.data.datasets.forEach((ds,di)=>{
+        const meta = chart.getDatasetMeta(di);
+        if(meta.hidden) return;
+        meta.data.forEach((bar,idx)=>{
+          const val = ds.data[idx];
+          if(val===null||val===undefined) return;
+          const isRight = ds.yAxisID==='y2';
+          const label = val>=1000?(val/1000).toFixed(0)+'k':String(val);
+          ctx.save();
+          ctx.font='600 9px Open Sans';
+          ctx.fillStyle = isRight?'#cc5500':'#333';
+          ctx.textAlign='center'; ctx.textBaseline='bottom';
+          ctx.fillText(label, bar.x, bar.y-3);
+          ctx.restore();
+        });
+      });
+    }
+  };
+  Chart.register(labelPlugin);
+
+  function makeYOY(canvasId, impYr, postsYr, intYr, barColors) {
+    const years = [2023,2024,2025,2026];
+    const dsLeft = years.map((yr,yi)=>({
+      label:String(yr), data:[postsYr[yr][mi], intYr[yr][mi], null],
+      backgroundColor:barColors[yi], borderRadius:3,
+      categoryPercentage:0.75, barPercentage:0.82, yAxisID:'y'
+    }));
+    const dsRight = years.map((yr,yi)=>({
+      label:yr+' impr', data:[null,null,impYr[yr][mi]],
+      backgroundColor:S2_IMPR_COLORS[yi], borderRadius:3,
+      categoryPercentage:0.75, barPercentage:0.82, yAxisID:'y2'
+    }));
+    return new Chart(document.getElementById(canvasId),{
+      type:'bar',
+      data:{ labels:['Posts','Interactions','Impressions'], datasets:[...dsLeft,...dsRight] },
+      options:{ responsive:true, maintainAspectRatio:false,
+        layout:{padding:{top:28}},
+        plugins:{legend:{display:false},tooltip:{enabled:false}},
+        scales:{
+          x:{...AXT,ticks:{...AXT.ticks,font:{family:'Montserrat',size:12,weight:'600'},color:'#333'}},
+          y:{position:'left',title:{display:true,text:'Posts / Interactions',font:{size:10},color:'#555'},ticks:AXT.ticks,grid:{color:'#f0f0f0'}},
+          y2:{position:'right',title:{display:true,text:'Impressions',font:{size:10},color:'#ff7300'},ticks:{...AXT.ticks,color:'#ff7300',callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{drawOnChartArea:false}}
+        }
+      }
+    });
+  }
+  makeYOY('s2fb', S2_FB_IMP_YR, S2_FB_POSTS_YR, S2_FB_INT_YR, ['#c5cce8','#8f9fd4','#5a6fc0','#182f8c']);
+  makeYOY('s2ig', S2_IG_IMP_YR, S2_IG_POSTS_YR, S2_IG_INT_YR, ['#b3ddb0','#7fbf7a','#4aa344','#259717']);
+}
+
+// --- SECTION 3 WEBSITE ---
+function buildS3Charts() {
+  // M/M cards
+  const {cur,prev} = S3_MM;
+  document.getElementById('s3-cards').innerHTML =
+    buildMMCard('Pageviews', cur.pv, prev.pv, true, v=>v.toLocaleString()) +
+    buildMMCard('Sessions', cur.sessions, prev.sessions, true, v=>v.toLocaleString()) +
+    buildMMCard('Active users', cur.users, prev.users, true, v=>v.toLocaleString()) +
+    buildMMCard('% Engaged', cur.engaged, prev.engaged, true, v=>v+'%');
+
+  function buildAllLabels() {
+    const labs=[]; const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    S3_YEAR_COUNTS.forEach(([yr,n])=>{for(let i=0;i<n;i++)labs.push(months[i]+' '+yr.slice(2));});
+    return labs;
+  }
+  function buildSSL(yearCounts) {
+    const sslIdx=[1,2,3,6]; const flags=[];
+    yearCounts.forEach(([yr,n])=>{for(let i=0;i<n;i++)flags.push(sslIdx.includes(i));});
+    return flags;
+  }
+  const allL = buildAllLabels();
+  const sslAll = buildSSL(S3_YEAR_COUNTS);
+  function buildYearBars(dataObj,colorMap) {
+    return ['2023','2024','2025','2026'].map((yr,yi)=>{
+      const d = Array(yi*12).fill(null).concat(dataObj[yr]).concat(Array(Math.max(0,39-(yi*12+dataObj[yr].length))).fill(null));
+      return {type:'bar',label:yr,data:d,backgroundColor:d.map((v,i)=>v!==null&&sslAll[i]?colorMap[yi]:colorMap[yi]+'99'),borderRadius:2,categoryPercentage:0.85,barPercentage:0.92};
+    });
+  }
+  new Chart(document.getElementById('s3ov'),{
+    data:{labels:allL,datasets:buildYearBars(S3_PAGEVIEWS,['#182f8c','#7f8fcc','#b8c2e8','#ff7300'])},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:AXT,y:{ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}}
+  });
+  const allS=[6974,12413,5643,5951,9456,9651,8320,6235,3887,4063,8323,7760,7948,7569,6190,3502,6841,3585,3135,1945,2639,4769,6427,7169,5812,5854,5487,5063,5983,4963,2764,2668,3732,5513,7319,7529,7253,4762,5382];
+  const other=allL.map((_,i)=>Math.max(0,allS[i]-(S3_DIRECT[i]||0)-(S3_ORGANIC[i]||0)-(S3_CPC[i]||0)-(S3_ORGSOCIAL[i]||0)-(S3_EMAIL_SRC[i]||0)));
+  new Chart(document.getElementById('s3src'),{type:'bar',data:{labels:allL,datasets:[
+    {label:'Direct',data:S3_DIRECT,backgroundColor:S3_DIRECT.map((_,i)=>sslAll[i]?'#182f8c':'#182f8c99'),borderRadius:0},
+    {label:'Organic',data:S3_ORGANIC,backgroundColor:S3_ORGANIC.map((_,i)=>sslAll[i]?'#259717':'#25971799'),borderRadius:0},
+    {label:'CPC',data:S3_CPC,backgroundColor:S3_CPC.map((_,i)=>sslAll[i]?'#ff7300':'#ff730099'),borderRadius:0},
+    {label:'Organic social',data:S3_ORGSOCIAL,backgroundColor:S3_ORGSOCIAL.map((_,i)=>sslAll[i]?'#cca800':'#f7ca0999'),borderRadius:0},
+    {label:'Email',data:S3_EMAIL_SRC,backgroundColor:S3_EMAIL_SRC.map((_,i)=>sslAll[i]?'#7f8fcc':'#7f8fcc99'),borderRadius:0},
+    {label:'Other',data:other,backgroundColor:other.map((_,i)=>sslAll[i]?'#b3ddb0':'#b3ddb099'),borderRadius:2}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('s3pg'),{type:'bar',data:{labels:allL,datasets:[
+    {label:'Homepage',data:S3_HOMEPAGE,backgroundColor:S3_HOMEPAGE.map((_,i)=>sslAll[i]?'#182f8c':'#182f8c99'),borderRadius:0},
+    {label:'Fundraising',data:S3_FUNDRAISE,backgroundColor:S3_FUNDRAISE.map((_,i)=>sslAll[i]?'#ff7300':'#ff730099'),borderRadius:0},
+    {label:'SSL pages',data:S3_SSL_PG,backgroundColor:S3_SSL_PG.map((_,i)=>sslAll[i]?'#259717':'#25971799'),borderRadius:0},
+    {label:'Blog',data:S3_BLOG_PG,backgroundColor:S3_BLOG_PG.map((_,i)=>sslAll[i]?'#cca800':'#f7ca0999'),borderRadius:2}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}}});
+}
+
+// --- SECTION 4 BLOG ---
+function parseDate(s){const[m,d,y]=s.split('/');return new Date(`20${y.length===2?y:y.slice(2)}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`);}
+function fmtDate(s){return parseDate(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function monthKey(s){return parseDate(s).toLocaleDateString('en-US',{month:'short',year:'numeric'});}
+const CAT_COLORS={'SSL':'background:#e8ecf8;color:#182f8c','Story':'background:#eaf6e8;color:#1a5a10','Thought Leadership':'background:#fff3e8;color:#7a3000','Spotlight':'background:#fefbe8;color:#7a5a00','News':'background:#f4f4f4;color:#555'};
+function buildS4() {
+  const allMonths=[...new Set(BLOG_POSTS.map(r=>monthKey(r[1])))];
+  const allCats=[...new Set(BLOG_POSTS.map(r=>r[3]))].sort();
+  const mSel=document.getElementById('s4-filter-month');
+  const cSel=document.getElementById('s4-filter-cat');
+  allMonths.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;mSel.appendChild(o);});
+  allCats.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;cSel.appendChild(o);});
+  renderBlog();
+}
+function renderBlog() {
+  const mf=document.getElementById('s4-filter-month').value;
+  const cf=document.getElementById('s4-filter-cat').value;
+  const sf=document.getElementById('s4-sort').value;
+  let data=BLOG_POSTS.filter(r=>(mf==='all'||monthKey(r[1])===mf)&&(cf==='all'||r[3]===cf));
+  data.sort((a,b)=>sf==='pv_desc'?(b[2]||0)-(a[2]||0):sf==='date_desc'?parseDate(b[1])-parseDate(a[1]):parseDate(a[1])-parseDate(b[1]));
+  const maxPV=Math.max(...BLOG_POSTS.map(r=>r[2]||0));
+  const totalPV=data.reduce((s,r)=>s+(r[2]||0),0);
+  document.getElementById('s4-summary').innerHTML=
+    `<div class="mm-card"><div class="mm-label">Posts shown</div><div class="mm-value">${data.length}</div></div>`+
+    `<div class="mm-card"><div class="mm-label">Total posts</div><div class="mm-value">${BLOG_POSTS.length}</div></div>`+
+    `<div class="mm-card"><div class="mm-label">Cumulative views</div><div class="mm-value orange">${totalPV.toLocaleString()}</div></div>`+
+    `<div class="mm-card"><div class="mm-label">Avg views/post</div><div class="mm-value green">${data.length?Math.round(totalPV/data.length):0}</div></div>`;
+  document.getElementById('s4-tbody').innerHTML=data.map(r=>{
+    const pv=r[2]||0;const pct=maxPV>0?Math.round((pv/maxPV)*100):0;
+    const cs=CAT_COLORS[r[3]]||'background:#f4f4f4;color:#555';
+    return `<tr style="border-bottom:0.5px solid #e0e0e0;">
+      <td style="padding:7px 10px;font-size:12px;max-width:280px;line-height:1.4;vertical-align:middle;">${r[0]}</td>
+      <td style="padding:7px 10px;font-size:11px;color:#666;white-space:nowrap;vertical-align:middle;">${fmtDate(r[1])}</td>
+      <td style="padding:7px 10px;vertical-align:middle;"><span style="display:inline-block;font-size:9px;font-family:'Montserrat',sans-serif;font-weight:700;padding:2px 6px;border-radius:3px;${cs}">${r[3]}</span></td>
+      <td style="padding:7px 10px;text-align:right;font-family:'Montserrat',sans-serif;font-weight:600;font-size:12px;vertical-align:middle;">${pv>0?pv:'—'}</td>
+      <td style="padding:7px 10px;min-width:80px;vertical-align:middle;"><div style="background:#f0f0f0;border-radius:3px;height:8px;"><div style="background:#182f8c;border-radius:3px;height:8px;width:${pct}%;"></div></div></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('s4-note').textContent=`Showing ${data.length} of ${BLOG_POSTS.length} posts · ${totalPV.toLocaleString()} total cumulative views · Source: STW Marketing KPI Tracker`;
+}
+
+// --- SECTION 5 EMAIL ---
+function buildS5Charts() {
+  const typeColors={'Newsletter':'#182f8c','SSL':'#259717','SSL Supporters':'#3a7bc8','Trip Recruitment':'#ff7300','Scholarship Campaign':'#f7ca09','YE Campaign':'#7f8fcc','Gala':'#b8c2e8','Lapsed Campaign':'#e88a5a','SSL Follow-Up':'#6fbf65','DAF Campaign':'#b3ddb0','Trip Follow-up':'#cca800','Campaign':'#b3ddb0'};
+  const groups={};
+  EMAIL_DATA.forEach(([type,date,del,opens,or_,clicks,ctr])=>{
+    if(!groups[type])groups[type]={count:0,totalOR:0,totalCTR:0,totalDel:0};
+    groups[type].count++;groups[type].totalOR+=or_;groups[type].totalCTR+=ctr;groups[type].totalDel+=del;
+  });
+  const types=Object.keys(groups).sort((a,b)=>(groups[b].totalOR/groups[b].count)-(groups[a].totalOR/groups[a].count));
+  const avgOR=types.map(t=>parseFloat((groups[t].totalOR/groups[t].count).toFixed(1)));
+  const avgCTR=types.map(t=>parseFloat((groups[t].totalCTR/groups[t].count).toFixed(2)));
+  const barColors=types.map(t=>typeColors[t]||'#888');
+  const h=types.length*36+60;
+  const ctrSorted=[...types].sort((a,b)=>(groups[b].totalCTR/groups[b].count)-(groups[a].totalCTR/groups[a].count));
+  ['legend-openrate','legend-ctr','legend-volume'].forEach(id=>{
+    document.getElementById('s5-'+id).innerHTML=types.map(t=>`<div class="legend-item"><div class="legend-dot" style="background:${typeColors[t]||'#888'};"></div>${t} (${groups[t].count})</div>`).join('');
+  });
+  document.getElementById('s5-chart-openrate').style.height=h+'px';
+  new Chart(document.getElementById('s5or'),{type:'bar',data:{labels:types,datasets:[{data:avgOR,backgroundColor:barColors,borderRadius:3}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` Avg open rate: ${ctx.parsed.x.toFixed(1)}%`}}},scales:{x:{...AXT,ticks:{...AXT.ticks,callback:v=>v+'%'},max:65},y:{ticks:{font:{family:'Open Sans',size:11},color:'#333'},grid:{display:false}}}}});
+  document.getElementById('s5-chart-ctr').style.height=h+'px';
+  new Chart(document.getElementById('s5ctr'),{type:'bar',data:{labels:ctrSorted,datasets:[{data:ctrSorted.map(t=>parseFloat((groups[t].totalCTR/groups[t].count).toFixed(2))),backgroundColor:ctrSorted.map(t=>typeColors[t]||'#888'),borderRadius:3}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...AXT,ticks:{...AXT.ticks,callback:v=>v+'%'}},y:{ticks:{font:{family:'Open Sans',size:11},color:'#333'},grid:{display:false}}}}});
+  const monthOrder=['Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
+  function emailMonth(d){const[m,,y]=d.split('/');const yr=parseInt('20'+y.slice(-2));return new Date(yr,parseInt(m)-1,1).toLocaleDateString('en-US',{month:'short',year:'2-digit'});}
+  const volByTypeMonth={};types.forEach(t=>{volByTypeMonth[t]=Array(monthOrder.length).fill(0);});
+  EMAIL_DATA.forEach(([type,date])=>{const mk=emailMonth(date);const mi=monthOrder.indexOf(mk);if(mi>=0&&volByTypeMonth[type])volByTypeMonth[type][mi]++;});
+  new Chart(document.getElementById('s5vol'),{type:'bar',data:{labels:monthOrder,datasets:types.map(t=>({label:t,data:volByTypeMonth[t],backgroundColor:typeColors[t]||'#888',borderRadius:1}))},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,stepSize:1},grid:{color:'#f0f0f0'}}}}});
+  const monthlyStats={};
+  EMAIL_DATA.forEach(([type,date,del,opens,or_])=>{const mk=emailMonth(date);if(!monthlyStats[mk])monthlyStats[mk]={sends:0,totalOR:0,totalDel:0,types:new Set()};monthlyStats[mk].sends++;monthlyStats[mk].totalOR+=or_;monthlyStats[mk].totalDel+=del;monthlyStats[mk].types.add(type);});
+  document.getElementById('s5-monthly-grid').innerHTML=monthOrder.map(m=>{
+    const s=monthlyStats[m]||{sends:0,totalOR:0,totalDel:0,types:new Set()};
+    return `<div style="background:#f4f4f4;border-radius:8px;padding:8px 10px;">
+      <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;color:#182f8c;margin-bottom:4px;">${m}</div>
+      <div style="font-size:10px;color:#555;display:flex;justify-content:space-between;"><span>Emails sent</span><span style="font-weight:600;color:#333;">${s.sends}</span></div>
+      <div style="font-size:10px;color:#555;display:flex;justify-content:space-between;"><span>Avg open rate</span><span style="font-weight:600;color:#333;">${s.sends?((s.totalOR/s.sends).toFixed(1))+'%':'—'}</span></div>
+      <div style="font-size:10px;color:#555;display:flex;justify-content:space-between;"><span>Delivered</span><span style="font-weight:600;color:#333;">${s.totalDel.toLocaleString()}</span></div>
+      <div style="font-size:10px;color:#555;display:flex;justify-content:space-between;"><span>Campaign types</span><span style="font-weight:600;color:#333;">${s.types.size}</span></div>
+    </div>`;
+  }).join('');
+}
+
+// --- SECTION 6 PAID GOOGLE ---
+function buildS6Charts() {
+  const ci=S6_CURRENT_IDX, pi=ci-1;
+  document.getElementById('s6-cards').innerHTML=
+    buildMMCard('AG Spend', S6_AG_COST[ci], S6_AG_COST[pi], null, v=>'$'+(v>=1000?(v/1000).toFixed(0)+'k':v)) +
+    buildMMCard('AG Impressions', S6_AG_IMPR[ci], S6_AG_IMPR[pi], true, v=>v>=1000?(v/1000).toFixed(0)+'k':String(v)) +
+    buildMMCard('AG Clicks', S6_AG_CLICKS[ci], S6_AG_CLICKS[pi], true, v=>v.toLocaleString()) +
+    buildMMCard('AG CTR', S6_AG_CTR[ci], S6_AG_CTR[pi], true, v=>v.toFixed(2)+'%') +
+    buildMMCard('AG Conversions', S6_AG_CONV[ci], S6_AG_CONV[pi], true, v=>String(v));
+
+  new Chart(document.getElementById('s6eff'),{data:{labels:S6_LABELS,datasets:[
+    {type:'bar',label:'Cost/conv',data:S6_AG_CPC,backgroundColor:S6_AG_CPC.map((_,i)=>i>=7?'#182f8c':'#182f8c88'),borderRadius:3,yAxisID:'y'},
+    {type:'line',label:'Conversions',data:S6_AG_CONV,borderColor:'#ff7300',backgroundColor:'transparent',pointBackgroundColor:'#ff7300',pointRadius:4,yAxisID:'y2',tension:0.3}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:AXT,y:{position:'left',ticks:{...AXT.ticks,callback:v=>'$'+v},grid:{color:'#f0f0f0'}},y2:{position:'right',ticks:AXT.ticks,grid:{drawOnChartArea:false}}}}});
+  new Chart(document.getElementById('s6conv'),{type:'bar',data:{labels:S6_LABELS,datasets:[
+    {label:'Ad Grant',data:S6_AG_CONV,backgroundColor:'#182f8c',borderRadius:3,categoryPercentage:0.8},
+    {label:'Paid',data:S6_PAID_CONV,backgroundColor:'#ff7300',borderRadius:3,categoryPercentage:0.8}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:AXT,y:{ticks:AXT.ticks,grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('s6mix'),{type:'bar',data:{labels:S6_LABELS,datasets:[
+    {label:'Guatemala',data:S6_MIX_GUA,backgroundColor:'#182f8c',borderRadius:0},
+    {label:'Honduras',data:S6_MIX_HON,backgroundColor:'#259717',borderRadius:0},
+    {label:'Panama',data:S6_MIX_PAN,backgroundColor:'#ff7300',borderRadius:0},
+    {label:'Newsletter',data:S6_MIX_NEWS,backgroundColor:'#f7ca09',borderRadius:0},
+    {label:'Outbound',data:S6_MIX_OUT,backgroundColor:'#7f8fcc',borderRadius:0},
+    {label:'Blog',data:S6_MIX_BLOG,backgroundColor:'#b3ddb0',borderRadius:2}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:AXT.ticks,grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('s6spend'),{data:{labels:S6_LABELS,datasets:[
+    {type:'bar',label:'Ad Grant',data:S6_AG_COST,backgroundColor:'#182f8c',borderRadius:0,yAxisID:'y',stack:'spend'},
+    {type:'bar',label:'Paid',data:S6_PAID_COST,backgroundColor:'#ff7300',borderRadius:2,yAxisID:'y',stack:'spend'},
+    {type:'line',label:'CTR',data:S6_AG_CTR,borderColor:'#259717',backgroundColor:'transparent',pointBackgroundColor:'#259717',pointRadius:3,yAxisID:'y2',tension:0.3}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:AXT,y:{position:'left',stacked:true,ticks:{...AXT.ticks,callback:v=>'$'+(v>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:'#f0f0f0'}},y2:{position:'right',min:0,max:7,ticks:{...AXT.ticks,callback:v=>v+'%'},grid:{drawOnChartArea:false}}}}});
+}
+
+// --- SECTION 7 LINKEDIN ---
+function buildS7Charts() {
+  const ci=S7_CURRENT_IDX, pi=ci-1;
+  document.getElementById('s7-cards').innerHTML=
+    buildMMCard('STW Impressions', S7_STW_IMPR[ci], S7_STW_IMPR[pi], true, v=>v.toLocaleString()) +
+    buildMMCard('STW Interactions', S7_STW_INT[ci], S7_STW_INT[pi], true, v=>String(v)) +
+    buildMMCard('STW Posts', S7_STW_POSTS[ci], S7_STW_POSTS[pi], null, v=>String(v)) +
+    buildMMCard('STW Impr/post', S7_STW_EFF[ci], S7_STW_EFF[pi], true, v=>String(v));
+
+  new Chart(document.getElementById('s7imp'),{data:{labels:S7_LABELS,datasets:[
+    {type:'bar',label:'STW',data:S7_STW_IMPR,backgroundColor:'#182f8c99',borderRadius:3,yAxisID:'y',categoryPercentage:0.7},
+    {type:'bar',label:'Kate',data:S7_KATE_IMPR,backgroundColor:'#ff730099',borderRadius:3,yAxisID:'y',categoryPercentage:0.7},
+    {type:'line',label:'STW posts',data:S7_STW_POSTS,borderColor:'#182f8c',borderDash:[4,3],backgroundColor:'transparent',pointRadius:3,pointBackgroundColor:'#182f8c',yAxisID:'y2',tension:0.3},
+    {type:'line',label:'Kate posts',data:S7_KATE_POSTS,borderColor:'#ff7300',borderDash:[4,3],backgroundColor:'transparent',pointRadius:3,pointBackgroundColor:'#ff7300',yAxisID:'y2',tension:0.3}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:AXT,y:{position:'left',ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v},grid:{color:'#f0f0f0'}},y2:{position:'right',min:0,max:20,ticks:{...AXT.ticks,stepSize:4},grid:{drawOnChartArea:false},title:{display:true,text:'Posts',font:{size:9},color:'#888'}}}}});
+  new Chart(document.getElementById('s7int'),{type:'bar',data:{labels:S7_LABELS,datasets:[{label:'STW',data:S7_STW_INT,backgroundColor:'#182f8c',borderRadius:3,categoryPercentage:0.7},{label:'Kate',data:S7_KATE_INT,backgroundColor:'#ff7300',borderRadius:3,categoryPercentage:0.7}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:AXT,y:{ticks:AXT.ticks,grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('s7eff'),{type:'line',data:{labels:S7_LABELS,datasets:[{label:'STW',data:S7_STW_EFF,borderColor:'#182f8c',backgroundColor:'#182f8c22',pointBackgroundColor:'#182f8c',pointRadius:4,tension:0.3,fill:true,spanGaps:true},{label:'Kate',data:S7_KATE_EFF,borderColor:'#ff7300',backgroundColor:'#ff730022',pointBackgroundColor:'#ff7300',pointRadius:4,tension:0.3,fill:true,spanGaps:true}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:AXT,y:{ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v},grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('s7fol'),{type:'bar',data:{labels:S7_LABELS,datasets:[{label:'STW',data:S7_STW_NFOL,backgroundColor:'#182f8c',borderRadius:3,categoryPercentage:0.7},{label:'Kate',data:S7_KATE_NFOL,backgroundColor:'#ff7300',borderRadius:3,categoryPercentage:0.7}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:AXT,y:{ticks:AXT.ticks,grid:{color:'#f0f0f0'}}}}});
+}
+
+// --- SECTION 8 PAID SOCIAL ---
+function buildS8Charts() {
+  const ci=S8_CURRENT_IDX, pi=ci-1;
+  document.getElementById('s8-cards').innerHTML=
+    buildMMCard('Spend', S8_COST[ci], S8_COST[pi], null, v=>'$'+v.toFixed(0)) +
+    buildMMCard('Clicks', S8_CLICKS[ci], S8_CLICKS[pi], true, v=>v.toLocaleString()) +
+    buildMMCard('CTR', S8_CTR[ci], S8_CTR[pi], true, v=>v.toFixed(2)+'%') +
+    buildMMCard('CPC', S8_CPC[ci], S8_CPC[pi], false, v=>'$'+v.toFixed(2));
+
+  new Chart(document.getElementById('s8trend'),{data:{labels:S8_LABELS,datasets:[
+    {type:'bar',label:'Spend',data:S8_COST,backgroundColor:S8_COST.map((_,i)=>i===ci?'#ff7300':'#ff730066'),borderRadius:3,yAxisID:'y'},
+    {type:'bar',label:'Clicks',data:S8_CLICKS,backgroundColor:S8_CLICKS.map((_,i)=>i===ci?'#182f8c':'#182f8c66'),borderRadius:3,yAxisID:'y2'},
+    {type:'line',label:'Impr÷100',data:S8_IMPR.map(v=>Math.round(v/100)),borderColor:'#259717',backgroundColor:'transparent',pointBackgroundColor:'#259717',pointRadius:4,yAxisID:'y2',tension:0.3}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{if(ctx.dataset.label==='Spend')return` Spend: $${ctx.parsed.y.toFixed(0)}`;if(ctx.dataset.label==='Clicks')return` Clicks: ${ctx.parsed.y}`;return` Impressions: ${(ctx.parsed.y*100).toLocaleString()}`;}}}},scales:{x:AXT,y:{position:'left',ticks:{...AXT.ticks,callback:v=>'$'+v},grid:{color:'#f0f0f0'},title:{display:true,text:'Spend ($)',font:{size:9},color:'#888'}},y2:{position:'right',ticks:AXT.ticks,grid:{drawOnChartArea:false},title:{display:true,text:'Clicks / Impr÷100',font:{size:9},color:'#888'}}}}});
+}
+
+// --- SECTION 9 TIKTOK ---
+function buildS9() {
+  const d=S9_DATA;
+  document.getElementById('s9-context').innerHTML=[
+    {key:'fb',label:'Facebook',color:'#182f8c',light:'#e8ecf8',badge:''},
+    {key:'ig',label:'Instagram',color:'#259717',light:'#eaf6e8',badge:''},
+    {key:'tt',label:'TikTok',color:'#ff7300',light:'#fff3e8',badge:'Month 1'}
+  ].map(p=>`<div style="border-radius:10px;padding:12px 14px;background:${p.light};border:1.5px solid ${p.color}22;text-align:center;">
+    <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:${p.color};margin-bottom:6px;">${p.label}${p.badge?` <span style="background:${p.light};color:${p.color};font-size:9px;padding:1px 6px;border-radius:3px;border:1px solid ${p.color}44;">${p.badge}</span>`:''}</div>
+    <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:22px;color:${p.color};">${d[p.key].followers.toLocaleString()}</div>
+    <div style="font-size:10px;color:#888;margin-bottom:6px;">followers</div>
+    <hr style="border:none;border-top:1px solid #e0e0e0;margin:6px 0;">
+    <div style="font-size:11px;color:#555;">Posts in March: <strong>${d[p.key].posts}</strong></div>
+  </div>`).join('');
+
+  const labelPlugin2={id:'barLabels9',afterDatasetsDraw(chart){const ctx=chart.ctx;chart.data.datasets.forEach((ds,di)=>{const meta=chart.getDatasetMeta(di);if(meta.hidden)return;meta.data.forEach((bar,idx)=>{const val=ds.data[idx];if(val===null||val===undefined)return;const isR=ds.yAxisID==='y2';const label=val>=1000?(val/1000).toFixed(1)+'k':String(val);ctx.save();ctx.font='600 10px Open Sans';ctx.fillStyle=isR?'#7a3000':['#182f8c','#259717','#ff7300'][idx];ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText(label,bar.x,bar.y-3);ctx.restore();});});}};
+  Chart.register(labelPlugin2);
+  new Chart(document.getElementById('s9chart'),{type:'bar',data:{labels:['Impressions / post','Interactions / post'],datasets:[
+    {label:'Facebook',data:[d.fb.imprPerPost,null],backgroundColor:'#182f8c',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y'},
+    {label:'Instagram',data:[d.ig.imprPerPost,null],backgroundColor:'#259717',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y'},
+    {label:'TikTok',data:[d.tt.imprPerPost,null],backgroundColor:'#ff7300',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y'},
+    {label:'FB int',data:[null,d.fb.intPerPost],backgroundColor:'#182f8c',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y2'},
+    {label:'IG int',data:[null,d.ig.intPerPost],backgroundColor:'#259717',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y2'},
+    {label:'TT int',data:[null,d.tt.intPerPost],backgroundColor:'#ff7300',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y2'}
+  ]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:28}},plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{...AXT,ticks:{...AXT.ticks,font:{family:'Montserrat',size:11,weight:'600'},color:'#333'}},y:{position:'left',title:{display:true,text:'Impressions per post',font:{size:10},color:'#555'},ticks:AXT.ticks,grid:{color:'#f0f0f0'},min:0},y2:{position:'right',title:{display:true,text:'Interactions per post',font:{size:10},color:'#7a3000'},ticks:{...AXT.ticks,color:'#7a3000'},grid:{drawOnChartArea:false},min:0,max:75}}}});
+}
+
+// --- SECTION 10 CAMPAIGNS ---
+function buildS10() {
+  document.getElementById('s10-camps').innerHTML = S10_CAMPAIGNS.map(c=>`
+    <div style="border-radius:10px;padding:16px;background:${c.lightColor};border:1.5px solid ${c.color}33;">
+      <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:${c.color};margin-bottom:3px;">${c.name} <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:${c.color};color:#fff;">${c.status}</span></div>
+      <div style="font-size:11px;color:#666;margin-bottom:10px;">${c.dateRange} · ${c.creatives} creatives · $${c.budgetPerAd} budget/ad</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <div style="background:rgba(255,255,255,0.6);border-radius:7px;padding:8px 10px;"><div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:18px;color:${c.color};">${c.totalViews.toLocaleString()}</div><div style="font-size:10px;color:#666;font-family:'Montserrat',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.03em;margin-top:2px;">Total views</div></div>
+        <div style="background:rgba(255,255,255,0.6);border-radius:7px;padding:8px 10px;"><div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:18px;color:${c.color};">${c.lpv}</div><div style="font-size:10px;color:#666;font-family:'Montserrat',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.03em;margin-top:2px;">LP views</div><div style="font-size:10px;color:${c.color};margin-top:1px;">${c.lpvRate}% rate</div></div>
+        <div style="background:rgba(255,255,255,0.6);border-radius:7px;padding:8px 10px;"><div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:18px;color:${c.color};">${c.uniqueViewers.toLocaleString()}</div><div style="font-size:10px;color:#666;font-family:'Montserrat',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.03em;margin-top:2px;">Unique viewers</div></div>
+        <div style="background:rgba(255,255,255,0.6);border-radius:7px;padding:8px 10px;"><div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:18px;color:${c.color};">$${c.costPerLPV.toFixed(2)}</div><div style="font-size:10px;color:#666;font-family:'Montserrat',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.03em;margin-top:2px;">Cost per LPV</div></div>
+      </div>
+      <div style="font-size:10px;color:#666;margin-bottom:3px;display:flex;justify-content:space-between;"><span>Budget utilization ($${c.totalBudget} total)</span><span style="font-weight:600;color:${c.color};">$${c.spent.toFixed(2)} spent · ${c.spentPct}%</span></div>
+      <div style="background:rgba(255,255,255,0.5);border-radius:4px;height:8px;"><div style="background:${c.color};border-radius:4px;height:8px;width:${c.spentPct}%;"></div></div>
+    </div>`).join('');
+
+  const h2h=[
+    {label:'LP Conversion Rate', vals:[{v:'1.76%',l:'Info Session',c:'#182f8c'},{v:'0.43%',l:'Interest Form',c:'#259717'}]},
+    {label:'Cost per Landing Page View', vals:[{v:'$0.40',l:'Info Session',c:'#182f8c'},{v:'$3.14',l:'Interest Form',c:'#259717'}]},
+    {label:'Viewer-to-View Ratio', vals:[{v:'86%',l:'Info Session',c:'#182f8c'},{v:'97%',l:'Interest Form',c:'#259717'}]}
+  ];
+  document.getElementById('s10-h2h').innerHTML=h2h.map(m=>`<div style="background:#f4f4f4;border-radius:8px;padding:10px 12px;text-align:center;">
+    <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.03em;color:#666;margin-bottom:8px;">${m.label}</div>
+    <div style="display:flex;justify-content:space-around;align-items:flex-end;gap:8px;">
+      ${m.vals.map(v=>`<div style="text-align:center;"><div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:16px;color:${v.c};">${v.v}</div><div style="font-size:9px;font-family:'Montserrat',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:${v.c};margin-top:3px;">${v.l}</div></div>`).join('<div style="width:1px;background:#e0e0e0;align-self:stretch;"></div>')}
+    </div>
+  </div>`).join('');
+}
+
+// ================================================================
+//  NAVIGATION & TAB LOGIC
+// ================================================================
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function showSubTab(section, tab, el) {
+  const prefix = section+'-';
+  document.querySelectorAll(`[id^="${prefix}chart-"],[id^="${prefix}legend-"],[id^="${prefix}insight-"]`).forEach(el=>{
+    el.style.display='none';
+  });
+  ['chart-'+tab,'legend-'+tab,'insight-'+tab].forEach(suffix=>{
+    const el=document.getElementById(prefix+suffix);
+    if(el) el.style.display = el.tagName==='DIV'&&el.className.includes('legend')?'flex':'block';
+  });
+  el.closest('.stw-tabs').querySelectorAll('.stw-tab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  // Update S1 cards when switching FB/IG
+  if(section==='s1') buildS1Cards(tab);
+}
+
+// ================================================================
+//  INIT — build all charts on load
+// ================================================================
+window.addEventListener('load', ()=>{
+  // If already authenticated (session persisted), init immediately
+  if (sessionStorage.getItem('stw_auth') === '1') {
+    initDashboard();
+  }
+});
+</script>
+</div><!-- end #dashboard -->
+</body>
+</html>
