@@ -487,10 +487,10 @@ function checkPW() {
   const input = document.getElementById('pw-input').value;
   const err = document.getElementById('pw-error');
   if (input === PW_CORRECT) {
-    sessionStorage.setItem('stw_auth', '1');
+    localStorage.setItem('stw_auth', '1');
     document.getElementById('pw-screen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
-    initDashboard();
+    setTimeout(initDashboard, 50);
   } else {
     err.textContent = 'Incorrect password. Please try again.';
     document.getElementById('pw-input').value = '';
@@ -498,11 +498,7 @@ function checkPW() {
   }
 }
 
-// Check if already authenticated this session
-if (sessionStorage.getItem('stw_auth') === '1') {
-  document.getElementById('pw-screen').style.display = 'none';
-  document.getElementById('dashboard').style.display = 'block';
-}
+// Auth handled in window.load event below
 
 function initDashboard() {
   buildS1Charts();
@@ -845,6 +841,7 @@ function buildS1Charts() {
   buildS1Cards('fb');
   function makeTrend(canvasId, imp, posts, impColor, postColor) {
     return new Chart(document.getElementById(canvasId), {
+      type:'bar',
       data:{ labels:S1_LABELS, datasets:[
         { type:'bar', label:'Posts', data:posts,
           backgroundColor: posts.map((_,i)=>S1_SSL[i]?postColor:postColor+'99'),
@@ -962,6 +959,7 @@ function buildS3Charts() {
     });
   }
   new Chart(document.getElementById('s3ov'),{
+    type:'bar',
     data:{labels:allL,datasets:buildYearBars(S3_PAGEVIEWS,['#182f8c','#7f8fcc','#b8c2e8','#ff7300'])},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       layout:{padding:{top:18}},
@@ -1093,7 +1091,7 @@ function buildS6Charts() {
     buildMMCard('AG Conversions', S6_AG_CONV[ci], S6_AG_CONV[pi], true, v=>String(v));
 
   // AG Efficiency: cost/conv bar + conversions line
-  new Chart(document.getElementById('s6ageff'),{data:{labels:S6_LABELS,datasets:[
+  new Chart(document.getElementById('s6ageff'),{type:'bar',data:{labels:S6_LABELS,datasets:[
     {type:'bar',label:'Cost/conv',data:S6_AG_CPC,backgroundColor:'#182f8c',borderRadius:3,yAxisID:'y'},
     {type:'line',label:'Conversions',data:S6_AG_CONV,borderColor:'#ff7300',backgroundColor:'transparent',pointBackgroundColor:'#ff7300',pointRadius:4,yAxisID:'y2',tension:0.3}
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
@@ -1126,7 +1124,7 @@ function buildS6Charts() {
 
   // Paid Efficiency: cost/conv bar + conversions line (Oct 25 onward)
   const paidEffLabels = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
-  new Chart(document.getElementById('s6paideff'),{data:{labels:paidEffLabels,datasets:[
+  new Chart(document.getElementById('s6paideff'),{type:'bar',data:{labels:paidEffLabels,datasets:[
     {type:'bar',label:'Cost/conv',data:S6_PAID_CPC.slice(7),backgroundColor:'#ff7300',borderRadius:3,yAxisID:'y'},
     {type:'line',label:'Conversions',data:S6_PAID_CONV.slice(7),borderColor:'#182f8c',backgroundColor:'transparent',pointBackgroundColor:'#182f8c',pointRadius:4,yAxisID:'y2',tension:0.3}
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
@@ -1146,7 +1144,7 @@ function buildS6Charts() {
     scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:AXT.ticks,grid:{color:'#f0f0f0'}}}}});
 
   // Spend: stacked AG + paid + CTR line
-  new Chart(document.getElementById('s6spend'),{data:{labels:S6_LABELS,datasets:[
+  new Chart(document.getElementById('s6spend'),{type:'bar',data:{labels:S6_LABELS,datasets:[
     {type:'bar',label:'Ad Grant',data:S6_AG_COST,backgroundColor:'#182f8c',borderRadius:0,yAxisID:'y',stack:'spend'},
     {type:'bar',label:'Paid',data:S6_PAID_COST,backgroundColor:'#ff7300',borderRadius:2,yAxisID:'y',stack:'spend'},
     {type:'line',label:'CTR',data:S6_AG_CTR,borderColor:'#259717',backgroundColor:'transparent',pointBackgroundColor:'#259717',pointRadius:3,yAxisID:'y2',tension:0.3}
@@ -1164,7 +1162,7 @@ function buildS7Charts() {
     buildMMCard('STW Posts', S7_STW_POSTS[ci], S7_STW_POSTS[pi], null, v=>String(v)) +
     buildMMCard('STW Impr/post', S7_STW_EFF[ci], S7_STW_EFF[pi], true, v=>String(v));
 
-  new Chart(document.getElementById('s7imp'),{data:{labels:S7_LABELS,datasets:[
+  new Chart(document.getElementById('s7imp'),{type:'bar',data:{labels:S7_LABELS,datasets:[
     {type:'bar',label:'STW',data:S7_STW_IMPR,backgroundColor:'#182f8c99',borderRadius:3,yAxisID:'y',categoryPercentage:0.7},
     {type:'bar',label:'Kate',data:S7_KATE_IMPR,backgroundColor:'#ff730099',borderRadius:3,yAxisID:'y',categoryPercentage:0.7},
     {type:'line',label:'STW posts',data:S7_STW_POSTS,borderColor:'#182f8c',borderDash:[4,3],backgroundColor:'transparent',pointRadius:3,pointBackgroundColor:'#182f8c',yAxisID:'y2',tension:0.3},
@@ -1184,7 +1182,7 @@ function buildS8Charts() {
     buildMMCard('CTR', S8_CTR[ci], S8_CTR[pi], true, v=>v.toFixed(2)+'%') +
     buildMMCard('CPC', S8_CPC[ci], S8_CPC[pi], false, v=>'$'+v.toFixed(2));
 
-  new Chart(document.getElementById('s8trend'),{data:{labels:S8_LABELS,datasets:[
+  new Chart(document.getElementById('s8trend'),{type:'bar',data:{labels:S8_LABELS,datasets:[
     {type:'bar',label:'Spend',data:S8_COST,backgroundColor:'#ff7300',borderRadius:3,yAxisID:'y'},
     {type:'bar',label:'Clicks',data:S8_CLICKS,backgroundColor:'#182f8c',borderRadius:3,yAxisID:'y2'},
     {type:'line',label:'Impr÷100',data:S8_IMPR.map(v=>Math.round(v/100)),borderColor:'#259717',backgroundColor:'transparent',pointBackgroundColor:'#259717',pointRadius:4,yAxisID:'y2',tension:0.3}
@@ -1297,9 +1295,12 @@ function showSubTab(section, tab, el) {
 //  INIT — build all charts on load
 // ================================================================
 window.addEventListener('load', ()=>{
-  // If already authenticated (session persisted), init immediately
-  if (sessionStorage.getItem('stw_auth') === '1') {
-    initDashboard();
+  // If already authenticated this session, skip password screen
+  if (localStorage.getItem('stw_auth') === '1') {
+    document.getElementById('pw-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    // Small delay ensures dashboard div is visible before Chart.js renders
+    setTimeout(initDashboard, 50);
   }
 });
 </script>
