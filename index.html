@@ -117,6 +117,7 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
   <button class="nav-btn" onclick="showSection('s8',this)">Paid Social</button>
   <button class="nav-btn" onclick="showSection('s9',this)">TikTok</button>
   <button class="nav-btn" onclick="showSection('s10',this)">Campaigns</button>
+  <button class="nav-btn" onclick="showSection('s11',this)">Fundraising</button>
 </div>
 
 <!-- ============================================================
@@ -587,6 +588,41 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 </div>
 
 <!-- ============================================================
+     SECTION 11 — FUNDRAISING
+     ============================================================ -->
+<div id="s11" class="section">
+<div class="stw-header">
+  <div><div class="stw-title">Fundraising</div><div class="stw-subtitle">GiveButter campaign performance &amp; platform totals · Sep 2025 – Mar 2026</div></div>
+</div>
+<div class="stw-tabs">
+  <button class="stw-tab active" onclick="showSubTab('s11','campaign',this)">Our campaigns</button>
+  <button class="stw-tab" onclick="showSubTab('s11','platform',this)">All GB donations</button>
+</div>
+
+<!-- Our campaigns tab -->
+<div id="s11-legend-campaign" class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Amount raised (left)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Avg donation $ (right)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div># donations (right)</div>
+</div>
+<div id="s11-cards-campaign" class="mm-grid mm-grid-3" style="margin-bottom:16px;"></div>
+<div id="s11-chart-campaign" class="chart-wrap" style="height:320px;"><canvas id="s11c1"></canvas></div>
+<div id="s11-insight-campaign" class="stw-insight">December&#8217;s year-end campaign drove 61% of all donations in the 7-month window. Average gift drops sharply with volume &#8212; smaller campaigns (Sep, Mar) sustain $420&#8211;$657 avg gifts while the YE push averaged $200.</div>
+
+<!-- All GB donations tab -->
+<div id="s11-legend-platform" class="legend" style="display:none;">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>GB donation total (left)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Avg gift $ (right)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Unique supporters (right)</div>
+</div>
+<div id="s11-cards-platform" class="mm-grid mm-grid-3" style="display:none;margin-bottom:16px;"></div>
+<div id="s11-chart-platform" class="chart-wrap" style="height:320px;display:none;"><canvas id="s11c2"></canvas></div>
+<div id="s11-insight-platform" class="stw-insight" style="display:none;">November was the platform&#8217;s peak donation month ($217k). March rebounded strongly to $107k after a slow February &#8212; driven by 330 unique supporters, the second-highest in the window. Avg gift rose to $278, reversing a multi-month decline.</div>
+
+<div class="stw-note">Source: GiveButter &#183; Sep 2025 &#8211; Mar 2026</div>
+</div>
+
+<!-- ============================================================
      ALL DATA + SCRIPTS
      ============================================================ -->
 <script>
@@ -629,6 +665,7 @@ function initDashboard() {
   buildS8Charts();
   buildS9();
   buildS10();
+  buildS11();
 }
 // ================================================================
 //  ██████╗  █████╗ ████████╗ █████╗
@@ -944,6 +981,19 @@ const S9_DATA = {
   ig:  { followers:3761,  posts:29, imprPerPost:2586, intPerPost:56  },
   tt:  { followers:123,   posts:1,  imprPerPost:308,  intPerPost:20  }
 };
+
+// ----------------------------------------------------------------
+// SECTION 11 — FUNDRAISING
+// ----------------------------------------------------------------
+const S11_LABELS   = ["Sep '25","Oct '25","Nov '25","Dec '25","Jan '26","Feb '26","Mar '26"];
+// Our campaigns
+const S11_RAISED   = [4600, 1190, 5700, 13228, 1550, 1166, 2098];
+const S11_AVG_DON  = [657,  595,  438,  200,   172,  194,  420];
+const S11_NUM_DON  = [7,    2,    13,   66,    9,    6,    5];
+// All GiveButter donations
+const S11_GB_TOT   = [134230, 70397, 217406, 100712, 93821, 43953, 107724];
+const S11_GB_AVG   = [1157, 903, 766, 206, 242, 113, 278];
+const S11_GB_SUPP  = [111, 78, 269, 393, 293, 205, 330];
 
 // ----------------------------------------------------------------
 // SECTION 10 — CAMPAIGNS (update as new campaigns run)
@@ -1925,6 +1975,104 @@ function showSubTab(section, tab, el) {
     const inv=document.getElementById('s4-chart-inventory');
     if(inv) inv.style.display='block';
   }
+  // s11 tabs have extra cards divs not caught by the chart- prefix
+  if(section==='s11') {
+    const cards=document.getElementById('s11-cards-'+tab);
+    if(cards) cards.style.display='grid';
+  }
+}
+
+// --- SECTION 11 FUNDRAISING ---
+function buildS11() {
+  const L = S11_LABELS;
+  const h = v => v >= 1000 ? '$'+(v/1000).toFixed(0)+'k' : '$'+v;
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const grid = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)';
+  const lc   = isDark ? '#aaa' : '#555';
+  const af   = { family:'Montserrat', size:11 };
+
+  // --- Summary cards helper ---
+  function makeCards(id, items) {
+    document.getElementById(id).innerHTML = items.map(({label, val, sub, color}) =>
+      `<div class="mm-card"><div class="mm-label">${label}</div>` +
+      `<div class="mm-value" style="color:${color};">${val}</div>` +
+      (sub ? `<div style="font-size:10px;color:var(--color-text-secondary);margin-top:2px;">${sub}</div>` : '') +
+      `</div>`
+    ).join('');
+  }
+
+  // Campaign cards (March spotlight)
+  makeCards('s11-cards-campaign', [
+    { label:'March raised',       val:'$2,098', sub:'vs $1,166 in February', color:'#182f8c' },
+    { label:'March donations',    val:'5',      sub:'vs 6 in February',      color:'#259717' },
+    { label:'March avg donation', val:'$420',   sub:'vs $194 in February',   color:'#ff7300' },
+  ]);
+
+  // Platform cards (March spotlight)
+  makeCards('s11-cards-platform', [
+    { label:'March GB total',         val:'$107,724', sub:'vs $43,953 in February', color:'#182f8c' },
+    { label:'March unique supporters',val:'330',      sub:'vs 205 in February',      color:'#259717' },
+    { label:'March avg gift',         val:'$278',     sub:'vs $113 in February',     color:'#ff7300' },
+  ]);
+
+  // --- Chart 1: Our campaigns ---
+  function barColors(arr, peak) {
+    return arr.map((_, i) => i === 6 ? peak : i === peak ? peak+'99' : peak+'55');
+  }
+  function ptColors(arr, col) { return arr.map((_, i) => i === 6 ? col : col+'77'); }
+  function ptRadii(arr) { return arr.map((_, i) => i === 6 ? 6 : 4); }
+
+  new Chart(document.getElementById('s11c1'), {
+    type: 'bar',
+    data: { labels: L, datasets: [
+      { label:'Amount raised', data:S11_RAISED,  backgroundColor:S11_RAISED.map((_,i)=>i===6?'#182f8c':i===3?'#182f8c99':'#182f8c55'), borderRadius:4, categoryPercentage:0.6, barPercentage:0.85, yAxisID:'y' },
+      { label:'Avg donation',  data:S11_AVG_DON, type:'line', borderColor:'#ff7300', backgroundColor:'transparent', pointBackgroundColor:ptColors(S11_AVG_DON,'#ff7300'), pointRadius:ptRadii(S11_AVG_DON), borderWidth:2.5, tension:0.3, yAxisID:'y2' },
+      { label:'# donations',   data:S11_NUM_DON, type:'line', borderColor:'#259717', backgroundColor:'transparent', pointBackgroundColor:ptColors(S11_NUM_DON,'#259717'), pointRadius:ptRadii(S11_NUM_DON), borderWidth:2, borderDash:[4,3], tension:0.3, yAxisID:'y2' }
+    ]},
+    options: { responsive:true, maintainAspectRatio:false, layout:{padding:{top:28,right:16}},
+      interaction:{mode:'index',intersect:false},
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>{const v=ctx.parsed.y;if(ctx.dataset.label==='Amount raised')return` Raised: $${v.toLocaleString()}`;if(ctx.dataset.label==='Avg donation')return` Avg gift: $${v}`;return` Donations: ${v}`;}}} },
+      scales:{ x:{ticks:{color:lc,font:{...af,weight:'600'}},grid:{color:grid}},
+        y:{position:'left',title:{display:true,text:'Amount raised ($)',color:lc,font:af},ticks:{color:lc,font:af,callback:v=>'$'+(v>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:grid},min:0},
+        y2:{position:'right',title:{display:true,text:'Avg gift ($)  ·  # donations',color:'#7a3000',font:af},ticks:{color:'#7a3000',font:af},grid:{drawOnChartArea:false},min:0,max:80} }},
+    plugins:[{id:'s11c1Labels',afterDatasetsDraw(chart){
+      const ctx=chart.ctx;
+      chart.getDatasetMeta(0).data.forEach((bar,i)=>{
+        const v=S11_RAISED[i];
+        ctx.save();ctx.font='600 10px Open Sans';
+        ctx.fillStyle=i===6?'#182f8c':i===3?'#182f8c99':'#182f8c77';
+        ctx.textAlign='center';ctx.textBaseline='bottom';
+        ctx.fillText('$'+(v>=1000?(v/1000).toFixed(1)+'k':v),bar.x,bar.y-4);ctx.restore();
+      });
+    }}]
+  });
+
+  // --- Chart 2: All GB donations ---
+  new Chart(document.getElementById('s11c2'), {
+    type: 'bar',
+    data: { labels: L, datasets: [
+      { label:'GB donation total',  data:S11_GB_TOT,  backgroundColor:S11_GB_TOT.map((_,i)=>i===6?'#182f8c':i===2?'#182f8c99':'#182f8c55'), borderRadius:4, categoryPercentage:0.6, barPercentage:0.85, yAxisID:'y' },
+      { label:'Avg gift',           data:S11_GB_AVG,  type:'line', borderColor:'#ff7300', backgroundColor:'transparent', pointBackgroundColor:ptColors(S11_GB_AVG,'#ff7300'), pointRadius:ptRadii(S11_GB_AVG), borderWidth:2.5, tension:0.3, yAxisID:'y2' },
+      { label:'Unique supporters',  data:S11_GB_SUPP, type:'line', borderColor:'#259717', backgroundColor:'transparent', pointBackgroundColor:ptColors(S11_GB_SUPP,'#259717'), pointRadius:ptRadii(S11_GB_SUPP), borderWidth:2, borderDash:[4,3], tension:0.3, yAxisID:'y3' }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, layout:{padding:{top:28,right:16}},
+      interaction:{mode:'index',intersect:false},
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>{const v=ctx.parsed.y;if(ctx.dataset.label==='GB donation total')return` Total: $${v.toLocaleString()}`;if(ctx.dataset.label==='Avg gift')return` Avg gift: $${v.toLocaleString()}`;return` Unique supporters: ${v}`;}}} },
+      scales:{ x:{ticks:{color:lc,font:{...af,weight:'600'}},grid:{color:grid}},
+        y:{position:'left',title:{display:true,text:'GB donation total ($)',color:lc,font:af},ticks:{color:lc,font:af,callback:v=>'$'+(v>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:grid},min:0},
+        y2:{position:'right',title:{display:true,text:'Avg gift ($)',color:'#7a3000',font:af},ticks:{color:'#7a3000',font:af,callback:v=>'$'+v},grid:{drawOnChartArea:false},min:0,max:1400},
+        y3:{position:'right',display:false,min:0,max:550} }},
+    plugins:[{id:'s11c2Labels',afterDatasetsDraw(chart){
+      const ctx=chart.ctx;
+      chart.getDatasetMeta(0).data.forEach((bar,i)=>{
+        const v=S11_GB_TOT[i];
+        ctx.save();ctx.font='600 10px Open Sans';
+        ctx.fillStyle=i===6?'#182f8c':i===2?'#182f8c99':'#182f8c77';
+        ctx.textAlign='center';ctx.textBaseline='bottom';
+        ctx.fillText('$'+(v>=1000?(v/1000).toFixed(0)+'k':v),bar.x,bar.y-4);ctx.restore();
+      });
+    }}]
+  });
 }
 
 // ================================================================
