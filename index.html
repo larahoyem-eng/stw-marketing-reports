@@ -692,8 +692,15 @@ function _buildSection(id) {
     return;
   }
   if (id === 's6')  {
-    // Use setTimeout so section is fully visible before Chart.js measures canvas
-    setTimeout(() => { buildS6Charts(); }, 20);
+    setTimeout(() => {
+      try { buildS6Charts(); }
+      catch(e) {
+        const dbg = document.createElement('div');
+        dbg.style = 'background:red;color:white;padding:12px;font-size:12px;white-space:pre;';
+        dbg.textContent = 'S6 ERROR: ' + e.message + '\n' + e.stack;
+        document.getElementById('s6').prepend(dbg);
+      }
+    }, 100);
     return;
   }
   if (id === 's7')  {
