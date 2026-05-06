@@ -675,16 +675,41 @@ function _buildSection(id) {
   if (_built[id]) return;
   _built[id] = true;
   if (id === 's1')  { buildS1Charts(); return; }
-  if (id === 's2')  { buildS2Charts(); return; }
-  if (id === 's3')  { buildS3Charts(); buildS3_13mo(); buildS3_marchYOY(); return; }
-  if (id === 's4')  { buildS4Overview(); buildS4(); return; }
-  if (id === 's5')  { buildS5Charts(); return; }
-  if (id === 's6')  { buildS6Charts(); return; }
-  if (id === 's7')  { buildS7Charts(); return; }
-  if (id === 's8')  { buildS8Charts(); return; }
-  if (id === 's9')  { buildS9(); return; }
-  if (id === 's10') { buildS10(); return; }
-  if (id === 's11') { buildS11(); return; }
+  if (id === 's2')  {
+    setTimeout(() => { buildS2Charts() }, 20);
+    return;
+  }
+  if (id === 's3')  {
+    setTimeout(() => { buildS3Charts(); buildS3_13mo(); buildS3_marchYOY(); }, 20);
+    return;
+  }
+  if (id === 's4')  {
+    setTimeout(() => { buildS4Overview(); buildS4(); }, 20);
+    return;
+  }
+  if (id === 's5')  {
+    setTimeout(() => { buildS5Charts() }, 20);
+    return;
+  }
+  if (id === 's6')  {
+    // Use setTimeout so section is fully visible before Chart.js measures canvas
+    setTimeout(() => { buildS6Charts(); }, 20);
+    return;
+  }
+  if (id === 's7')  {
+    setTimeout(() => { buildS7Charts() }, 20);
+    return;
+  }
+  if (id === 's8')  {
+    setTimeout(() => { buildS8Charts() }, 20);
+    return;
+  }
+  if (id === 's9')  {
+    setTimeout(() => { buildS9() }, 20);
+    return;
+  }
+  if (id === 's10') { setTimeout(() => { buildS10(); }, 20); return; }
+  if (id === 's11') { setTimeout(() => { buildS11(); }, 20); return; }
 }
 // ================================================================
 //  ██████╗  █████╗ ████████╗ █████╗
@@ -1729,7 +1754,11 @@ function buildS6Charts() {
     plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{if(ctx.dataset.label==='CTR')return` CTR: ${ctx.parsed.y}%`;return` ${ctx.dataset.label}: $${ctx.parsed.y?.toLocaleString()??'—'}`;}}}},
     scales:{x:AXT,y:{position:'left',stacked:true,ticks:{...AXT.ticks,callback:v=>'$'+(v>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:'#f0f0f0'}},y2:{position:'right',min:0,max:7,ticks:{...AXT.ticks,callback:v=>v+'%'},grid:{drawOnChartArea:false}}}}});
 
-  // ── Campaign Comparison — March 2026 ─────────────────────────────────
+}
+
+
+function buildS6CampCompare() {
+// ── Campaign Comparison — March 2026 ─────────────────────────────────
   // 3 grouped bar sets: Interaction Rate | Conv. Rate | (rates on y left)
   // Avg. Cost + Cost/Conv on y2 right as line markers with dot labels
   const cc = S6_CAMP_COMPARE;
@@ -2045,6 +2074,11 @@ function showSubTab(section, tab, el) {
   el.classList.add('active');
   // Update S1 cards when switching FB/IG
   if(section==='s1') buildS1Cards(tab);
+  // s6 campaign comparison tab: canvas is hidden at section load time
+  if(section==='s6' && tab==='camp-compare' && !window._s6CampBuilt) {
+    window._s6CampBuilt = true;
+    buildS6CampCompare();
+  }
   // Build newsletter chart lazily on first click (canvas needs visible parent)
   if(section==='s5' && tab==='newsletter' && !window._s5nlBuilt) {
     window._s5nlBuilt = true;
