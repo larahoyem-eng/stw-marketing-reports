@@ -1556,7 +1556,7 @@ function buildS5Charts() {
   new Chart(document.getElementById('s5or'),{type:'bar',data:{labels:types,datasets:[{data:avgOR,backgroundColor:barColors,borderRadius:3}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` Avg open rate: ${ctx.parsed.x.toFixed(1)}%`}}},scales:{x:{...AXT,ticks:{...AXT.ticks,callback:v=>v+'%'},max:65},y:{ticks:{font:{family:'Open Sans',size:11},color:'#333'},grid:{display:false}}}}});
   document.getElementById('s5-chart-ctr').style.height=h+'px';
   new Chart(document.getElementById('s5ctr'),{type:'bar',data:{labels:ctrSorted,datasets:[{data:ctrSorted.map(t=>parseFloat((groups[t].totalCTR/groups[t].count).toFixed(2))),backgroundColor:ctrSorted.map(t=>typeColors[t]||'#888'),borderRadius:3}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...AXT,ticks:{...AXT.ticks,callback:v=>v+'%'}},y:{ticks:{font:{family:'Open Sans',size:11},color:'#333'},grid:{display:false}}}}});
-  const monthOrder=['Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
+  const monthOrder=['Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26'];
   function emailMonth(d){const[m,,y]=d.split('/');const yr=parseInt('20'+y.slice(-2));return new Date(yr,parseInt(m)-1,1).toLocaleDateString('en-US',{month:'short',year:'2-digit'});}
   const volByTypeMonth={};types.forEach(t=>{volByTypeMonth[t]=Array(monthOrder.length).fill(0);});
   EMAIL_DATA.forEach(([type,date])=>{const mk=emailMonth(date);const mi=monthOrder.indexOf(mk);if(mi>=0&&volByTypeMonth[type])volByTypeMonth[type][mi]++;});
