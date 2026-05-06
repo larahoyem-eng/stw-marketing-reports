@@ -685,19 +685,19 @@ function initDashboard() {
 // Months: Mar 25 → Mar 26 (13 months)
 // SSL months: Feb=1, Mar=2, Apr=3, Jul=6 (0-indexed within each year)
 // ----------------------------------------------------------------
-const S1_LABELS = ['Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
-const S1_SSL    = [true, true, false, false, true, false, false, false, false, false, false, true, true]; // Feb/Mar/Apr/Jul
-const S1_CURRENT_IDX = 12; // UPDATE: index of most recent month (0-based)
+const S1_LABELS = ['Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26'];
+const S1_SSL    = [true, true, false, false, true, false, false, false, false, false, false, true, true, true]; // Feb/Mar/Apr/Jul
+const S1_CURRENT_IDX = 13; // UPDATE: index of most recent month (0-based)
 
-const S1_FB_IMP    = [13486,23879,8113,9941,65852,7451,45800,25778,42411,30947,24901,79546,105000];
-const S1_FB_POSTS  = [15,25,8,18,45,13,20,21,25,22,18,24,29];
-const S1_FB_INT    = [479,675,168,304,1587,2620,719,379,558,398,247,2625,1677];
-const S1_FB_IPP    = [899,955,1014,552,1463,573,2290,1228,852,1388,1383,3314,3621];
+const S1_FB_IMP    = [13486,23879,8113,9941,65852,7451,45800,25778,42411,30947,24901,79546,105000,70138];
+const S1_FB_POSTS  = [15,25,8,18,45,13,20,21,25,22,18,24,29,38];
+const S1_FB_INT    = [479,675,168,304,1587,2620,719,379,558,398,247,2625,1677,1779];
+const S1_FB_IPP    = [899,955,1014,552,1463,573,2290,1228,852,1388,1383,3314,3621,1846];
 
-const S1_IG_IMP    = [13966,33502,6789,19816,129078,14894,44919,34800,40396,43110,34647,94849,74991];
-const S1_IG_POSTS  = [37,15,10,24,25,12,41,23,25,28,20,25,29];
-const S1_IG_INT    = [426,1307,282,386,1745,390,1869,499,561,817,520,2376,1620];
-const S1_IG_IPP    = [377,2233,679,826,5163,1241,1096,1513,822,1823,1732,3794,2586];
+const S1_IG_IMP    = [13966,33502,6789,19816,129078,14894,44919,34800,40396,43110,34647,94849,74991,109501];
+const S1_IG_POSTS  = [37,15,10,24,25,12,41,23,25,28,20,25,29,38];
+const S1_IG_INT    = [426,1307,282,386,1745,390,1869,499,561,817,520,2376,1620,2740];
+const S1_IG_IPP    = [377,2233,679,826,5163,1241,1096,1513,822,1823,1732,3794,2586,2882];
 
 // YOY data — full monthly arrays 2023-2026
 // Each row = Jan through Dec (or available months for 2026)
@@ -707,61 +707,61 @@ const S2_FB_IMP_YR  = {
   2023:[14589,32843,57813,50222,16677,31958,48977,32080,21173,21836,21203,39620],
   2024:[16060,23963,28527,42156,33074,18166,36036,38144,23883,36194,16074,16522],
   2025:[7817,18184,13486,23879,8113,9941,65852,7451,45800,25778,42411,30947],
-  2026:[24901,79546,105000,null,null,null,null,null,null,null,null,null]
+  2026:[24901,79546,105000,70138,null,null,null,null,null,null,null,null]
 };
 const S2_FB_POSTS_YR = {
   2023:[18,32,29,32,22,26,23,19,20,29,19,30],
   2024:[14,21,27,41,23,19,29,28,25,23,16,13],
   2025:[11,19,15,25,8,18,45,13,20,21,25,22],
-  2026:[18,24,29,null,null,null,null,null,null,null,null,null]
+  2026:[18,24,29,38,null,null,null,null,null,null,null,null]
 };
 const S2_FB_INT_YR = {
   2023:[337,659,858,972,461,750,874,841,508,557,385,830],
   2024:[392,621,521,962,644,577,791,997,673,788,420,382],
   2025:[236,501,479,675,168,304,1587,2620,719,379,558,398],
-  2026:[247,2625,1677,null,null,null,null,null,null,null,null,null]
+  2026:[247,2625,1677,1779,null,null,null,null,null,null,null,null]
 };
 const S2_IG_IMP_YR = {
   2023:[7604,12581,17280,15442,9593,11308,17964,12839,11351,11138,5865,14876],
   2024:[5799,17383,18670,17087,12340,8394,22628,12573,21152,18436,17749,13510],
   2025:[10334,34940,13966,33502,6789,19816,129078,14894,44919,34800,40396,43110],
-  2026:[34647,94849,74991,null,null,null,null,null,null,null,null,null]
+  2026:[34647,94849,74991,109501,null,null,null,null,null,null,null,null]
 };
 const S2_IG_POSTS_YR = {
   2023:[18,22,28,29,22,21,20,18,20,22,15,29],
   2024:[11,23,26,22,22,19,18,20,41,48,35,39],
   2025:[14,60,37,15,10,24,25,12,41,23,25,28],
-  2026:[20,25,29,null,null,null,null,null,null,null,null,null]
+  2026:[20,25,29,38,null,null,null,null,null,null,null,null]
 };
 const S2_IG_INT_YR = {
   2023:[515,1318,1744,1605,914,967,1608,1123,588,548,480,869],
   2024:[288,1347,1509,1276,794,698,1438,1031,1118,733,727,483],
   2025:[379,917,426,1307,282,386,1745,390,1869,499,561,817],
-  2026:[520,2376,1620,null,null,null,null,null,null,null,null,null]
+  2026:[520,2376,1620,2740,null,null,null,null,null,null,null,null]
 };
 // UPDATE THIS each month — month index (0=Jan) for YOY comparison
-const S2_CURRENT_MONTH_IDX = 2; // March = 2
-const S2_CURRENT_MONTH_NAME = 'March';
+const S2_CURRENT_MONTH_IDX = 3; // April = 3
+const S2_CURRENT_MONTH_NAME = 'April';
 
 // ----------------------------------------------------------------
 // SECTION 3 — WEBSITE
 // ----------------------------------------------------------------
-const S3_YEAR_COUNTS = [['2023',12],['2024',12],['2025',12],['2026',3]];
+const S3_YEAR_COUNTS = [['2023',12],['2024',12],['2025',12],['2026',4]];
 const S3_PAGEVIEWS = {
   '2023':[17799,34332,13968,14400,19726,20352,16436,12629,8420,9783,20357,18165],
   '2024':[17458,18152,15177,9708,16058,8074,7614,5780,7515,12972,16152,15773],
   '2025':[12665,12774,11949,10552,12013,9699,5318,4758,6648,8496,10348,11199],
-  '2026':[10618,6239,8570]
+  '2026':[10618,6239,8570,4155]
 };
-const S3_DIRECT    = [3555,4719,3084,1700,2242,2136,1613,716,692,1307,3770,3816,3397,3331,3063,1412,3264,1634,1341,637,813,1680,3000,3023,2757,2823,2598,2506,3073,2582,930,796,1402,1698,2156,4331,4583,1792,3141];
-const S3_ORGANIC   = [882,1608,1396,1126,1208,1103,842,621,539,976,1402,1583,1936,1863,1461,1253,1111,804,851,806,1093,1442,1606,1251,1336,1218,1209,1112,1296,847,846,802,1060,601,1102,477,673,507,514];
-const S3_CPC       = [1070,3994,52,2283,4657,5139,4693,4299,1992,220,1039,646,475,661,656,306,524,329,384,236,226,486,199,135,217,144,80,41,45,35,181,217,299,219,251,225,170,64,119];
-const S3_ORGSOCIAL = [868,1228,600,269,354,846,641,139,97,156,1458,1303,1662,1295,665,236,1169,499,356,116,198,486,818,1137,803,1039,896,919,854,674,197,419,396,173,201,840,531,560,562];
-const S3_EMAIL_SRC = [199,224,256,212,241,162,38,20,76,124,380,138,177,241,225,109,501,150,87,23,185,438,473,828,386,401,285,159,225,107,151,101,116,117,173,225,429,108,51];
-const S3_HOMEPAGE  = [1091,1679,1617,1365,1442,1519,1121,1142,978,1209,1406,1241,1559,1343,1361,1340,1140,763,864,970,1148,1415,1809,1420,1873,1260,1341,1115,1392,946,1175,1240,1677,1738,1347,1303,1188,790,826];
-const S3_FUNDRAISE = [262,580,394,475,369,630,345,14,10,25,164,71,198,280,245,226,1134,446,423,41,11,123,168,203,240,489,4525,3824,4783,4418,774,628,597,953,2610,5443,4170,2769,4315];
-const S3_SSL_PG    = [687,1182,679,978,1352,481,582,645,1413,2138,928,1096,1488,1651,1364,1184,1250,687,1018,680,1049,1017,1476,1347,1840,1261,null,null,null,null,null,150,914,2566,1099,958,1048,665,861];
-const S3_BLOG_PG   = [15,15,7,18,59,46,40,49,30,32,29,26,32,22,30,23,34,36,38,35,41,50,38,null,null,null,null,null,null,null,10,435,220,276,525,582,506,265,488];
+const S3_DIRECT    = [3555,4719,3084,1700,2242,2136,1613,716,692,1307,3770,3816,3397,3331,3063,1412,3264,1634,1341,637,813,1680,3000,3023,2757,2823,2598,2506,3073,2582,930,796,1402,1698,2156,4331,4583,1792,3141,965];
+const S3_ORGANIC   = [882,1608,1396,1126,1208,1103,842,621,539,976,1402,1583,1936,1863,1461,1253,1111,804,851,806,1093,1442,1606,1251,1336,1218,1209,1112,1296,847,846,802,1060,601,1102,477,673,507,514,539];
+const S3_CPC       = [1070,3994,52,2283,4657,5139,4693,4299,1992,220,1039,646,475,661,656,306,524,329,384,236,226,486,199,135,217,144,80,41,45,35,181,217,299,219,251,225,170,64,119,107];
+const S3_ORGSOCIAL = [868,1228,600,269,354,846,641,139,97,156,1458,1303,1662,1295,665,236,1169,499,356,116,198,486,818,1137,803,1039,896,919,854,674,197,419,396,173,201,840,531,560,562,354];
+const S3_EMAIL_SRC = [199,224,256,212,241,162,38,20,76,124,380,138,177,241,225,109,501,150,87,23,185,438,473,828,386,401,285,159,225,107,151,101,116,117,173,225,429,108,51,43];
+const S3_HOMEPAGE  = [1091,1679,1617,1365,1442,1519,1121,1142,978,1209,1406,1241,1559,1343,1361,1340,1140,763,864,970,1148,1415,1809,1420,1873,1260,1341,1115,1392,946,1175,1240,1677,1738,1347,1303,1188,790,826,731];
+const S3_FUNDRAISE = [262,580,394,475,369,630,345,14,10,25,164,71,198,280,245,226,1134,446,423,41,11,123,168,203,240,489,4525,3824,4783,4418,774,628,597,953,2610,5443,4170,2769,4315,1626];
+const S3_SSL_PG    = [687,1182,679,978,1352,481,582,645,1413,2138,928,1096,1488,1651,1364,1184,1250,687,1018,680,1049,1017,1476,1347,1840,1261,null,null,null,null,null,150,914,2566,1099,958,1048,665,861,392];
+const S3_BLOG_PG   = [15,15,7,18,59,46,40,49,30,32,29,26,32,22,30,23,34,36,38,35,41,50,38,null,null,null,null,null,null,null,10,435,220,276,525,582,506,265,488,383];
 // M/M cards: current = Mar 26, prev = Feb 26
 const S3_MM = { cur:{pv:8570,sessions:5382,users:3426,engaged:46}, prev:{pv:6239,sessions:4762,users:2431,engaged:81} };
 
@@ -869,12 +869,25 @@ const EMAIL_DATA = [
   ["SSL Supporters","3/9/26",140,21,15.00,1,4.76],["SSL Follow-Up","3/9/26",59,28,47.46,1,3.57],
   ["Newsletter","3/18/26",3832,1417,36.98,7,0.49],["SSL Supporters","3/19/26",92,18,19.57,0,0],
   ["DAF Campaign","3/19/26",37,7,18.92,2,28.57],["SSL Supporters","3/23/26",92,11,11.96,0,0]
+,
+  ["Book Club Campaign","4/9/26",3863,1494,38.67,7,0.47],
+  ["Newsletter","4/15/26",3790,1286,33.93,12,0.93],
+  ["Book Club Campaign","4/21/26",3678,642,17.46,7,1.09],
+  ["SSL Supporters","4/21/26",123,37,30.08,4,10.81],
+  ["SSL Supporters","4/21/26",94,20,21.28,2,10.00],
+  ["SSL Supporters","4/21/26",134,46,34.33,1,2.17],
+  ["SSL Supporters","4/23/26",90,17,18.89,2,11.76],
+  ["SSL Supporters","4/23/26",82,30,36.59,1,3.33],
+  ["SSL Supporters","4/23/26",119,33,27.73,3,9.09],
+  ["SSL Supporters","4/27/26",90,18,20.00,5,27.78],
+  ["SSL Supporters","4/27/26",117,36,30.77,8,22.22],
+  ["SSL Supporters","4/27/26",293,73,24.91,3,4.11]
 ];
 
 // ----------------------------------------------------------------
 // SECTION 6 — PAID GOOGLE
 // ----------------------------------------------------------------
-const S6_LABELS = ['Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
+const S6_LABELS = ['Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26'];
 const S6_CURRENT_IDX = 12;
 const S6_AG_COST  = [1360,2390,2700,1740,7602,4621,4764,9830,9899,10249,5818,9292,10267];
 
@@ -918,13 +931,13 @@ const S6_CAMP_COMPARE = [
     totalCost:   139.91,
   },
 ];
-const S6_AG_IMPR  = [7826,8644,6594,3935,9488,9955,14331,62600,147528,197386,55515,107219,111130];
+const S6_AG_IMPR  = [7826,8644,6594,3935,9488,9955,14331,62600,147528,197386,55515,107219,111130,12400];
 const S6_AG_CLICKS= [162,204,182,181,374,422,512,2290,5820,6832,2077,4451,4221];
-const S6_AG_CTR   = [2.07,2.36,2.76,4.60,3.92,4.24,3.57,3.66,3.95,3.46,3.74,4.15,3.80];
-const S6_AG_CONV  = [338,464,368,678,678,564,409,320,230,175,159,131,179];
-const S6_AG_CPC   = [4.02,5.16,4.04,2.60,11.21,8.19,11.65,30.72,43.04,58.57,36.59,70.93,57.36];
-const S6_PAID_COST= [null,null,null,null,null,null,null,177,486,486,479,491,623];
-const S6_PAID_CONV= [null,null,null,null,null,null,null,164,477,412,510,275,346];
+const S6_AG_CTR   = [2.07,2.36,2.76,4.60,3.92,4.24,3.57,3.66,3.95,3.46,3.74,4.15,3.80,4.99];
+const S6_AG_CONV  = [338,464,368,678,678,564,409,320,230,175,159,131,179,56];
+const S6_AG_CPC   = [4.02,5.16,4.04,2.60,11.21,8.19,11.65,30.72,43.04,58.57,36.59,70.93,57.36,126.73];
+const S6_PAID_COST= [null,null,null,null,null,null,null,177,486,486,479,491,623,160];
+const S6_PAID_CONV= [null,null,null,null,null,null,null,164,477,412,510,275,346,67];
 // AD GRANT conversion mix (Sep 25 – Feb 26, Mar blank)
 // Labels: Mar25,Apr25,May25,Jun25,Jul25,Aug25,Sep25,Oct25,Nov25,Dec25,Jan26,Feb26,Mar26
 const S6_AG_MIX_NEWS   = [null,null,null,null,null,null,4,2,8,3,0,0,null];
@@ -937,14 +950,14 @@ const S6_AG_MIX_OUTDNT = [null,null,null,null,null,null,1,2,3,2,0,0,null];
 const S6_AG_MIX_BLOG   = [null,null,null,null,null,null,18,16,10,4,14,6,null];
 
 // PAID campaign conversion mix (Oct 25 – Feb 26, Mar blank)
-const S6_PAID_MIX_NEWS = [null,null,null,null,null,null,null,0,6,16,4,null,null];
-const S6_PAID_MIX_INFO = [null,null,null,null,null,null,null,11,30,24,30,13,null];
-const S6_PAID_MIX_HON  = [null,null,null,null,null,null,null,7,9,11,27,14,null];
-const S6_PAID_MIX_PAN  = [null,null,null,null,null,null,null,13,42,28,28,25,null];
-const S6_PAID_MIX_GUA  = [null,null,null,null,null,null,null,21,68,59,50,31,null];
+const S6_PAID_MIX_NEWS = [null,null,null,null,null,null,null,0,6,16,4,null,null,null];
+const S6_PAID_MIX_INFO = [null,null,null,null,null,null,null,11,30,24,30,13,null,null];
+const S6_PAID_MIX_HON  = [null,null,null,null,null,null,null,7,9,11,27,14,null,null];
+const S6_PAID_MIX_PAN  = [null,null,null,null,null,null,null,13,42,28,28,25,null,null];
+const S6_PAID_MIX_GUA  = [null,null,null,null,null,null,null,21,68,59,50,31,null,null];
 
 // Paid campaign efficiency (Oct 25 onward)
-const S6_PAID_CPC = [null,null,null,null,null,null,null,1.08,1.02,1.18,0.94,1.79,1.80];
+const S6_PAID_CPC = [null,null,null,null,null,null,null,1.08,1.02,1.18,0.94,1.79,1.80,2.39];
 
 // ----------------------------------------------------------------
 // SECTION 7 — LINKEDIN
@@ -965,13 +978,13 @@ const S7_KATE_NFOL = [null,7,8,11,9,19,3,9,12,12];
 // ----------------------------------------------------------------
 // SECTION 8 — PAID SOCIAL
 // ----------------------------------------------------------------
-const S8_LABELS = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
-const S8_CURRENT_IDX = 5;
-const S8_COST   = [604,150,75,109,422.81,393.30];
-const S8_IMPR   = [104318,28555,8185,8314,64013,48478];
-const S8_CLICKS = [1410,272,118,155,976,744];
-const S8_CTR    = [1.35,0.95,1.44,1.86,1.52,1.53];
-const S8_CPC    = [0.43,0.55,0.63,0.70,0.43,0.53];
+const S8_LABELS = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26'];
+const S8_CURRENT_IDX = 6;
+const S8_COST   = [604,150,75,109,422.81,393.30,null];
+const S8_IMPR   = [104318,28555,8185,8314,64013,48478,null];
+const S8_CLICKS = [1410,272,118,155,976,744,null];
+const S8_CTR    = [1.35,0.95,1.44,1.86,1.52,1.53,null];
+const S8_CPC    = [0.43,0.55,0.63,0.70,0.43,0.53,null];
 
 // ----------------------------------------------------------------
 // SECTION 9 — TIKTOK (update monthly once more data available)
@@ -985,15 +998,15 @@ const S9_DATA = {
 // ----------------------------------------------------------------
 // SECTION 11 — FUNDRAISING
 // ----------------------------------------------------------------
-const S11_LABELS   = ["Sep '25","Oct '25","Nov '25","Dec '25","Jan '26","Feb '26","Mar '26"];
+const S11_LABELS   = ["Sep '25","Oct '25","Nov '25","Dec '25","Jan '26","Feb '26","Mar '26","Apr '26"];
 // Our campaigns
-const S11_RAISED   = [4600, 1190, 5700, 13228, 1550, 1166, 2098];
-const S11_AVG_DON  = [657,  595,  438,  200,   172,  194,  420];
-const S11_NUM_DON  = [7,    2,    13,   66,    9,    6,    5];
+const S11_RAISED   = [4600, 1190, 5700, 13228, 1550, 1166, 2098, 453];
+const S11_AVG_DON  = [657,  595,  438,  200,   172,  194,  420,  32];
+const S11_NUM_DON  = [7,    2,    13,   66,    9,    6,    5,    14];
 // All GiveButter donations
-const S11_GB_TOT   = [134230, 70397, 217406, 100712, 93821, 43953, 107724];
-const S11_GB_AVG   = [1157, 903, 766, 206, 242, 113, 278];
-const S11_GB_SUPP  = [111, 78, 269, 393, 293, 205, 330];
+const S11_GB_TOT   = [134230, 70397, 217406, 100712, 93821, 43953, 107724, 41045];
+const S11_GB_AVG   = [1157, 903, 766, 206, 242, 113, 278, 106];
+const S11_GB_SUPP  = [111, 78, 269, 393, 293, 205, 330, 107];
 
 // ----------------------------------------------------------------
 // SECTION 10 — CAMPAIGNS (update as new campaigns run)
@@ -1190,7 +1203,7 @@ function buildS3Charts() {
       });
     }}]
   });
-  const allS=[6974,12413,5643,5951,9456,9651,8320,6235,3887,4063,8323,7760,7948,7569,6190,3502,6841,3585,3135,1945,2639,4769,6427,7169,5812,5854,5487,5063,5983,4963,2764,2668,3732,5513,7319,7529,7253,4762,5382];
+  const allS=[6974,12413,5643,5951,9456,9651,8320,6235,3887,4063,8323,7760,7948,7569,6190,3502,6841,3585,3135,1945,2639,4769,6427,7169,5812,5854,5487,5063,5983,4963,2764,2668,3732,5513,7319,7529,7253,4762,5382,2466];
   const other=allL.map((_,i)=>Math.max(0,allS[i]-(S3_DIRECT[i]||0)-(S3_ORGANIC[i]||0)-(S3_CPC[i]||0)-(S3_ORGSOCIAL[i]||0)-(S3_EMAIL_SRC[i]||0)));
   new Chart(document.getElementById('s3src'),{type:'bar',data:{labels:allL,datasets:[
     {label:'Direct',data:S3_DIRECT,backgroundColor:S3_DIRECT.map((_,i)=>sslAll[i]?'#182f8c':'#182f8c99'),borderRadius:0},
@@ -1212,19 +1225,19 @@ function buildS3Charts() {
 
 // --- SECTION 3 — 13-MONTH VIEWS (Mar 2025 – Mar 2026) ---
 function buildS3_13mo() {
-  const L = ['Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
-  const PV  = [11949,10552,12013,9699,5318,4758,6648,8496,10348,11199,10618,6239,8570];
-  const SE  = [5487,5063,5983,4963,2764,2668,3732,5513,7319,7529,7253,4762,5382];
-  const D   = [2598,2506,3073,2582,930,796,1402,1698,2156,4331,4583,1792,3141];
-  const O   = [1209,1112,1296,847,846,802,1060,601,1102,477,673,507,514];
-  const C   = [80,41,45,35,181,217,299,219,251,225,170,64,119];
-  const OS  = [896,919,854,674,197,419,396,173,201,840,531,560,562];
-  const EM  = [285,159,225,107,151,101,116,117,173,225,429,108,51];
+  const L = ['Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26'];
+  const PV  = [11949,10552,12013,9699,5318,4758,6648,8496,10348,11199,10618,6239,8570,4155];
+  const SE  = [5487,5063,5983,4963,2764,2668,3732,5513,7319,7529,7253,4762,5382,2466];
+  const D   = [2598,2506,3073,2582,930,796,1402,1698,2156,4331,4583,1792,3141,965];
+  const O   = [1209,1112,1296,847,846,802,1060,601,1102,477,673,507,514,539];
+  const C   = [80,41,45,35,181,217,299,219,251,225,170,64,119,107];
+  const OS  = [896,919,854,674,197,419,396,173,201,840,531,560,562,354];
+  const EM  = [285,159,225,107,151,101,116,117,173,225,429,108,51,43];
   const OT  = SE.map((_,i)=>Math.max(0,SE[i]-D[i]-O[i]-C[i]-OS[i]-EM[i]));
-  const HP  = [1341,1115,1392,946,1175,1240,1677,1738,1347,1303,1188,790,826];
-  const FD  = [4525,3824,4783,4418,774,628,597,953,2610,5443,4170,2769,4315];
-  const SL  = [null,null,null,null,null,150,914,2566,1099,958,1048,665,861];
-  const BL  = [null,null,null,10,435,220,276,525,523,582,506,265,488];
+  const HP  = [1341,1115,1392,946,1175,1240,1677,1738,1347,1303,1188,790,826,731];
+  const FD  = [4525,3824,4783,4418,774,628,597,953,2610,5443,4170,2769,4315,1626];
+  const SL  = [null,null,null,null,null,150,914,2566,1099,958,1048,665,861,392];
+  const BL  = [null,null,null,10,435,220,276,525,523,582,506,265,488,383];
   const h = v=>v>=1000?(v/1000).toFixed(0)+'k':v;
 
   // Traffic overview: grouped PV + Sessions
@@ -1505,10 +1518,10 @@ function buildS5Charts() {
 // --- SECTION 5 NEWSLETTER TREND ---
 function buildS5Newsletter() {
   // One newsletter per month Aug 25 – Mar 26
-  const NL_LABELS    = ['Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
-  const NL_OR        = [43.62, 18.94, 30.71, 21.48, 6.62, 28.84, 13.63, 36.98]; // open rate %
-  const NL_CTR       = [0.12,  1.99,  1.52,  0.93,  1.22, 0.87,  1.34,  0.49];  // CTR %
-  const NL_RECIPIENTS= [4046,  4504,  4506,  4520,  12343,3176,  12582, 3832];   // delivered
+  const NL_LABELS    = ['Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26'];
+  const NL_OR        = [43.62, 18.94, 30.71, 21.48, 6.62, 28.84, 13.63, 36.98, 33.93]; // open rate %
+  const NL_CTR       = [0.12,  1.99,  1.52,  0.93,  1.22, 0.87,  1.34,  0.49,  0.93];  // CTR %
+  const NL_RECIPIENTS= [4046,  4504,  4506,  4520,  12343,3176,  12582, 3832,  3790];   // delivered
 
   new Chart(document.getElementById('s5nl'), {
     type: 'bar',
@@ -2003,16 +2016,16 @@ function buildS11() {
 
   // Campaign cards (March spotlight)
   makeCards('s11-cards-campaign', [
-    { label:'March raised',       val:'$2,098', sub:'vs $1,166 in February', color:'#182f8c' },
-    { label:'March donations',    val:'5',      sub:'vs 6 in February',      color:'#259717' },
-    { label:'March avg donation', val:'$420',   sub:'vs $194 in February',   color:'#ff7300' },
+    { label:'April raised',       val:'$453',   sub:'vs $2,098 in March',    color:'#182f8c' },
+    { label:'April donations',    val:'14',     sub:'vs 5 in March',         color:'#259717' },
+    { label:'April avg donation', val:'$32',    sub:'vs $420 in March',      color:'#ff7300' },
   ]);
 
   // Platform cards (March spotlight)
   makeCards('s11-cards-platform', [
-    { label:'March GB total',         val:'$107,724', sub:'vs $43,953 in February', color:'#182f8c' },
-    { label:'March unique supporters',val:'330',      sub:'vs 205 in February',      color:'#259717' },
-    { label:'March avg gift',         val:'$278',     sub:'vs $113 in February',     color:'#ff7300' },
+    { label:'April GB total',         val:'$41,045',  sub:'vs $107,724 in March',   color:'#182f8c' },
+    { label:'April unique supporters',val:'107',      sub:'vs 330 in March',         color:'#259717' },
+    { label:'April avg gift',         val:'$106',     sub:'vs $278 in March',        color:'#ff7300' },
   ]);
 
   // --- Chart 1: Our campaigns ---
@@ -2025,7 +2038,7 @@ function buildS11() {
   new Chart(document.getElementById('s11c1'), {
     type: 'bar',
     data: { labels: L, datasets: [
-      { label:'Amount raised', data:S11_RAISED,  backgroundColor:S11_RAISED.map((_,i)=>i===6?'#182f8c':i===3?'#182f8c99':'#182f8c55'), borderRadius:4, categoryPercentage:0.6, barPercentage:0.85, yAxisID:'y' },
+      { label:'Amount raised', data:S11_RAISED,  backgroundColor:S11_RAISED.map((_,i)=>i===7?'#182f8c':i===3?'#182f8c99':'#182f8c55'), borderRadius:4, categoryPercentage:0.6, barPercentage:0.85, yAxisID:'y' },
       { label:'Avg donation',  data:S11_AVG_DON, type:'line', borderColor:'#ff7300', backgroundColor:'transparent', pointBackgroundColor:ptColors(S11_AVG_DON,'#ff7300'), pointRadius:ptRadii(S11_AVG_DON), borderWidth:2.5, tension:0.3, yAxisID:'y2' },
       { label:'# donations',   data:S11_NUM_DON, type:'line', borderColor:'#259717', backgroundColor:'transparent', pointBackgroundColor:ptColors(S11_NUM_DON,'#259717'), pointRadius:ptRadii(S11_NUM_DON), borderWidth:2, borderDash:[4,3], tension:0.3, yAxisID:'y2' }
     ]},
@@ -2040,7 +2053,7 @@ function buildS11() {
       chart.getDatasetMeta(0).data.forEach((bar,i)=>{
         const v=S11_RAISED[i];
         ctx.save();ctx.font='600 10px Open Sans';
-        ctx.fillStyle=i===6?'#182f8c':i===3?'#182f8c99':'#182f8c77';
+        ctx.fillStyle=i===7?'#182f8c':i===3?'#182f8c99':'#182f8c77';
         ctx.textAlign='center';ctx.textBaseline='bottom';
         ctx.fillText('$'+(v>=1000?(v/1000).toFixed(1)+'k':v),bar.x,bar.y-4);ctx.restore();
       });
@@ -2051,7 +2064,7 @@ function buildS11() {
   new Chart(document.getElementById('s11c2'), {
     type: 'bar',
     data: { labels: L, datasets: [
-      { label:'GB donation total',  data:S11_GB_TOT,  backgroundColor:S11_GB_TOT.map((_,i)=>i===6?'#182f8c':i===2?'#182f8c99':'#182f8c55'), borderRadius:4, categoryPercentage:0.6, barPercentage:0.85, yAxisID:'y' },
+      { label:'GB donation total',  data:S11_GB_TOT,  backgroundColor:S11_GB_TOT.map((_,i)=>i===7?'#182f8c':i===2?'#182f8c99':'#182f8c55'), borderRadius:4, categoryPercentage:0.6, barPercentage:0.85, yAxisID:'y' },
       { label:'Avg gift',           data:S11_GB_AVG,  type:'line', borderColor:'#ff7300', backgroundColor:'transparent', pointBackgroundColor:ptColors(S11_GB_AVG,'#ff7300'), pointRadius:ptRadii(S11_GB_AVG), borderWidth:2.5, tension:0.3, yAxisID:'y2' },
       { label:'Unique supporters',  data:S11_GB_SUPP, type:'line', borderColor:'#259717', backgroundColor:'transparent', pointBackgroundColor:ptColors(S11_GB_SUPP,'#259717'), pointRadius:ptRadii(S11_GB_SUPP), borderWidth:2, borderDash:[4,3], tension:0.3, yAxisID:'y3' }
     ]},
@@ -2067,7 +2080,7 @@ function buildS11() {
       chart.getDatasetMeta(0).data.forEach((bar,i)=>{
         const v=S11_GB_TOT[i];
         ctx.save();ctx.font='600 10px Open Sans';
-        ctx.fillStyle=i===6?'#182f8c':i===2?'#182f8c99':'#182f8c77';
+        ctx.fillStyle=i===7?'#182f8c':i===2?'#182f8c99':'#182f8c77';
         ctx.textAlign='center';ctx.textBaseline='bottom';
         ctx.fillText('$'+(v>=1000?(v/1000).toFixed(0)+'k':v),bar.x,bar.y-4);ctx.restore();
       });
