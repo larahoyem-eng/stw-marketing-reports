@@ -555,11 +555,19 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
      ============================================================ -->
 <div id="s9" class="section">
 <div class="stw-header">
-  
-  <div><div class="stw-title">TikTok Launch: First Month Benchmarks</div><div class="stw-subtitle">March 2026 · TikTok vs. Facebook vs. Instagram</div></div>
+  <div><div class="stw-title">TikTok — Early Performance</div><div class="stw-subtitle">Month 1 vs Month 2 · April 2026 benchmark vs. Facebook &amp; Instagram</div></div>
 </div>
+
+<!-- M/M stat cards: April vs March -->
+<div class="section-label" style="margin-bottom:10px;">April 2026 vs March 2026 — Month-over-month</div>
+<div id="s9-mm" class="mm-grid mm-grid-4" style="margin-bottom:20px;"></div>
+
+<!-- Channel context cards -->
+<div class="section-label" style="margin-bottom:10px;">April 2026 channel context</div>
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;" id="s9-context"></div>
-<div class="section-label">Engagement efficiency — per post · March 2026</div>
+
+<!-- Benchmark chart -->
+<div class="section-label">Engagement efficiency — per post · April 2026 vs. established channels</div>
 <div class="legend">
   <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Facebook</div>
   <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Instagram</div>
@@ -568,8 +576,8 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
   <div class="legend-item" style="font-size:10px;color:#7a3000;">Interactions/post → right axis</div>
 </div>
 <div class="chart-wrap" style="height:300px;"><canvas id="s9chart"></canvas></div>
-<div class="stw-insight orange">TikTok's first month: 6.5% interaction rate vs FB's 1.6% and IG's 2.2% — strong engagement efficiency despite 90× fewer followers. Watch as the channel grows.</div>
-<div class="stw-note">TikTok views normalized as impressions · Source: STW Marketing KPI Tracker · March 2026</div>
+<div class="stw-insight orange">TikTok month 2: views jumped 15.99× and interactions 21.6× vs month 1 — driven by a 6× increase in posts. At 821 views/post and 72 interactions/post, TikTok now matches Instagram on interactions per post and trails only on reach, which will scale with the following. Early signal is strong.</div>
+<div class="stw-note">TikTok views normalized as impressions · Source: STW Marketing KPI Tracker · Mar–Apr 2026</div>
 </div>
 
 <!-- ============================================================
@@ -990,9 +998,14 @@ const S8_CPC    = [0.43,0.55,0.63,0.70,0.43,0.53,null];
 // SECTION 9 — TIKTOK (update monthly once more data available)
 // ----------------------------------------------------------------
 const S9_DATA = {
+  // April 2026 (current month — used for benchmark chart)
   fb:  { followers:11235, posts:38, imprPerPost:1846, intPerPost:47  },
   ig:  { followers:3876,  posts:38, imprPerPost:2882, intPerPost:72  },
-  tt:  { followers:163,   posts:6,  imprPerPost:821,  intPerPost:72  }
+  tt:  { followers:163,   posts:6,  imprPerPost:821,  intPerPost:72  },
+  // March 2026 (prior month — used for M/M cards)
+  tt_prior: { followers:123, posts:1, views:308, interactions:20, imprPerPost:308, intPerPost:20 },
+  // April 2026 TikTok raw (for M/M cards)
+  tt_curr:  { followers:163, posts:6, views:4924, interactions:432, imprPerPost:821, intPerPost:72 }
 };
 
 // ----------------------------------------------------------------
@@ -1880,50 +1893,91 @@ function buildS8Charts() {
 
 // --- SECTION 9 TIKTOK ---
 function buildS9() {
-  const d=S9_DATA;
-  document.getElementById('s9-context').innerHTML=[
-    {key:'fb',label:'Facebook',color:'#182f8c',light:'#e8ecf8',badge:''},
-    {key:'ig',label:'Instagram',color:'#259717',light:'#eaf6e8',badge:''},
-    {key:'tt',label:'TikTok',color:'#ff7300',light:'#fff3e8',badge:'Month 1'}
-  ].map(p=>`<div style="border-radius:10px;padding:12px 14px;background:${p.light};border:1.5px solid ${p.color}22;text-align:center;">
-    <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:${p.color};margin-bottom:6px;">${p.label}${p.badge?` <span style="background:${p.light};color:${p.color};font-size:9px;padding:1px 6px;border-radius:3px;border:1px solid ${p.color}44;">${p.badge}</span>`:''}</div>
+  const d = S9_DATA;
+  const tc = d.tt_curr;
+  const tp = d.tt_prior;
+
+  // ── M/M cards (Apr vs Mar TikTok) ──────────────────────────────
+  function mmPct(cur, pri) {
+    if (!pri || pri === 0) return null;
+    return ((cur - pri) / pri * 100).toFixed(1);
+  }
+  function mmCard(label, cur, pri, fmt, higherIsBetter) {
+    const pct = mmPct(cur, pri);
+    const up = parseFloat(pct) >= 0;
+    const color = pct === null ? '#555' : (up === higherIsBetter ? '#259717' : '#cc2200');
+    const arrow = pct === null ? '' : (up ? '&#9650;' : '&#9660;');
+    return `<div class="mm-card">
+      <div class="mm-label">${label}</div>
+      <div class="mm-value">${fmt(cur)}</div>
+      <div class="mm-delta" style="color:${color};">${pct !== null ? `${arrow} ${Math.abs(pct)}% vs Mar` : '—'}</div>
+      <div class="mm-prior">Prior: ${fmt(pri)}</div>
+    </div>`;
+  }
+  document.getElementById('s9-mm').innerHTML =
+    mmCard('Views',             tc.views,        tp.views,        v=>v.toLocaleString(), true) +
+    mmCard('Interactions',      tc.interactions, tp.interactions, v=>v.toLocaleString(), true) +
+    mmCard('Views / post',      tc.imprPerPost,  tp.imprPerPost,  v=>v.toLocaleString(), true) +
+    mmCard('Interactions/post', tc.intPerPost,   tp.intPerPost,   v=>v.toLocaleString(), true);
+
+  // ── Channel context cards ───────────────────────────────────────
+  document.getElementById('s9-context').innerHTML = [
+    { key:'fb', label:'Facebook', color:'#182f8c', light:'#e8ecf8', badge:'' },
+    { key:'ig', label:'Instagram', color:'#259717', light:'#eaf6e8', badge:'' },
+    { key:'tt', label:'TikTok', color:'#ff7300', light:'#fff3e8', badge:'Month 2' }
+  ].map(p => `<div style="border-radius:10px;padding:12px 14px;background:${p.light};border:1.5px solid ${p.color}22;text-align:center;">
+    <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:${p.color};margin-bottom:6px;">${p.label}${p.badge ? ` <span style="background:${p.light};color:${p.color};font-size:9px;padding:1px 6px;border-radius:3px;border:1px solid ${p.color}44;">${p.badge}</span>` : ''}</div>
     <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:22px;color:${p.color};">${d[p.key].followers.toLocaleString()}</div>
     <div style="font-size:10px;color:#888;margin-bottom:6px;">followers</div>
     <hr style="border:none;border-top:1px solid #e0e0e0;margin:6px 0;">
-    <div style="font-size:11px;color:#555;">Posts in March: <strong>${d[p.key].posts}</strong></div>
+    <div style="font-size:11px;color:#555;">Posts in April: <strong>${d[p.key].posts}</strong></div>
   </div>`).join('');
 
-  new Chart(document.getElementById('s9chart'),{type:'bar',data:{labels:['Impressions / post','Interactions / post'],datasets:[
-    {label:'Facebook',data:[d.fb.imprPerPost,null],backgroundColor:'#182f8c',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y'},
-    {label:'Instagram',data:[d.ig.imprPerPost,null],backgroundColor:'#259717',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y'},
-    {label:'TikTok',data:[d.tt.imprPerPost,null],backgroundColor:'#ff7300',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y'},
-    {label:'FB int',data:[null,d.fb.intPerPost],backgroundColor:'#182f8c',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y2'},
-    {label:'IG int',data:[null,d.ig.intPerPost],backgroundColor:'#259717',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y2'},
-    {label:'TT int',data:[null,d.tt.intPerPost],backgroundColor:'#ff7300',borderRadius:4,categoryPercentage:0.65,barPercentage:0.85,yAxisID:'y2'}
-  ]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:22}},
-    plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
-    scales:{x:{...AXT,ticks:{...AXT.ticks,font:{family:'Montserrat',size:11,weight:'600'},color:'#333'}},y:{position:'left',title:{display:true,text:'Impressions per post',font:{size:10},color:'#555'},ticks:AXT.ticks,grid:{color:'#f0f0f0'},min:0},y2:{position:'right',title:{display:true,text:'Interactions per post',font:{size:10},color:'#7a3000'},ticks:{...AXT.ticks,color:'#7a3000'},grid:{drawOnChartArea:false},min:0,max:75}}},
-  plugins:[{
-    id:'s9Labels',
-    afterDatasetsDraw(chart){
-      const ctx=chart.ctx;
-      const colors=['#182f8c','#259717','#ff7300'];
-      chart.data.datasets.forEach((ds,di)=>{
-        const meta=chart.getDatasetMeta(di);
-        meta.data.forEach((bar,idx)=>{
-          const val=ds.data[idx];
-          if(val===null||val===undefined) return;
-          ctx.save();
-          ctx.font='600 10px Open Sans';
-          ctx.fillStyle=colors[idx]||'#333';
-          ctx.textAlign='center';
-          ctx.textBaseline='bottom';
-          ctx.fillText(String(val),bar.x,bar.y-3);
-          ctx.restore();
+  // ── Benchmark chart ─────────────────────────────────────────────
+  new Chart(document.getElementById('s9chart'), {
+    type: 'bar',
+    data: {
+      labels: ['Impressions / post', 'Interactions / post'],
+      datasets: [
+        { label:'Facebook',  data:[d.fb.imprPerPost, null], backgroundColor:'#182f8c', borderRadius:4, categoryPercentage:0.65, barPercentage:0.85, yAxisID:'y' },
+        { label:'Instagram', data:[d.ig.imprPerPost, null], backgroundColor:'#259717', borderRadius:4, categoryPercentage:0.65, barPercentage:0.85, yAxisID:'y' },
+        { label:'TikTok',    data:[d.tt.imprPerPost, null], backgroundColor:'#ff7300', borderRadius:4, categoryPercentage:0.65, barPercentage:0.85, yAxisID:'y' },
+        { label:'FB int',    data:[null, d.fb.intPerPost],  backgroundColor:'#182f8c', borderRadius:4, categoryPercentage:0.65, barPercentage:0.85, yAxisID:'y2' },
+        { label:'IG int',    data:[null, d.ig.intPerPost],  backgroundColor:'#259717', borderRadius:4, categoryPercentage:0.65, barPercentage:0.85, yAxisID:'y2' },
+        { label:'TT int',    data:[null, d.tt.intPerPost],  backgroundColor:'#ff7300', borderRadius:4, categoryPercentage:0.65, barPercentage:0.85, yAxisID:'y2' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding: { top: 22 } },
+      plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+      scales: {
+        x: { ...AXT, ticks: { ...AXT.ticks, font: { family:'Montserrat', size:11, weight:'600' }, color:'#333' } },
+        y: { position:'left', title:{ display:true, text:'Impressions per post', font:{size:10}, color:'#555' }, ticks:AXT.ticks, grid:{ color:'#f0f0f0' }, min:0 },
+        y2: { position:'right', title:{ display:true, text:'Interactions per post', font:{size:10}, color:'#7a3000' }, ticks:{ ...AXT.ticks, color:'#7a3000' }, grid:{ drawOnChartArea:false }, min:0, max:90 }
+      }
+    },
+    plugins: [{
+      id: 's9Labels',
+      afterDatasetsDraw(chart) {
+        const ctx = chart.ctx;
+        const colors = ['#182f8c','#259717','#ff7300'];
+        chart.data.datasets.forEach((ds, di) => {
+          chart.getDatasetMeta(di).data.forEach((bar, idx) => {
+            const val = ds.data[idx];
+            if (val === null || val === undefined) return;
+            ctx.save();
+            ctx.font = '600 10px Open Sans';
+            ctx.fillStyle = colors[di % 3];
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(String(val), bar.x, bar.y - 3);
+            ctx.restore();
+          });
         });
-      });
-    }
-  }]});
+      }
+    }]
+  });
 }
 
 // --- SECTION 10 CAMPAIGNS ---
