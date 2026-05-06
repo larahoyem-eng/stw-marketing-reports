@@ -70,10 +70,14 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 /* M/M Summary cards */
 .mm-grid { display: grid; gap: 10px; margin-bottom: 20px; }
 .mm-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.mm-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.mm-grid-4 { grid-template-columns: repeat(4, 1fr); }
 .mm-grid-5 { grid-template-columns: repeat(5, 1fr); }
 @media(max-width:600px) { .mm-grid-4, .mm-grid-5 { grid-template-columns: repeat(2,1fr); } }
 .mm-card { background: #fff; border: 0.5px solid #e0e0e0; border-radius: 10px; padding: 12px 14px; }
 .mm-label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: #666; margin-bottom: 6px; }
+.mm-delta { font-size: 11px; font-weight: 600; margin-bottom: 2px; }
+.mm-prior { font-size: 10px; color: #888; }
 .mm-value { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 22px; color: #182f8c; margin-bottom: 4px; line-height: 1; }
 .mm-value.orange { color: #ff7300; }
 .mm-value.green { color: #259717; }
@@ -659,21 +663,28 @@ function checkPW() {
 
 // Auth handled in window.load event below
 
+// Track which sections have been built
+const _built = {};
+
 function initDashboard() {
-  buildS1Charts();
-  buildS2Charts();
-  buildS3Charts();
-  buildS3_13mo();
-  buildS3_marchYOY();
-  buildS4Overview();
-  buildS4();
-  buildS5Charts();
-  buildS6Charts();
-  buildS7Charts();
-  buildS8Charts();
-  buildS9();
-  buildS10();
-  buildS11();
+  // Only build S1 (default visible section) at load time
+  _buildSection('s1');
+}
+
+function _buildSection(id) {
+  if (_built[id]) return;
+  _built[id] = true;
+  if (id === 's1')  { buildS1Charts(); return; }
+  if (id === 's2')  { buildS2Charts(); return; }
+  if (id === 's3')  { buildS3Charts(); buildS3_13mo(); buildS3_marchYOY(); return; }
+  if (id === 's4')  { buildS4Overview(); buildS4(); return; }
+  if (id === 's5')  { buildS5Charts(); return; }
+  if (id === 's6')  { buildS6Charts(); return; }
+  if (id === 's7')  { buildS7Charts(); return; }
+  if (id === 's8')  { buildS8Charts(); return; }
+  if (id === 's9')  { buildS9(); return; }
+  if (id === 's10') { buildS10(); return; }
+  if (id === 's11') { buildS11(); return; }
 }
 // ================================================================
 //  ██████╗  █████╗ ████████╗ █████╗
@@ -2017,6 +2028,8 @@ function showSection(id, btn) {
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
+  // Build section charts lazily on first visit (canvas needs visible parent)
+  _buildSection(id);
 }
 
 function showSubTab(section, tab, el) {
