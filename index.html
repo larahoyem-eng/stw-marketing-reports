@@ -788,7 +788,7 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 
   <button class="stw-tab" onclick="showSubTab('s6','ag-mix',this)">AG Conversion mix</button>
 
-  <button class="stw-tab" onclick="showSubTab('s6','conversions',this)">AG vs Paid volume</button>
+  <button class="stw-tab" onclick="showSubTab('s6','conversions',this)">Conversion breakdown</button>
 
   <button class="stw-tab" onclick="showSubTab('s6','paid-eff',this)">Paid Efficiency</button>
 
@@ -872,7 +872,7 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 
 <div id="s6-chart-ag-mix" class="chart-wrap" style="height:320px;display:none;"><canvas id="s6agmix"></canvas></div>
 
-<div id="s6-chart-conversions" class="chart-wrap" style="height:280px;display:none;"><canvas id="s6conv"></canvas></div>
+<div id="s6-chart-conversions" class="chart-wrap" style="height:360px;display:none;"><canvas id="s6conv"></canvas></div>
 
 <div id="s6-chart-paid-eff" class="chart-wrap" style="height:280px;display:none;"><canvas id="s6paideff"></canvas></div>
 
@@ -3296,17 +3296,102 @@ function buildS6Charts() {
 
   // AG vs Paid conversion volume
 
-  new Chart(document.getElementById('s6conv'),{type:'bar',data:{labels:S6_LABELS,datasets:[
+  // Conversion breakdown — stacked grouped (AG left, Paid right per month)
+  // Only show months where at least one type has data (Sep '25–May '26 = indices 6–14)
+  const CONV_LABELS = S6_LABELS.slice(6);
 
-    {label:'Ad Grant',data:S6_AG_CONV,backgroundColor:'#182f8c',borderRadius:3,categoryPercentage:0.8},
+  const agSlice  = arr => arr.slice(6).map(v => v === null ? 0 : v);
+  const paidSlice = arr => arr.slice(6).map(v => v === null ? 0 : v);
 
-    {label:'Paid',data:S6_PAID_CONV,backgroundColor:'#ff7300',borderRadius:3,categoryPercentage:0.8}
+  // Goal colors
+  const GC = {
+    news:   '#182f8c',  // Newsletter
+    info:   '#3a7bc8',  // Request Info
+    hon:    '#259717',  // Honduras
+    pan:    '#f7ca09',  // Panama
+    gua:    '#ff7300',  // Guatemala
+    out:    '#b8c2e8',  // Outbound Social/Donate
+    blog:   '#e88a5a',  // Blog
+  };
 
-  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+  // Build interleaved labels: for each month, "AG" + "Paid" labels
+  const intLabels = [];
+  const intLabelMeta = []; // 'ag' or 'paid'
+  CONV_LABELS.forEach(m => { intLabels.push(m); intLabels.push(''); intLabelMeta.push('ag'); intLabelMeta.push('paid'); });
 
-    plugins:{legend:{display:false}},
+  function interleave(agArr, paidArr) {
+    const out = [];
+    for (let i = 0; i < agArr.length; i++) { out.push(agArr[i]); out.push(paidArr[i]); }
+    return out;
+  }
 
-    scales:{x:AXT,y:{ticks:AXT.ticks,grid:{color:'#f0f0f0'}}}}});
+  const agNews   = agSlice(S6_AG_MIX_NEWS);
+  const agInfo   = agSlice(S6_AG_MIX_INFO);
+  const agHon    = agSlice(S6_AG_MIX_HON);
+  const agPan    = agSlice(S6_AG_MIX_PAN);
+  const agGua    = agSlice(S6_AG_MIX_GUA);
+  const agOut    = agSlice(S6_AG_MIX_OUTSOC).map((v,i)=>v + (S6_AG_MIX_OUTDNT.slice(6)[i]||0));
+  const agBlog   = agSlice(S6_AG_MIX_BLOG);
+
+  const pdNews   = paidSlice(S6_PAID_MIX_NEWS);
+  const pdInfo   = paidSlice(S6_PAID_MIX_INFO);
+  const pdHon    = paidSlice(S6_PAID_MIX_HON);
+  const pdPan    = paidSlice(S6_PAID_MIX_PAN);
+  const pdGua    = paidSlice(S6_PAID_MIX_GUA);
+  const pdOut    = paidSlice(S6_PAID_MIX_OUT);
+  const pdBlog   = paidSlice(S6_PAID_MIX_BLOG);
+
+  const zero9 = Array(9).fill(0);
+
+  new Chart(document.getElementById('s6conv'), {
+    type: 'bar',
+    data: {
+      labels: intLabels,
+      datasets: [
+        { label:'Newsletter',    data:interleave(agNews, pdNews), backgroundColor:GC.news,  stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
+        { label:'Request Info',  data:interleave(agInfo, pdInfo), backgroundColor:GC.info,  stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
+        { label:'Honduras',      data:interleave(agHon,  pdHon),  backgroundColor:GC.hon,   stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
+        { label:'Panama',        data:interleave(agPan,  pdPan),  backgroundColor:GC.pan,   stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
+        { label:'Guatemala',     data:interleave(agGua,  pdGua),  backgroundColor:GC.gua,   stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
+        { label:'Outbound',      data:interleave(agOut,  pdOut),  backgroundColor:GC.out,   stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
+        { label:'Blog',          data:interleave(agBlog, pdBlog), backgroundColor:GC.blog,  stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding: { top: 20 } },
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: true, position: 'bottom', labels: { font: { family:'Open Sans', size:11 }, boxWidth:12, padding:10 } },
+        tooltip: {
+          callbacks: {
+            title: ctx => {
+              const idx = ctx[0].dataIndex;
+              const mo = CONV_LABELS[Math.floor(idx/2)];
+              return mo + (idx % 2 === 0 ? ' — Ad Grant' : ' — Paid');
+            },
+            label: ctx => ctx.parsed.y > 0 ? ` ${ctx.dataset.label}: ${ctx.parsed.y}` : null,
+            footer: ctx => {
+              const total = ctx.reduce((s,c) => s + c.parsed.y, 0);
+              return total > 0 ? `Total: ${total}` : '';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          ticks: {
+            color: c => intLabelMeta[c.index] === 'ag' ? '#182f8c' : '#ff7300',
+            font: { family:'Open Sans', size:9, weight:'600' },
+            callback: (val, idx) => intLabels[idx] !== '' ? [intLabels[idx], intLabelMeta[idx] === 'ag' ? 'AG' : 'Paid'] : ''
+          },
+          grid: { color:'#f0f0f0' }
+        },
+        y: { stacked: true, ticks: { ...AXT.ticks, stepSize: 10 }, grid: { color:'#f0f0f0' }, min: 0 }
+      }
+    }
+  });
 
   // Paid Efficiency: cost/conv bar + conversions line (Oct 25 onward)
 
