@@ -3300,99 +3300,141 @@ function buildS6Charts() {
 
   // AG vs Paid conversion volume
 
-  // Conversion breakdown — stacked grouped (AG left, Paid right per month)
-  // Only show months where at least one type has data (Sep '25–May '26 = indices 6–14)
-  const CONV_LABELS = S6_LABELS.slice(6);
+  // Conversion breakdown — Sep '25–May '26, AG | Paid grouped stacked by goal
+  const CONV_MO = ['Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26'];
+  const N = CONV_MO.length; // 9
 
-  const agSlice  = arr => arr.slice(6).map(v => v === null ? 0 : v);
-  const paidSlice = arr => arr.slice(6).map(v => v === null ? 0 : v);
+  // Slice helper: indices 6–14 of a 15-element MIX array, null→0
+  const ms = arr => arr.slice(6).map(v => (v === null || v === undefined) ? 0 : Number(v));
 
-  // Goal colors
+  // AG goal arrays (9 values each)
+  const agNews  = ms(S6_AG_MIX_NEWS);
+  const agInfo  = ms(S6_AG_MIX_INFO);
+  const agHon   = ms(S6_AG_MIX_HON);
+  const agPan   = ms(S6_AG_MIX_PAN);
+  const agGua   = ms(S6_AG_MIX_GUA);
+  const agOut   = ms(S6_AG_MIX_OUTSOC).map((v,i)=>v + ms(S6_AG_MIX_OUTDNT)[i]);
+  const agBlog  = ms(S6_AG_MIX_BLOG);
+
+  // Paid goal arrays (9 values each)
+  const pdNews  = ms(S6_PAID_MIX_NEWS);
+  const pdInfo  = ms(S6_PAID_MIX_INFO);
+  const pdHon   = ms(S6_PAID_MIX_HON);
+  const pdPan   = ms(S6_PAID_MIX_PAN);
+  const pdGua   = ms(S6_PAID_MIX_GUA);
+  const pdOut   = ms(S6_PAID_MIX_OUT);
+  const pdBlog  = ms(S6_PAID_MIX_BLOG);
+
+  // Colors per goal
   const GC = {
-    news:   '#182f8c',  // Newsletter
-    info:   '#3a7bc8',  // Request Info
-    hon:    '#259717',  // Honduras
-    pan:    '#f7ca09',  // Panama
-    gua:    '#ff7300',  // Guatemala
-    out:    '#b8c2e8',  // Outbound Social/Donate
-    blog:   '#e88a5a',  // Blog
+    news:'#182f8c', info:'#3a7bc8', hon:'#259717',
+    pan:'#f7ca09',  gua:'#ff7300', out:'#b8c2e8', blog:'#e88a5a'
   };
 
-  // Build interleaved labels: for each month, "AG" + "Paid" labels
-  const intLabels = [];
-  const intLabelMeta = []; // 'ag' or 'paid'
-  CONV_LABELS.forEach(m => { intLabels.push(m); intLabels.push(''); intLabelMeta.push('ag'); intLabelMeta.push('paid'); });
+  // Each dataset has 2N values: [ag_sep, paid_sep, ag_oct, paid_oct, ...]
+  // X-labels similarly interleaved; stack IDs alternate 'ag'/'paid'
+  const convLabels = [];
+  CONV_MO.forEach(m => { convLabels.push(m); convLabels.push(''); });
 
-  function interleave(agArr, paidArr) {
-    const out = [];
-    for (let i = 0; i < agArr.length; i++) { out.push(agArr[i]); out.push(paidArr[i]); }
-    return out;
+  // stack alternates: even indices → 'ag', odd → 'paid'
+  function mkDataset(label, agArr, pdArr, color) {
+    const data = [];
+    for (let i = 0; i < N; i++) { data.push(agArr[i]); data.push(pdArr[i]); }
+    // Chart.js grouped stacking: give each bar-position its own stack id
+    // We achieve AG|Paid grouping by using xAxisID trick via two x axes —
+    // simpler: use stack property with index so even=ag, odd=paid
+    return {
+      label, data, backgroundColor: color,
+      stack: label + '-ag',   // overridden per-point below — use parsing instead
+      borderRadius: 2,
+      categoryPercentage: 0.85,
+      barPercentage: 0.92,
+    };
   }
 
-  const agNews   = agSlice(S6_AG_MIX_NEWS);
-  const agInfo   = agSlice(S6_AG_MIX_INFO);
-  const agHon    = agSlice(S6_AG_MIX_HON);
-  const agPan    = agSlice(S6_AG_MIX_PAN);
-  const agGua    = agSlice(S6_AG_MIX_GUA);
-  const agOut    = agSlice(S6_AG_MIX_OUTSOC).map((v,i)=>v + (S6_AG_MIX_OUTDNT.slice(6)[i]||0));
-  const agBlog   = agSlice(S6_AG_MIX_BLOG);
+  // Correct approach: one dataset per (goal × channel), 9 bars each, two x-axes
+  // Simplest correct approach: use two separate x scales with offset
+  // BEST: use Chart.js grouped stacking with stackGroup per bar position
+  // We'll use the "two datasets per goal, one for AG one for Paid" with stack:'ag' / stack:'paid'
+  // and labels just being the 9 months — Chart.js will render AG and Paid as adjacent groups
 
-  const pdNews   = paidSlice(S6_PAID_MIX_NEWS);
-  const pdInfo   = paidSlice(S6_PAID_MIX_INFO);
-  const pdHon    = paidSlice(S6_PAID_MIX_HON);
-  const pdPan    = paidSlice(S6_PAID_MIX_PAN);
-  const pdGua    = paidSlice(S6_PAID_MIX_GUA);
-  const pdOut    = paidSlice(S6_PAID_MIX_OUT);
-  const pdBlog   = paidSlice(S6_PAID_MIX_BLOG);
+  function mkAG(label, arr, color) {
+    return { label, data: arr, backgroundColor: color, stack: 'ag',
+             borderRadius: 2, categoryPercentage: 0.85, barPercentage: 0.48 };
+  }
+  function mkPaid(label, arr, color) {
+    return { label, data: arr, backgroundColor: color, stack: 'paid',
+             borderRadius: 2, categoryPercentage: 0.85, barPercentage: 0.48 };
+  }
 
-  const zero9 = Array(9).fill(0);
+  // Legend: show goal name once (AG datasets only visible in legend)
+  const convDatasets = [
+    mkAG(  'Newsletter',   agNews, GC.news),
+    mkPaid('Newsletter ',  pdNews, GC.news),
+    mkAG(  'Request Info', agInfo, GC.info),
+    mkPaid('Request Info ',pdInfo, GC.info),
+    mkAG(  'Honduras',     agHon,  GC.hon),
+    mkPaid('Honduras ',    pdHon,  GC.hon),
+    mkAG(  'Panama',       agPan,  GC.pan),
+    mkPaid('Panama ',      pdPan,  GC.pan),
+    mkAG(  'Guatemala',    agGua,  GC.gua),
+    mkPaid('Guatemala ',   pdGua,  GC.gua),
+    mkAG(  'Outbound',     agOut,  GC.out),
+    mkPaid('Outbound ',    pdOut,  GC.out),
+    mkAG(  'Blog',         agBlog, GC.blog),
+    mkPaid('Blog ',        pdBlog, GC.blog),
+  ];
+
+  // Hide Paid datasets from legend (trailing-space names)
+  convDatasets.forEach(ds => { if (ds.label.endsWith(' ')) ds.legendHide = true; });
 
   new Chart(document.getElementById('s6conv'), {
     type: 'bar',
-    data: {
-      labels: intLabels,
-      datasets: [
-        { label:'Newsletter',    data:interleave(agNews, pdNews), backgroundColor:GC.news,  stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
-        { label:'Request Info',  data:interleave(agInfo, pdInfo), backgroundColor:GC.info,  stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
-        { label:'Honduras',      data:interleave(agHon,  pdHon),  backgroundColor:GC.hon,   stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
-        { label:'Panama',        data:interleave(agPan,  pdPan),  backgroundColor:GC.pan,   stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
-        { label:'Guatemala',     data:interleave(agGua,  pdGua),  backgroundColor:GC.gua,   stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
-        { label:'Outbound',      data:interleave(agOut,  pdOut),  backgroundColor:GC.out,   stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
-        { label:'Blog',          data:interleave(agBlog, pdBlog), backgroundColor:GC.blog,  stack:'s', borderRadius:2, categoryPercentage:0.72, barPercentage:0.9 },
-      ]
-    },
+    data: { labels: CONV_MO, datasets: convDatasets },
     options: {
       responsive: true, maintainAspectRatio: false,
-      layout: { padding: { top: 20 } },
+      layout: { padding: { top: 24 } },
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { display: true, position: 'bottom', labels: { font: { family:'Open Sans', size:11 }, boxWidth:12, padding:10 } },
+        legend: {
+          display: true, position: 'bottom',
+          labels: {
+            font: { family:'Open Sans', size:11 }, boxWidth:12, padding:10,
+            filter: item => !item.text.endsWith(' ')
+          }
+        },
         tooltip: {
           callbacks: {
-            title: ctx => {
-              const idx = ctx[0].dataIndex;
-              const mo = CONV_LABELS[Math.floor(idx/2)];
-              return mo + (idx % 2 === 0 ? ' — Ad Grant' : ' — Paid');
+            title: ctx => ctx[0].label,
+            beforeBody: ctx => {
+              // Show AG total vs Paid total
+              const agTotal = convDatasets.filter(d=>d.stack==='ag').reduce((s,d)=>s+d.data[ctx[0].dataIndex],0);
+              const pdTotal = convDatasets.filter(d=>d.stack==='paid').reduce((s,d)=>s+d.data[ctx[0].dataIndex],0);
+              return [`Ad Grant total: ${agTotal}`, `Paid total: ${pdTotal}`];
             },
-            label: ctx => ctx.parsed.y > 0 ? ` ${ctx.dataset.label}: ${ctx.parsed.y}` : null,
-            footer: ctx => {
-              const total = ctx.reduce((s,c) => s + c.parsed.y, 0);
-              return total > 0 ? `Total: ${total}` : '';
-            }
+            label: ctx => {
+              const v = ctx.parsed.y;
+              if (!v) return null;
+              const isAG = ctx.dataset.stack === 'ag';
+              const name = ctx.dataset.label.trim();
+              return ` ${isAG ? 'AG' : 'Paid'} ${name}: ${v}`;
+            },
+            footer: () => ''
           }
         }
       },
       scales: {
         x: {
           stacked: true,
-          ticks: {
-            color: c => intLabelMeta[c.index] === 'ag' ? '#182f8c' : '#ff7300',
-            font: { family:'Open Sans', size:9, weight:'600' },
-            callback: (val, idx) => intLabels[idx] !== '' ? [intLabels[idx], intLabelMeta[idx] === 'ag' ? 'AG' : 'Paid'] : ''
-          },
+          ticks: { color:'#333', font:{ family:'Open Sans', size:10, weight:'600' } },
           grid: { color:'#f0f0f0' }
         },
-        y: { stacked: true, ticks: { ...AXT.ticks, stepSize: 10 }, grid: { color:'#f0f0f0' }, min: 0 }
+        y: {
+          stacked: true,
+          ticks: { ...AXT.ticks, stepSize: 20 },
+          grid: { color:'#f0f0f0' },
+          min: 0
+        }
       }
     }
   });
