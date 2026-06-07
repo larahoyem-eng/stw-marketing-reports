@@ -412,11 +412,11 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 
   <button class="stw-tab" onclick="showSubTab('s3','13mo-pg',this)">13-mo: Pages</button>
 
-  <button class="stw-tab" onclick="showSubTab('s3','myoy-ov',this)">Mar YOY: Traffic</button>
+  <button class="stw-tab" onclick="showSubTab('s3','myoy-ov',this)">May YOY: Traffic</button>
 
-  <button class="stw-tab" onclick="showSubTab('s3','myoy-src',this)">Mar YOY: Sources</button>
+  <button class="stw-tab" onclick="showSubTab('s3','myoy-src',this)">May YOY: Sources</button>
 
-  <button class="stw-tab" onclick="showSubTab('s3','myoy-pg',this)">Mar YOY: Pages</button>
+  <button class="stw-tab" onclick="showSubTab('s3','myoy-pg',this)">May YOY: Pages</button>
 
 </div>
 
@@ -1050,25 +1050,25 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 
 <div class="stw-header">
 
-  <div><div class="stw-title">TikTok — Early Performance</div><div class="stw-subtitle">Month 1 vs Month 2 · April 2026 benchmark vs. Facebook &amp; Instagram</div></div>
+  <div><div class="stw-title">TikTok — Early Performance</div><div class="stw-subtitle">Month 2 vs Month 1 · May 2026 benchmark vs. Facebook &amp; Instagram</div></div>
 
 </div>
 
 <!-- M/M stat cards: April vs March -->
 
-<div class="section-label" style="margin-bottom:10px;">April 2026 vs March 2026 — Month-over-month</div>
+<div class="section-label" style="margin-bottom:10px;">May 2026 vs April 2026 — Month-over-month</div>
 
 <div id="s9-mm" class="mm-grid mm-grid-4" style="margin-bottom:20px;"></div>
 
 <!-- Channel context cards -->
 
-<div class="section-label" style="margin-bottom:10px;">April 2026 channel context</div>
+<div class="section-label" style="margin-bottom:10px;">May 2026 channel context</div>
 
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;" id="s9-context"></div>
 
 <!-- Benchmark chart -->
 
-<div class="section-label">Engagement efficiency — per post · April 2026 vs. established channels</div>
+<div class="section-label">Engagement efficiency — per post · May 2026 vs. established channels</div>
 
 <div class="legend">
 
@@ -1086,9 +1086,9 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 
 <div class="chart-wrap" style="height:300px;"><canvas id="s9chart"></canvas></div>
 
-<div class="stw-insight orange">TikTok month 2: views jumped 15.99× and interactions 21.6× vs month 1 — driven by a 6× increase in posts. At 821 views/post and 72 interactions/post, TikTok now matches Instagram on interactions per post and trails only on reach, which will scale with the following. Early signal is strong.</div>
+<div class="stw-insight orange">TikTok month 3: with only 1 post in May (vs 6 in April), raw views and interactions dropped sharply — but views/post held at 270 and interactions/post at 11, showing the channel still engages when content goes out. The follower base is stable at 161. Performance will track closely with posting frequency.</div>
 
-<div class="stw-note">TikTok views normalized as impressions · Source: STW Marketing KPI Tracker · Mar–Apr 2026</div>
+<div class="stw-note">TikTok views normalized as impressions · Source: STW Marketing KPI Tracker · Mar–May 2026</div>
 
 </div>
 
@@ -1264,7 +1264,7 @@ function _buildSection(id) {
 
   if (id === 's3')  {
 
-    setTimeout(() => { buildS3Charts(); buildS3_13mo(); buildS3_marchYOY(); }, 20);
+    setTimeout(() => { buildS3Charts(); buildS3_13mo(); buildS3_mayYOY(); }, 20);
 
     return;
 
@@ -1668,7 +1668,21 @@ const BLOG_POSTS = [
 
   ["World Changer Diary: The Joy of Getting My Hands Dirty in Guatemala","4/28/26",14,"SSL"],
 
-  ["From Training to Action: Eight Years of Partnership with the Ron Burton Training Village","4/29/26",0,"SSL"]
+  ["From Training to Action: Eight Years of Partnership with the Ron Burton Training Village","4/29/26",0,"SSL"],
+
+  ["A Mother Who Leads by Learning","5/4/26",2,"Story"],
+
+  ["A Mother Who Built Opportunity—One Block at a Time","5/4/26",8,"Story"],
+
+  ["The Belief That Gets Passed On","5/4/26",8,"Story"],
+
+  ["World Changer Diary: More Than Just Classrooms, How Guatemala Felt Like Home","5/5/26",21,"SSL"],
+
+  ["Making Connections on a Service Trip to Central America","5/13/26",15,"SSL"],
+
+  ["Art with Impact: How Liv Turned Creativity into Connection","5/19/26",10,"Spotlight"],
+
+  ["Books That Build a Culture of Reading","5/28/26",0,"Story"]
 
 ];
 
@@ -1760,7 +1774,17 @@ const EMAIL_DATA = [
 
   ["SSL Supporters","4/27/26",117,36,30.77,8,22.22],
 
-  ["SSL Supporters","4/27/26",293,73,24.91,3,4.11]
+  ["SSL Supporters","4/27/26",293,73,24.91,3,4.11],
+
+  ["Mothers Day Campaign","5/5/26",3727,597,16.02,10,1.68],
+
+  ["Mothers Day Campaign","5/7/26",3644,706,19.37,7,0.99],
+
+  ["Mothers Day Campaign","5/11/26",3588,648,18.06,7,1.08],
+
+  ["Newsletter","5/18/26",3539,1261,35.63,10,0.28],
+
+  ["Book Club Campaign","5/26/26",3407,634,18.61,3,0.47]
 
 ];
 
@@ -1860,7 +1884,7 @@ const S6_AG_IMPR  = [7826,8644,6594,3935,9488,9955,14331,62600,147528,197386,555
 
 const S6_AG_CLICKS= [162,204,182,181,374,422,512,2290,5820,6832,2077,4451,4221,619,537];
 
-const S6_AG_CTR   = [2.07,2.36,2.76,4.60,3.92,4.24,3.57,3.66,3.95,3.46,3.74,4.15,3.80,4.99,0.05586];
+const S6_AG_CTR   = [2.07,2.36,2.76,4.60,3.92,4.24,3.57,3.66,3.95,3.46,3.74,4.15,3.80,4.99,5.59];
 
 const S6_AG_CONV  = [338,464,368,678,678,564,409,320,230,175,159,131,179,56,29];
 
@@ -1964,21 +1988,21 @@ const S8_CPC    = [0.43,0.55,0.63,0.70,0.43,0.53,0.43,0.46];
 
 const S9_DATA = {
 
-  // April 2026 (current month — used for benchmark chart)
+  // May 2026 (current month — used for benchmark chart)
 
-  fb:  { followers:11235, posts:38, imprPerPost:1846, intPerPost:47  },
+  fb:  { followers:11242, posts:17, imprPerPost:1489, intPerPost:21  },
 
-  ig:  { followers:3876,  posts:38, imprPerPost:2882, intPerPost:72  },
+  ig:  { followers:3855,  posts:18, imprPerPost:1331, intPerPost:32  },
 
-  tt:  { followers:163,   posts:6,  imprPerPost:821,  intPerPost:72  },
+  tt:  { followers:161,   posts:1,  imprPerPost:270,  intPerPost:11  },
 
-  // March 2026 (prior month — used for M/M cards)
+  // April 2026 (prior month — used for M/M cards)
 
-  tt_prior: { followers:123, posts:1, views:308, interactions:20, imprPerPost:308, intPerPost:20 },
+  tt_prior: { followers:163, posts:6, views:4924, interactions:432, imprPerPost:821, intPerPost:72 },
 
-  // April 2026 TikTok raw (for M/M cards)
+  // May 2026 TikTok raw (for M/M cards)
 
-  tt_curr:  { followers:163, posts:6, views:4924, interactions:432, imprPerPost:821, intPerPost:72 }
+  tt_curr:  { followers:161, posts:1, views:270, interactions:11, imprPerPost:270, intPerPost:11 }
 
 };
 
@@ -2544,37 +2568,37 @@ function buildS3_13mo() {
 
 }
 
-// --- SECTION 3 — MARCH YOY VIEWS ---
+// --- SECTION 3 — MAY YOY VIEWS ---
 
-function buildS3_marchYOY() {
+function buildS3_mayYOY() {
 
-  const YRS    = ['Mar 2023','Mar 2024','Mar 2025','Mar 2026'];
+  const YRS    = ['May 2023','May 2024','May 2025','May 2026'];
 
   const COLORS = ['#182f8c','#7f8fcc','#b8c2e8','#ff7300'];
 
-  const PV_M   = [13968,15177,11949,8570];
+  const PV_M   = [19726,16058,12013,4873];
 
-  const SE_M   = [5643,6190,5487,5382];
+  const SE_M   = [9456,6841,5983,3090];
 
-  const DIR_M  = [3084,3063,2598,3141];
+  const DIR_M  = [2242,3264,3073,1659];
 
-  const ORG_M  = [1396,1461,1209,514];
+  const ORG_M  = [1208,1111,1296,340];
 
-  const CPC_M  = [52,656,80,119];
+  const CPC_M  = [4657,524,45,157];
 
-  const OS_M   = [600,665,896,562];
+  const OS_M   = [354,1169,854,291];
 
-  const EM_M   = [256,225,285,51];
+  const EM_M   = [241,501,225,56];
 
   const OT_M   = SE_M.map((_,i)=>Math.max(0,SE_M[i]-DIR_M[i]-ORG_M[i]-CPC_M[i]-OS_M[i]-EM_M[i]));
 
-  const HP_M   = [1617,1361,1341,826];
+  const HP_M   = [1442,1140,1392,673];
 
-  const FUND_M = [394,245,4525,4315];
+  const FUND_M = [369,1134,4783,2137];
 
-  const SSL_M  = [679,1364,null,null];
+  const SSL_M  = [1352,1250,null,520];
 
-  const BLOG_M = [7,30,null,488];
+  const BLOG_M = [59,34,null,393];
 
   const h = v=>v>=1000?(v/1000).toFixed(0)+'k':v;
 
@@ -2902,7 +2926,7 @@ function renderBlog() {
 
 function buildS5Charts() {
 
-  const typeColors={'Newsletter':'#182f8c','SSL':'#259717','SSL Supporters':'#3a7bc8','Trip Recruitment':'#ff7300','Scholarship Campaign':'#f7ca09','YE Campaign':'#7f8fcc','Gala':'#b8c2e8','Lapsed Campaign':'#e88a5a','SSL Follow-Up':'#6fbf65','DAF Campaign':'#b3ddb0','Trip Follow-up':'#cca800','Campaign':'#b3ddb0'};
+  const typeColors={'Newsletter':'#182f8c','SSL':'#259717','SSL Supporters':'#3a7bc8','Trip Recruitment':'#ff7300','Scholarship Campaign':'#f7ca09','YE Campaign':'#7f8fcc','Gala':'#b8c2e8','Lapsed Campaign':'#e88a5a','SSL Follow-Up':'#6fbf65','DAF Campaign':'#b3ddb0','Trip Follow-up':'#cca800','Campaign':'#b3ddb0','Mothers Day Campaign':'#e84393','Book Club Campaign':'#cca800'};
 
   const groups={};
 
@@ -2980,15 +3004,15 @@ function buildS5Charts() {
 
 function buildS5Newsletter() {
 
-  // One newsletter per month Aug 25 – Mar 26
+  // One newsletter per month Aug 25 – May 26
 
-  const NL_LABELS    = ['Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26'];
+  const NL_LABELS    = ['Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26'];
 
-  const NL_OR        = [43.62, 18.94, 30.71, 21.48, 6.62, 28.84, 13.63, 36.98, 33.93]; // open rate %
+  const NL_OR        = [43.62, 18.94, 30.71, 21.48, 6.62, 28.84, 13.63, 36.98, 33.93, 35.63]; // open rate %
 
-  const NL_CTR       = [0.12,  1.99,  1.52,  0.93,  1.22, 0.87,  1.34,  0.49,  0.93];  // CTR %
+  const NL_CTR       = [0.12,  1.99,  1.52,  0.93,  1.22, 0.87,  1.34,  0.49,  0.93,  0.28];  // CTR %
 
-  const NL_RECIPIENTS= [4046,  4504,  4506,  4520,  12343,3176,  12582, 3832,  3790];   // delivered
+  const NL_RECIPIENTS= [4046,  4504,  4506,  4520,  12343,3176,  12582, 3832,  3790,  3539];   // delivered
 
   new Chart(document.getElementById('s5nl'), {
 
@@ -3680,7 +3704,7 @@ function buildS9() {
 
   const tp = d.tt_prior;
 
-  // ── M/M cards (Apr vs Mar TikTok) ──────────────────────────────
+  // ── M/M cards (May vs Apr TikTok) ──────────────────────────────
 
   function mmPct(cur, pri) {
 
@@ -3706,7 +3730,7 @@ function buildS9() {
 
       <div class="mm-value">${fmt(cur)}</div>
 
-      <div class="mm-delta" style="color:${color};">${pct !== null ? `${arrow} ${Math.abs(pct)}% vs Mar` : '—'}</div>
+      <div class="mm-delta" style="color:${color};">${pct !== null ? `${arrow} ${Math.abs(pct)}% vs Apr` : '—'}</div>
 
       <div class="mm-prior">Prior: ${fmt(pri)}</div>
 
@@ -3732,7 +3756,7 @@ function buildS9() {
 
     { key:'ig', label:'Instagram', color:'#259717', light:'#eaf6e8', badge:'' },
 
-    { key:'tt', label:'TikTok', color:'#ff7300', light:'#fff3e8', badge:'Month 2' }
+    { key:'tt', label:'TikTok', color:'#ff7300', light:'#fff3e8', badge:'Month 3' }
 
   ].map(p => `<div style="border-radius:10px;padding:12px 14px;background:${p.light};border:1.5px solid ${p.color}22;text-align:center;">
 
@@ -3744,7 +3768,7 @@ function buildS9() {
 
     <hr style="border:none;border-top:1px solid #e0e0e0;margin:6px 0;">
 
-    <div style="font-size:11px;color:#555;">Posts in April: <strong>${d[p.key].posts}</strong></div>
+    <div style="font-size:11px;color:#555;">Posts in May: <strong>${d[p.key].posts}</strong></div>
 
   </div>`).join('');
 
@@ -4022,11 +4046,11 @@ function buildS11() {
 
   makeCards('s11-cards-campaign', [
 
-    { label:'April raised',       val:'$453',   sub:'vs $2,098 in March',    color:'#182f8c' },
+    { label:'May raised',         val:'$1,520', sub:'vs $453 in April',      color:'#182f8c' },
 
-    { label:'April donations',    val:'14',     sub:'vs 5 in March',         color:'#259717' },
+    { label:'May donations',      val:'8',      sub:'vs 14 in April',        color:'#259717' },
 
-    { label:'April avg donation', val:'$32',    sub:'vs $420 in March',      color:'#ff7300' },
+    { label:'May avg donation',   val:'$190',   sub:'vs $32 in April',       color:'#ff7300' },
 
   ]);
 
@@ -4078,7 +4102,7 @@ function buildS11() {
 
         y:{position:'left',title:{display:true,text:'Amount raised ($)',color:lc,font:af},ticks:{color:lc,font:af,callback:v=>'$'+(v>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:grid},min:0},
 
-        y2:{position:'right',title:{display:true,text:'Avg gift ($)  ·  # donations',color:'#7a3000',font:af},ticks:{color:'#7a3000',font:af},grid:{drawOnChartArea:false},min:0,max:80} }},
+        y2:{position:'right',title:{display:true,text:'Avg gift ($)  ·  # donations',color:'#7a3000',font:af},ticks:{color:'#7a3000',font:af,callback:v=>'$'+v},grid:{drawOnChartArea:false},min:0,max:750} }},
 
     plugins:[{id:'s11c1Labels',afterDatasetsDraw(chart){
 
