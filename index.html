@@ -119,7 +119,7 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 </div>
 <div id="s1-chart-fb" class="chart-wrap" style="height:280px;"><canvas id="s1fb"></canvas></div>
 <div id="s1-chart-ig" class="chart-wrap" style="height:280px;display:none;"><canvas id="s1ig"></canvas></div>
-<div id="s1-insight-fb" class="stw-insight">Feb 2026 (79,546) and Mar 2026 (105,000) remain the two strongest FB months — both SSL trip months. Jul 2026 (43,720) came in below Jul 2025 (65,852) on the same post count, though interactions hit a new high (1,715).</div>
+<div id="s1-insight-fb" class="stw-insight">Feb 2026 (79,546) and Mar 2026 (105,000) remain the two strongest FB months — both SSL trip months. Jul 2026 (43,720) came in below Jul 2025 (65,852), but on roughly half the posts (23 vs. 45) — interactions still hit a new high (1,715).</div>
 <div id="s1-insight-ig" class="stw-insight green" style="display:none;">IG peaked at 129,078 in Jul 2025 and 94,849 in Feb 2026 — both SSL months. Jul 2026 nearly matched last July at 127,074, with interactions up sharply to 3,703.</div>
 <div class="stw-note">Source: STW Marketing KPI Tracker · <span class="ssl-badge">SSL</span> = Feb, Mar, Apr, Jul · Mar 2025–Jul 2026</div>
 </div>
@@ -153,7 +153,7 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 </div>
 <div id="s2-chart-fb" class="chart-wrap" style="height:300px;"><canvas id="s2fb"></canvas></div>
 <div id="s2-chart-ig" class="chart-wrap" style="height:300px;display:none;"><canvas id="s2ig"></canvas></div>
-<div id="s2-insight-fb" class="stw-insight">July FB impressions eased to 43,720 in 2026 — below 2025's SSL-trip peak of 65,852 — on the same 23 posts. Interactions climbed to 1,715, the strongest July on record for engagement.</div>
+<div id="s2-insight-fb" class="stw-insight">July FB impressions eased to 43,720 in 2026 — below 2025's SSL-trip peak of 65,852 — on roughly half the post volume (23 posts vs. 45 in 2025). Interactions still climbed to 1,715, the strongest July on record for engagement, and impressions-per-post nearly tripled year over year.</div>
 <div id="s2-insight-ig" class="stw-insight green" style="display:none;">IG July impressions held nearly steady at 127,074 (2026) vs 129,078 (2025) — both SSL months — on a comparable 25 posts. Interactions nearly doubled to 3,703, the highest July on record.</div>
 <div class="stw-note">Source: STW Marketing KPI Tracker · Posts/Interactions on left axis · Impressions on right axis</div>
 </div>
@@ -165,13 +165,9 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 <div class="stw-tabs">
   <button class="stw-tab active" onclick="showSubTab('s3','overview',this)">Overview (3yr)</button>
   <button class="stw-tab" onclick="showSubTab('s3','sources',this)">Sources (3yr)</button>
-  <button class="stw-tab" onclick="showSubTab('s3','pages',this)">Pages (3yr)</button>
   <button class="stw-tab" onclick="showSubTab('s3','13mo-ov',this)">13-mo: Traffic</button>
   <button class="stw-tab" onclick="showSubTab('s3','13mo-src',this)">13-mo: Sources</button>
   <button class="stw-tab" onclick="showSubTab('s3','13mo-pg',this)">13-mo: Pages</button>
-  <button class="stw-tab" onclick="showSubTab('s3','myoy-ov',this)">May YOY: Traffic</button>
-  <button class="stw-tab" onclick="showSubTab('s3','myoy-src',this)">May YOY: Sources</button>
-  <button class="stw-tab" onclick="showSubTab('s3','myoy-pg',this)">May YOY: Pages</button>
 </div>
 <div id="s3-legend-overview" class="legend">
   <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>2023</div>
@@ -191,14 +187,6 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 </div>
 <div id="s3-chart-sources" class="chart-wrap" style="height:320px;display:none;"><canvas id="s3src"></canvas></div>
 <div id="s3-insight-sources" class="stw-insight" style="display:none;">Google CPC dominated 2023 (up to 5,139 sessions/month) but has declined sharply. Direct and organic search are now primary. Organic social spikes in SSL months. Fundraising pages spiked Apr–Jun 2025 — tied to SSL student fundraising.</div>
-<div id="s3-legend-pages" class="legend" style="display:none;">
-  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Homepage</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Fundraising pages</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>SSL pages</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#cca800;"></div>Blog</div>
-</div>
-<div id="s3-chart-pages" class="chart-wrap" style="height:300px;display:none;"><canvas id="s3pg"></canvas></div>
-<div id="s3-insight-pages" class="stw-insight" style="display:none;">Fundraising pages spike in SSL recruitment season (students fundraising for trips). Blog traffic growing from near-zero to 488 sessions in Mar 2026 — AEO/SEO value accumulating over time.</div>
 <div id="s3-legend-13mo-ov" class="legend" style="display:none;">
   <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Pageviews</div>
   <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Sessions</div>
@@ -223,32 +211,6 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 </div>
 <div id="s3-chart-13mo-pg" class="chart-wrap" style="height:300px;display:none;"><canvas id="s3c-13mo-pg"></canvas></div>
 <div id="s3-insight-13mo-pg" class="stw-insight" style="display:none;">Fundraising pages dominate Apr–Jun and Oct–Mar — driven by SSL student trip fundraising. Blog traffic building steadily from Oct 2025, reaching 488 in Mar 2026. Homepage traffic is relatively stable 790–1,738 throughout.</div>
-<div id="s3-legend-myoy-ov" class="legend" style="display:none;">
-  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>2023</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#7f8fcc;"></div>2024</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#b8c2e8;"></div>2025</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>2026</div>
-</div>
-<div id="s3-chart-myoy-ov" class="chart-wrap" style="height:300px;display:none;"><canvas id="s3c-myoy-ov"></canvas></div>
-<div id="s3-insight-myoy-ov" class="stw-insight" style="display:none;">March pageviews peaked in 2024 (15.2k) then declined in 2025 (11.9k) and 2026 (8.6k). Sessions tell a more stable story — 2026 (5.4k) is close to 2025 (5.5k), suggesting fewer but more engaged visits.</div>
-<div id="s3-legend-myoy-src" class="legend" style="display:none;">
-  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Direct</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Organic search</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Google CPC</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#cca800;"></div>Organic social</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#7f8fcc;"></div>Email</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#b3ddb0;"></div>Other</div>
-</div>
-<div id="s3-chart-myoy-src" class="chart-wrap" style="height:300px;display:none;"><canvas id="s3c-myoy-src"></canvas></div>
-<div id="s3-insight-myoy-src" class="stw-insight" style="display:none;">CPC drove significant sessions in 2024 (656) but is near-zero in 2025–26 as paid search shifted. Organic social grew from 600 (2023) to 896 (2025) — SSL organic posting driving website traffic. Email dropped sharply in Mar 2026 (51 vs 285 in 2025).</div>
-<div id="s3-legend-myoy-pg" class="legend" style="display:none;">
-  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Homepage</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Fundraising pages</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>SSL pages</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#cca800;"></div>Blog</div>
-</div>
-<div id="s3-chart-myoy-pg" class="chart-wrap" style="height:300px;display:none;"><canvas id="s3c-myoy-pg"></canvas></div>
-<div id="s3-insight-myoy-pg" class="stw-insight" style="display:none;">Fundraising pages are a new dominant force in Mar 2025 (4,525) and 2026 (4,315) — absent in 2023–24. SSL pages tracked in 2023 (679) and 2024 (1,364) but not in 2025–26. Blog appeared in 2026 (488). Homepage declining year-over-year: 1,617 → 826.</div>
 <div class="stw-note">Source: STW Marketing KPI Tracker · <span class="ssl-badge">SSL</span> = Feb, Mar, Apr, Jul · Jan 2023 – Jul 2026</div>
 </div>
 <div id="s4" class="section">
@@ -327,20 +289,23 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 </div>
 <div id="s6" class="section">
 <div class="stw-header">
-  <div><div class="stw-title">Paid Search Performance</div><div class="stw-subtitle">Google Ad Grant + paid campaign · Mar 2025 – Jul 2026</div></div>
+  <div><div class="stw-title">Paid Search Performance</div><div class="stw-subtitle">Google Ad Grant + paid campaign · Jul 2025 – Jul 2026</div></div>
 </div>
 <div id="s6-cards" class="mm-grid mm-grid-5"></div>
 <div style="margin-bottom:6px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:#182f8c;text-transform:uppercase;letter-spacing:.04em;">Ad Grant</div>
 <div class="stw-tabs">
-  <button class="stw-tab active" onclick="showSubTab('s6','ag-eff',this)">AG Efficiency</button>
+  <button class="stw-tab active" onclick="showSubTab('s6','spend',this)">Spend</button>
+  <button class="stw-tab" onclick="showSubTab('s6','ag-eff',this)">AG Efficiency</button>
   <button class="stw-tab" onclick="showSubTab('s6','ag-mix',this)">AG Conversion mix</button>
   <button class="stw-tab" onclick="showSubTab('s6','conversions',this)">Conversion breakdown</button>
-  <button class="stw-tab" onclick="showSubTab('s6','paid-eff',this)">Paid Efficiency</button>
-  <button class="stw-tab" onclick="showSubTab('s6','paid-mix',this)">Paid Conversion mix</button>
-  <button class="stw-tab" onclick="showSubTab('s6','spend',this)">Spend</button>
   <button class="stw-tab" onclick="showSubTab('s6','camp-compare',this)">Campaign Comparison</button>
 </div>
-<div id="s6-legend-ag-eff" class="legend">
+<div id="s6-legend-spend" class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Ad Grant spend</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Paid campaign spend</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#259717;width:18px;height:2px;border-radius:0;"></div>CTR % (right)</div>
+</div>
+<div id="s6-legend-ag-eff" class="legend" style="display:none;">
   <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Cost/conversion — Ad Grant</div>
   <div class="legend-item"><div class="legend-dot" style="background:#ff7300;width:18px;height:2px;border-radius:0;"></div>Conversions (right axis)</div>
 </div>
@@ -363,34 +328,14 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
   <div class="legend-item"><div class="legend-dot" style="background:#b8c2e8;"></div>Outbound</div>
   <div class="legend-item"><div class="legend-dot" style="background:#e88a5a;"></div>Blog</div>
 </div>
-<div id="s6-legend-paid-eff" class="legend" style="display:none;">
-  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Cost/conversion — Paid campaign</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;width:18px;height:2px;border-radius:0;"></div>Conversions (right axis)</div>
-</div>
-<div id="s6-legend-paid-mix" class="legend" style="display:none;">
-  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Guatemala</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Honduras</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Panama</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#f7ca09;border:1px solid #cca800;"></div>Newsletter</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#c5cce8;"></div>Request info</div>
-</div>
-<div id="s6-legend-spend" class="legend" style="display:none;">
-  <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Ad Grant spend</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Paid campaign spend</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#259717;width:18px;height:2px;border-radius:0;"></div>CTR % (right)</div>
-</div>
-<div id="s6-chart-ag-eff" class="chart-wrap" style="height:280px;"><canvas id="s6ageff"></canvas></div>
+<div id="s6-chart-spend" class="chart-wrap" style="height:280px;"><canvas id="s6spend"></canvas></div>
+<div id="s6-chart-ag-eff" class="chart-wrap" style="height:280px;display:none;"><canvas id="s6ageff"></canvas></div>
 <div id="s6-chart-ag-mix" class="chart-wrap" style="height:320px;display:none;"><canvas id="s6agmix"></canvas></div>
 <div id="s6-chart-conversions" class="chart-wrap" style="height:360px;display:none;"><canvas id="s6conv"></canvas></div>
-<div id="s6-chart-paid-eff" class="chart-wrap" style="height:280px;display:none;"><canvas id="s6paideff"></canvas></div>
-<div id="s6-chart-paid-mix" class="chart-wrap" style="height:280px;display:none;"><canvas id="s6paidmix"></canvas></div>
-<div id="s6-chart-spend" class="chart-wrap" style="height:280px;display:none;"><canvas id="s6spend"></canvas></div>
-<div id="s6-insight-ag-eff" class="stw-insight">Cost per Ad Grant conversion rose from ~$4 (Mar 2025) to $71 (Feb 2026) as the grant reached full $10k utilization but conversions declined. Jul 2026 hit $181/conversion — the highest on record — on just 31 conversions against $5,616 spend.</div>
+<div id="s6-insight-spend" class="stw-insight">Ad Grant hit $10k ceiling Oct–Dec 2025. Jan dipped to $5.8k (disruption). Paid campaign spend is modest ($177–$623/month) but growing. CTR held stable at 3.5–4.2%.</div>
+<div id="s6-insight-ag-eff" class="stw-insight" style="display:none;">Cost per Ad Grant conversion rose from $11 (Jul 2025) to $71 (Feb 2026) as the grant reached full $10k utilization but conversions declined. Jul 2026 hit $181/conversion — the highest in the past 13 months — on just 31 conversions against $5,616 spend.</div>
 <div id="s6-insight-ag-mix" class="stw-insight" style="display:none;">Ad Grant drives a diversified mix — Blog traffic and outbound clicks alongside trip recruitment. Guatemala leads trip-related conversions, but Blog and Outbound together often rival the country totals.</div>
 <div id="s6-insight-conversions" class="stw-insight" style="display:none;">Ad Grant conversions peaked at 678 in Jul 2025 then declined. The paid campaign launched Oct 2025 and has grown to 346 conversions in Mar 2026 at under $2 each — highly efficient for its budget.</div>
-<div id="s6-insight-paid-eff" class="stw-insight" style="display:none;">Paid campaign cost/conversion has risen slightly ($0.94–$1.80) but remains dramatically lower than the Ad Grant. Guatemala, Panama, and Honduras trip recruitment drive the bulk of paid conversions.</div>
-<div id="s6-insight-paid-mix" class="stw-insight" style="display:none;">Paid campaign conversions are almost entirely SSL trip recruitment — Guatemala leads, followed by Panama and Honduras. Request Info is a consistent conversion type, reflecting a direct inquiry intent from this warmer audience.</div>
-<div id="s6-insight-spend" class="stw-insight" style="display:none;">Ad Grant hit $10k ceiling Oct–Dec 2025. Jan dipped to $5.8k (disruption). Paid campaign spend is modest ($177–$623/month) but growing. CTR held stable at 3.5–4.2%.</div>
 <div id="s6-legend-camp-compare" class="legend" style="display:none;">
   <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Performance Max</div>
   <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Search</div>
@@ -400,7 +345,7 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
 </div>
 <div id="s6-chart-camp-compare" class="chart-wrap" style="height:300px;display:none;"><canvas id="s6campcompare"></canvas></div>
 <div id="s6-insight-camp-compare" class="stw-insight orange" style="display:none;">Search leads on interaction rate (8.6%) and conversion rate (43.5%) — the most qualified traffic. Performance Max drives volume at 4.5% interaction rate and 47.3% conv. rate. Display's 3.1% interaction rate and 4.3% conv. rate reflects awareness-stage behavior, but at $0.51 avg. cost it was the cheapest per interaction tested.</div>
-<div class="stw-note">Source: STW Marketing KPI Tracker + PromotMotor · Ad Grant max $10,000/month · Mar 2025 – Jul 2026</div>
+<div class="stw-note">Source: STW Marketing KPI Tracker + PromotMotor · Ad Grant max $10,000/month · Jul 2025 – Jul 2026</div>
 </div>
 <div id="s7" class="section">
 <div class="stw-header">
@@ -537,7 +482,7 @@ function _buildSection(id) {
   _built[id] = true;
   if (id === 's1')  { buildS1Charts(); return; }
   if (id === 's2')  { setTimeout(() => { buildS2Charts() }, 20); return; }
-  if (id === 's3')  { setTimeout(() => { buildS3Charts(); buildS3_13mo(); buildS3_mayYOY(); }, 20); return; }
+  if (id === 's3')  { setTimeout(() => { buildS3Charts(); buildS3_13mo(); }, 20); return; }
   if (id === 's4')  { setTimeout(() => { buildS4Overview(); buildS4(); }, 20); return; }
   if (id === 's5')  { setTimeout(() => { buildS5Charts() }, 20); return; }
   if (id === 's6')  {
@@ -620,10 +565,6 @@ const S3_ORGANIC   = [882,1608,1396,1126,1208,1103,842,621,539,976,1402,1583,193
 const S3_CPC       = [1070,3994,52,2283,4657,5139,4693,4299,1992,220,1039,646,475,661,656,306,524,329,384,236,226,486,199,135,217,144,80,41,45,35,181,217,299,219,251,225,170,64,119,107,157,46,15];
 const S3_ORGSOCIAL = [868,1228,600,269,354,846,641,139,97,156,1458,1303,1662,1295,665,236,1169,499,356,116,198,486,818,1137,803,1039,896,919,854,674,197,419,396,173,201,840,531,560,562,354,291,314,107];
 const S3_EMAIL_SRC = [199,224,256,212,241,162,38,20,76,124,380,138,177,241,225,109,501,150,87,23,185,438,473,828,386,401,285,159,225,107,151,101,116,117,173,225,429,108,51,43,56,45,36];
-const S3_HOMEPAGE  = [1091,1679,1617,1365,1442,1519,1121,1142,978,1209,1406,1241,1559,1343,1361,1340,1140,763,864,970,1148,1415,1809,1420,1873,1260,1341,1115,1392,946,1175,1240,1677,1738,1347,1303,1188,790,826,731,673,524,634];
-const S3_FUNDRAISE = [262,580,394,475,369,630,345,14,10,25,164,71,198,280,245,226,1134,446,423,41,11,123,168,203,240,489,4525,3824,4783,4418,774,628,597,953,2610,5443,4170,2769,4315,1626,2137,1378,47];
-const S3_SSL_PG    = [687,1182,679,978,1352,481,582,645,1413,2138,928,1096,1488,1651,1364,1184,1250,687,1018,680,1049,1017,1476,1347,1840,1261,null,null,null,null,null,150,914,2566,1099,958,1048,665,861,392,520,206,517];
-const S3_BLOG_PG   = [15,15,7,18,59,46,40,49,30,32,29,26,32,22,30,23,34,36,38,35,41,50,38,null,null,null,null,null,null,null,10,435,220,276,525,582,506,265,488,383,393,359,250];
 const S3_MM = { cur:{pv:2585,sessions:1322,users:931,engaged:53}, prev:{pv:3159,sessions:2449,users:1198,engaged:40} };
 const S4_MONTHLY_LABELS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
 const S4_PAGEVIEWS = [435, 220, 276, 525, 523, 582, 506, 265, 488, 383,393,359,250];
@@ -782,9 +723,9 @@ const EMAIL_DATA = [
   ["Newsletter","7/28/26",3634,1510,41.55,19,1.26],
   ["SSL Supporters","7/31/26",187,25,13.37,7,28.00]
 ];
-const S6_LABELS = ['Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
-const S6_CURRENT_IDX = 16;
-const S6_AG_COST  = [1360,2390,2700,1740,7602,4621,4764,9830,9899,10249,5818,9292,10267,7097,7394,5594.07,5616.42];
+const S6_LABELS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
+const S6_CURRENT_IDX = 12;
+const S6_AG_COST  = [7602,4621,4764,9830,9899,10249,5818,9292,10267,7097,7394,5594.07,5616.42];
 const S6_CAMP_COMPARE = [
   {
     label:       'Performance Max',
@@ -823,29 +764,29 @@ const S6_CAMP_COMPARE = [
     totalCost:   139.91,
   },
 ];
-const S6_AG_IMPR  = [7826,8644,6594,3935,9488,9955,14331,62600,147528,197386,55515,107219,111130,12400,9614,13903,8455];
-const S6_AG_CLICKS= [162,204,182,181,374,422,512,2290,5820,6832,2077,4451,4221,619,537,418,353];
-const S6_AG_CTR   = [2.07,2.36,2.76,4.60,3.92,4.24,3.57,3.66,3.95,3.46,3.74,4.15,3.80,4.99,5.59,3.01,4.18];
-const S6_AG_CONV  = [338,464,368,678,678,564,409,320,230,175,159,131,179,56,29,33,31];
-const S6_AG_CPC   = [4.02,5.16,4.04,2.60,11.21,8.19,11.65,30.72,43.04,58.57,36.59,70.93,57.36,126.73,254.97,169.52,181.17];
-const S6_PAID_COST= [null,null,null,null,null,null,null,177,486,486,479,491,623,160,164,38.11,null];
-const S6_PAID_CONV= [null,null,null,null,null,null,null,164,477,412,510,275,346,67,86,17,null];
-const S6_AG_MIX_NEWS = [null,null,null,null,null,null,4,2,8,3,0,0,0,null,null,null,null];
-const S6_AG_MIX_INFO = [null,null,null,null,null,null,0,1,2,0,4,2,1,1,1,null,null];
-const S6_AG_MIX_HON = [null,null,null,null,null,null,0,0,0,1,6,3,1,0,3,null,null];
-const S6_AG_MIX_PAN = [null,null,null,null,null,null,0,9,0,0,0,0,0,0,0,null,null];
-const S6_AG_MIX_GUA = [null,null,null,null,null,null,1,3,1,1,2,0,1,7,4,null,null];
-const S6_AG_MIX_OUTSOC = [null,null,null,null,null,null,3,4,1,1,1,1,0,0,0,null,null];
-const S6_AG_MIX_OUTDNT = [null,null,null,null,null,null,1,2,3,2,0,0,0,null,1,null,null];
-const S6_AG_MIX_BLOG = [null,null,null,null,null,null,18,16,10,4,14,6,3,6,5,null,null];
-const S6_PAID_MIX_NEWS = [null,null,null,null,null,null,null,0,6,16,4,null,11,1,3,null,null];
-const S6_PAID_MIX_INFO = [null,null,null,null,null,null,null,11,30,24,30,13,17,5,3,null,null];
-const S6_PAID_MIX_HON = [null,null,null,null,null,null,null,7,9,11,27,14,29,17,20,null,null];
-const S6_PAID_MIX_PAN = [null,null,null,null,null,null,null,13,42,28,28,25,18,18,9,null,null];
-const S6_PAID_MIX_GUA = [null,null,null,null,null,null,null,21,68,59,50,31,42,12,36,null,null];
-const S6_PAID_MIX_OUT = [null,null,null,null,null,null,null,0,0,0,0,0,0,0,0,null,null];
-const S6_PAID_MIX_BLOG = [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null];
-const S6_PAID_CPC = [null,null,null,null,null,null,null,1.08,1.02,1.18,0.94,1.79,1.80,2.39,1.91,2.24,null];
+const S6_AG_IMPR  = [9488,9955,14331,62600,147528,197386,55515,107219,111130,12400,9614,13903,8455];
+const S6_AG_CLICKS= [374,422,512,2290,5820,6832,2077,4451,4221,619,537,418,353];
+const S6_AG_CTR   = [3.92,4.24,3.57,3.66,3.95,3.46,3.74,4.15,3.80,4.99,5.59,3.01,4.18];
+const S6_AG_CONV  = [678,564,409,320,230,175,159,131,179,56,29,33,31];
+const S6_AG_CPC   = [11.21,8.19,11.65,30.72,43.04,58.57,36.59,70.93,57.36,126.73,254.97,169.52,181.17];
+const S6_PAID_COST= [null,null,null,177,486,486,479,491,623,160,164,38.11,null];
+const S6_PAID_CONV= [null,null,null,164,477,412,510,275,346,67,86,17,null];
+const S6_AG_MIX_NEWS = [null,null,4,2,8,3,0,0,0,null,null,null,null];
+const S6_AG_MIX_INFO = [null,null,0,1,2,0,4,2,1,1,1,null,null];
+const S6_AG_MIX_HON = [null,null,0,0,0,1,6,3,1,0,3,null,null];
+const S6_AG_MIX_PAN = [null,null,0,9,0,0,0,0,0,0,0,null,null];
+const S6_AG_MIX_GUA = [null,null,1,3,1,1,2,0,1,7,4,null,null];
+const S6_AG_MIX_OUTSOC = [null,null,3,4,1,1,1,1,0,0,0,null,null];
+const S6_AG_MIX_OUTDNT = [null,null,1,2,3,2,0,0,0,null,1,null,null];
+const S6_AG_MIX_BLOG = [null,null,18,16,10,4,14,6,3,6,5,null,null];
+const S6_PAID_MIX_NEWS = [null,null,null,0,6,16,4,null,11,1,3,null,null];
+const S6_PAID_MIX_INFO = [null,null,null,11,30,24,30,13,17,5,3,null,null];
+const S6_PAID_MIX_HON = [null,null,null,7,9,11,27,14,29,17,20,null,null];
+const S6_PAID_MIX_PAN = [null,null,null,13,42,28,28,25,18,18,9,null,null];
+const S6_PAID_MIX_GUA = [null,null,null,21,68,59,50,31,42,12,36,null,null];
+const S6_PAID_MIX_OUT = [null,null,null,0,0,0,0,0,0,0,0,null,null];
+const S6_PAID_MIX_BLOG = [null,null,null,null,null,null,null,null,null,null,null,null,null];
+const S6_PAID_CPC = [null,null,null,1.08,1.02,1.18,0.94,1.79,1.80,2.39,1.91,2.24,null];
 const S7_LABELS = ['Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
 const S7_CURRENT_IDX = 13;
 const S7_STW_IMPR  = [602,3560,1531,2777,4815,2955,1158,1507,1989,2912,1866,1127,1557,709];
@@ -1064,13 +1005,6 @@ function buildS3Charts() {
     {label:'Other',data:other,backgroundColor:other.map((_,i)=>sslAll[i]?'#b3ddb0':'#b3ddb099'),borderRadius:2}
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},
     scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}}});
-  new Chart(document.getElementById('s3pg'),{type:'bar',data:{labels:allL,datasets:[
-    {label:'Homepage',data:S3_HOMEPAGE,backgroundColor:S3_HOMEPAGE.map((_,i)=>sslAll[i]?'#182f8c':'#182f8c99'),borderRadius:0},
-    {label:'Fundraising',data:S3_FUNDRAISE,backgroundColor:S3_FUNDRAISE.map((_,i)=>sslAll[i]?'#ff7300':'#ff730099'),borderRadius:0},
-    {label:'SSL pages',data:S3_SSL_PG,backgroundColor:S3_SSL_PG.map((_,i)=>sslAll[i]?'#259717':'#25971799'),borderRadius:0},
-    {label:'Blog',data:S3_BLOG_PG,backgroundColor:S3_BLOG_PG.map((_,i)=>sslAll[i]?'#cca800':'#f7ca0999'),borderRadius:2}
-  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},
-    scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},grid:{color:'#f0f0f0'}}}}});
 }
 function buildS3_13mo() {
   const L = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
@@ -1127,67 +1061,6 @@ function buildS3_13mo() {
       {label:'SSL pages',   data:SL, backgroundColor:'#259717',borderRadius:0},
       {label:'Blog',        data:BL, backgroundColor:'#cca800',borderRadius:2}
     ]},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:false}},
-      scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,callback:h},grid:{color:'#f0f0f0'}}}}
-  });
-}
-function buildS3_mayYOY() {
-  const YRS    = ['May 2023','May 2024','May 2025','May 2026'];
-  const COLORS = ['#182f8c','#7f8fcc','#b8c2e8','#ff7300'];
-  const PV_M   = [19726,16058,12013,4873];
-  const SE_M   = [9456,6841,5983,3090];
-  const DIR_M  = [2242,3264,3073,1659];
-  const ORG_M  = [1208,1111,1296,340];
-  const CPC_M  = [4657,524,45,157];
-  const OS_M   = [354,1169,854,291];
-  const EM_M   = [241,501,225,56];
-  const OT_M   = SE_M.map((_,i)=>Math.max(0,SE_M[i]-DIR_M[i]-ORG_M[i]-CPC_M[i]-OS_M[i]-EM_M[i]));
-  const HP_M   = [1442,1140,1392,673];
-  const FUND_M = [369,1134,4783,2137];
-  const SSL_M  = [1352,1250,null,520];
-  const BLOG_M = [59,34,null,393];
-  const h = v=>v>=1000?(v/1000).toFixed(0)+'k':v;
-  new Chart(document.getElementById('s3c-myoy-ov'),{type:'bar',
-    data:{labels:['Pageviews','Sessions'],datasets:
-      YRS.map((yr,i)=>({label:yr,data:[PV_M[i],SE_M[i]],backgroundColor:COLORS[i],borderRadius:4,categoryPercentage:0.7,barPercentage:0.85}))
-    },
-    options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:22}},
-      interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},
-      scales:{x:{...AXT,ticks:{...AXT.ticks,font:{family:'Montserrat',size:11,weight:'600'},color:'#333'}},
-              y:{ticks:{...AXT.ticks,callback:h},grid:{color:'#f0f0f0'}}}},
-    plugins:[{id:'lblMyoyOv',afterDatasetsDraw(chart){
-      const ctx=chart.ctx;
-      chart.data.datasets.forEach((ds,di)=>{
-        chart.getDatasetMeta(di).data.forEach((bar,idx)=>{
-          const v=ds.data[idx];if(!v) return;
-          ctx.save();ctx.font='600 9px Open Sans';ctx.fillStyle=COLORS[di];
-          ctx.textAlign='center';ctx.textBaseline='bottom';
-          ctx.fillText(h(v),bar.x,bar.y-3);ctx.restore();
-        });
-      });
-    }}]
-  });
-  const srcData  = [DIR_M,ORG_M,CPC_M,OS_M,EM_M,OT_M];
-  const srcLabels= ['Direct','Organic search','CPC','Organic social','Email','Other'];
-  const srcColors= ['#182f8c','#259717','#ff7300','#cca800','#7f8fcc','#b3ddb0'];
-  new Chart(document.getElementById('s3c-myoy-src'),{type:'bar',
-    data:{labels:YRS,datasets:srcLabels.map((lbl,si)=>({
-      label:lbl,data:srcData[si],backgroundColor:srcColors[si],
-      borderRadius:si===5?2:0,stack:'src'
-    }))},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:false}},
-      scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,callback:h},grid:{color:'#f0f0f0'}}}}
-  });
-  const pgData  = [HP_M,FUND_M,SSL_M,BLOG_M];
-  const pgLabels= ['Homepage','Fundraising','SSL pages','Blog'];
-  const pgColors= ['#182f8c','#ff7300','#259717','#cca800'];
-  new Chart(document.getElementById('s3c-myoy-pg'),{type:'bar',
-    data:{labels:YRS,datasets:pgLabels.map((lbl,pi)=>({
-      label:lbl,data:pgData[pi],backgroundColor:pgColors[pi],
-      borderRadius:pi===3?2:0,stack:'pg'
-    }))},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false}},
       scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:{...AXT.ticks,callback:h},grid:{color:'#f0f0f0'}}}}
@@ -1387,7 +1260,7 @@ function buildS5Newsletter() {
 function buildS6Charts() {
   const ci=S6_CURRENT_IDX, pi=ci-1;
   document.getElementById('s6-cards').innerHTML=
-    buildMMCard('AG Spend', S6_AG_COST[ci], S6_AG_COST[pi], null, v=>'$'+(v>=1000?(v/1000).toFixed(0)+'k':v)) +
+    buildMMCard('AG Spend', S6_AG_COST[ci], S6_AG_COST[pi], null, v=>'$'+Math.round(v).toLocaleString()) +
     buildMMCard('AG Impressions', S6_AG_IMPR[ci], S6_AG_IMPR[pi], true, v=>v>=1000?(v/1000).toFixed(0)+'k':String(v)) +
     buildMMCard('AG Clicks', S6_AG_CLICKS[ci], S6_AG_CLICKS[pi], true, v=>v.toLocaleString()) +
     buildMMCard('AG CTR', S6_AG_CTR[ci], S6_AG_CTR[pi], true, v=>v.toFixed(2)+'%') +
@@ -1399,22 +1272,22 @@ function buildS6Charts() {
     plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.yAxisID==='y2'?` Conversions: ${ctx.parsed.y}`:` Cost/conv: $${ctx.parsed.y.toFixed(2)}`}}},
     scales:{x:AXT,y:{position:'left',title:{display:true,text:'Cost per conversion ($)',font:{size:9},color:'#555'},ticks:{...AXT.ticks,callback:v=>'$'+v},grid:{color:'#f0f0f0'}},y2:{position:'right',title:{display:true,text:'Conversions',font:{size:9},color:'#888'},ticks:AXT.ticks,grid:{drawOnChartArea:false}}}}});
   const agMixLabels = ['Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26'];
-  const agMixSlice = i => [S6_AG_MIX_NEWS,S6_AG_MIX_INFO,S6_AG_MIX_HON,S6_AG_MIX_PAN,S6_AG_MIX_GUA,S6_AG_MIX_OUTSOC,S6_AG_MIX_OUTDNT,S6_AG_MIX_BLOG].map(a=>a)[i].slice(6,12);
+  const agMixSlice = i => [S6_AG_MIX_NEWS,S6_AG_MIX_INFO,S6_AG_MIX_HON,S6_AG_MIX_PAN,S6_AG_MIX_GUA,S6_AG_MIX_OUTSOC,S6_AG_MIX_OUTDNT,S6_AG_MIX_BLOG].map(a=>a)[i].slice(2,8);
   new Chart(document.getElementById('s6agmix'),{type:'bar',data:{labels:agMixLabels,datasets:[
-    {label:'Guatemala',     data:S6_AG_MIX_GUA.slice(6,12),    backgroundColor:'#182f8c',borderRadius:0},
-    {label:'Honduras',      data:S6_AG_MIX_HON.slice(6,12),    backgroundColor:'#259717',borderRadius:0},
-    {label:'Panama',        data:S6_AG_MIX_PAN.slice(6,12),    backgroundColor:'#ff7300',borderRadius:0},
-    {label:'Newsletter',    data:S6_AG_MIX_NEWS.slice(6,12),   backgroundColor:'#f7ca09',borderRadius:0},
-    {label:'Request Info',  data:S6_AG_MIX_INFO.slice(6,12),   backgroundColor:'#c5cce8',borderRadius:0},
-    {label:'Outbound Social',data:S6_AG_MIX_OUTSOC.slice(6,12),backgroundColor:'#7f8fcc',borderRadius:0},
-    {label:'Outbound Donate',data:S6_AG_MIX_OUTDNT.slice(6,12),backgroundColor:'#e88a5a',borderRadius:0},
-    {label:'Blog',          data:S6_AG_MIX_BLOG.slice(6,12),   backgroundColor:'#b3ddb0',borderRadius:2}
+    {label:'Guatemala',     data:S6_AG_MIX_GUA.slice(2,8),    backgroundColor:'#182f8c',borderRadius:0},
+    {label:'Honduras',      data:S6_AG_MIX_HON.slice(2,8),    backgroundColor:'#259717',borderRadius:0},
+    {label:'Panama',        data:S6_AG_MIX_PAN.slice(2,8),    backgroundColor:'#ff7300',borderRadius:0},
+    {label:'Newsletter',    data:S6_AG_MIX_NEWS.slice(2,8),   backgroundColor:'#f7ca09',borderRadius:0},
+    {label:'Request Info',  data:S6_AG_MIX_INFO.slice(2,8),   backgroundColor:'#c5cce8',borderRadius:0},
+    {label:'Outbound Social',data:S6_AG_MIX_OUTSOC.slice(2,8),backgroundColor:'#7f8fcc',borderRadius:0},
+    {label:'Outbound Donate',data:S6_AG_MIX_OUTDNT.slice(2,8),backgroundColor:'#e88a5a',borderRadius:0},
+    {label:'Blog',          data:S6_AG_MIX_BLOG.slice(2,8),   backgroundColor:'#b3ddb0',borderRadius:2}
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
     plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
     scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:AXT.ticks,grid:{color:'#f0f0f0'}}}}});
   const CONV_MO = ['Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26'];
   const N = CONV_MO.length;
-  const ms = arr => arr.slice(6).map(v => (v === null || v === undefined) ? 0 : Number(v));
+  const ms = arr => arr.slice(2).map(v => (v === null || v === undefined) ? 0 : Number(v));
   const agNews  = ms(S6_AG_MIX_NEWS);
   const agInfo  = ms(S6_AG_MIX_INFO);
   const agHon   = ms(S6_AG_MIX_HON);
@@ -1511,23 +1384,6 @@ function buildS6Charts() {
       }
     }
   });
-  const paidEffLabels = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
-  new Chart(document.getElementById('s6paideff'),{type:'bar',data:{labels:paidEffLabels,datasets:[
-    {type:'bar',label:'Cost/conv',data:S6_PAID_CPC.slice(7),backgroundColor:'#ff7300',borderRadius:3,yAxisID:'y'},
-    {type:'line',label:'Conversions',data:S6_PAID_CONV.slice(7),borderColor:'#182f8c',backgroundColor:'transparent',pointBackgroundColor:'#182f8c',pointRadius:4,yAxisID:'y2',tension:0.3}
-  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.yAxisID==='y2'?` Conversions: ${ctx.parsed.y}`:` Cost/conv: $${ctx.parsed.y.toFixed(2)}`}}},
-    scales:{x:AXT,y:{position:'left',title:{display:true,text:'Cost per conversion ($)',font:{size:9},color:'#888'},ticks:{...AXT.ticks,callback:v=>'$'+v},grid:{color:'#f0f0f0'}},y2:{position:'right',title:{display:true,text:'Conversions',font:{size:9},color:'#888'},ticks:AXT.ticks,grid:{drawOnChartArea:false}}}}});
-  const paidMixLabels = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26'];
-  new Chart(document.getElementById('s6paidmix'),{type:'bar',data:{labels:paidMixLabels,datasets:[
-    {label:'Guatemala',   data:S6_PAID_MIX_GUA.slice(7,12),  backgroundColor:'#182f8c',borderRadius:0},
-    {label:'Honduras',    data:S6_PAID_MIX_HON.slice(7,12),  backgroundColor:'#259717',borderRadius:0},
-    {label:'Panama',      data:S6_PAID_MIX_PAN.slice(7,12),  backgroundColor:'#ff7300',borderRadius:0},
-    {label:'Newsletter',  data:S6_PAID_MIX_NEWS.slice(7,12), backgroundColor:'#f7ca09',borderRadius:0},
-    {label:'Request Info',data:S6_PAID_MIX_INFO.slice(7,12), backgroundColor:'#c5cce8',borderRadius:2}
-  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-    plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
-    scales:{x:{...AXT,stacked:true},y:{stacked:true,ticks:AXT.ticks,grid:{color:'#f0f0f0'}}}}});
   new Chart(document.getElementById('s6spend'),{type:'bar',data:{labels:S6_LABELS,datasets:[
     {type:'bar',label:'Ad Grant',data:S6_AG_COST,backgroundColor:'#182f8c',borderRadius:0,yAxisID:'y',stack:'spend'},
     {type:'bar',label:'Paid',data:S6_PAID_COST,backgroundColor:'#ff7300',borderRadius:2,yAxisID:'y',stack:'spend'},
