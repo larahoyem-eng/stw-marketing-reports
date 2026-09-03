@@ -391,14 +391,14 @@ body { font-family: 'Open Sans', sans-serif; background: #f4f4f4; color: #333; }
   <div><div class="stw-title">Paid Social</div><div class="stw-subtitle">Oct 2025 – Aug 2026</div></div>
 </div>
 <div id="s8-cards" class="mm-grid mm-grid-4"></div>
-<div class="section-label">Trend — Oct 2025 to May 2026</div>
+<div class="section-label">Trend — Oct 2025 to Aug 2026</div>
 <div class="legend">
   <div class="legend-item"><div class="legend-dot" style="background:#ff7300;"></div>Spend ($)</div>
   <div class="legend-item"><div class="legend-dot" style="background:#182f8c;"></div>Clicks</div>
   <div class="legend-item"><div class="legend-dot" style="background:#259717;"></div>Impressions ÷100 (right)</div>
 </div>
 <div class="chart-wrap" style="height:240px;"><canvas id="s8trend"></canvas></div>
-<div class="stw-insight">Sep 2025 was highest paid social month ($604, 1,410 clicks, 104k impressions) — tied to Gala promotion. No paid social ran in Jun 2026; Jul relaunched at scale — $396 spend, 2,526 clicks, 111k impressions — the largest campaign since the Sep 2025 Gala push, at a very efficient $0.16 CPC.</div>
+<div class="stw-insight">Sep 2025 was highest paid social month ($604, 1,410 clicks, 104k impressions) — tied to Gala promotion. Jul 2026 relaunched at scale — $396 spend, 2,526 clicks, 111k impressions — the largest campaign since the Sep 2025 Gala push, at a very efficient $0.16 CPC. No paid social ran in Aug 2026.</div>
 <div class="stw-note">Source: STW Marketing KPI Tracker · Oct 2025 – Aug 2026</div>
 </div>
 <div id="s9" class="section">
@@ -823,8 +823,8 @@ const S7_KATE_POSTS= [1,1,2,2,3,2,4,0,2,0,1,0,0,0,0];
 const S7_KATE_EFF  = [1312,3946,1179,923,523,350,493,null,813,null,752,null,null,null,null];
 const S7_KATE_NFOL = [null,7,8,11,9,19,3,9,12,12,11,0,3,2,7];
 const S8_LABELS = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26'];
-const S8_CURRENT_IDX = 9;
-const S8_COST   = [604,150,75,109,422.81,393.30,356.47,53.94,null,395.70,null];
+const S8_CURRENT_IDX = 10;
+const S8_COST   = [604,150,75,109,422.81,393.30,356.47,53.94,null,395.70,0];
 const S8_IMPR   = [104318,28555,8185,8314,64013,48478,49951,9599,null,110860,null];
 const S8_CLICKS = [1410,272,118,155,976,744,836,194,null,2526,null];
 const S8_CTR    = [1.35,0.95,1.44,1.86,1.52,1.53,1.67,2.02,null,2.30,null];
@@ -851,7 +851,7 @@ const S10_CAMPAIGNS = [
 ];
 const AXT = { ticks:{font:{family:'Open Sans',size:10},color:'#555',autoSkip:true,maxTicksLimit:13,maxRotation:45}, grid:{color:'#f0f0f0'} };
 function mmChange(cur, prev, higherIsGood) {
-  if (!prev) return { arrow:'—', cls:'neutral', pct:'—' };
+  if (!prev || cur === null || cur === undefined) return { arrow:'—', cls:'neutral', pct:'—' };
   const pct = ((cur-prev)/prev)*100;
   const up = pct >= 0.5;
   const down = pct <= -0.5;
@@ -1545,10 +1545,10 @@ function buildS8Charts() {
   let pi=ci-1;
   while (pi>=0 && S8_COST[pi]===null) pi--;
   document.getElementById('s8-cards').innerHTML=
-    buildMMCard('Spend', S8_COST[ci], S8_COST[pi], null, v=>'$'+v.toFixed(0)) +
-    buildMMCard('Clicks', S8_CLICKS[ci], S8_CLICKS[pi], true, v=>v.toLocaleString()) +
-    buildMMCard('CTR', S8_CTR[ci], S8_CTR[pi], true, v=>v.toFixed(2)+'%') +
-    buildMMCard('CPC', S8_CPC[ci], S8_CPC[pi], false, v=>'$'+v.toFixed(2));
+    buildMMCard('Spend', S8_COST[ci], S8_COST[pi], null, v=>v==null?'—':'$'+v.toFixed(0)) +
+    buildMMCard('Clicks', S8_CLICKS[ci], S8_CLICKS[pi], true, v=>v==null?'—':v.toLocaleString()) +
+    buildMMCard('CTR', S8_CTR[ci], S8_CTR[pi], true, v=>v==null?'—':v.toFixed(2)+'%') +
+    buildMMCard('CPC', S8_CPC[ci], S8_CPC[pi], false, v=>v==null?'—':'$'+v.toFixed(2));
   new Chart(document.getElementById('s8trend'),{type:'bar',data:{labels:S8_LABELS,datasets:[
     {type:'bar',label:'Spend',data:S8_COST,backgroundColor:'#ff7300',borderRadius:3,yAxisID:'y'},
     {type:'bar',label:'Clicks',data:S8_CLICKS,backgroundColor:'#182f8c',borderRadius:3,yAxisID:'y2'},
